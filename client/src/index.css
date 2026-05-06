@@ -970,7 +970,8 @@ body {
 .stock-badge.in  { background: #e8f5e9; color: #2e7d32; }
 .stock-badge.out { background: #ffebee; color: #c62828; }
 
-.admin-product-info { padding: 14px 16px; }
+.admin-product-card { display: flex; flex-direction: column; }
+.admin-product-info { padding: 14px 16px; display: flex; flex-direction: column; flex: 1; }
 .admin-product-name { font-size: 14px; font-weight: 700; margin-bottom: 3px; }
 .admin-product-cat  { font-size: 11px; color: #888; margin-bottom: 6px; text-transform: capitalize; }
 .admin-product-desc {
@@ -988,6 +989,7 @@ body {
   display: flex;
   gap: 8px;
   flex-wrap: nowrap;
+  margin-top: auto;
 }
 
 .btn-edit,
