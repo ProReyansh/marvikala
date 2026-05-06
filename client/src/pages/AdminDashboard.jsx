@@ -40,8 +40,13 @@ export default function AdminDashboard() {
 
   function closeModal() {
     setModalClosing(true);
-    setTimeout(() => { setModalOpen(false); setModalClosing(false); }, 230);
+    setTimeout(() => { setModalOpen(false); setModalClosing(false); document.body.style.overflow = ''; }, 230);
   }
+
+  useEffect(() => {
+    if (modalOpen) document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = ''; };
+  }, [modalOpen]);
 
   async function fetchProducts() {
     try {

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const CAT_LABEL = {
   flowers: 'Flowers', keychains: 'Keychains', bookmarks: 'Bookmarks',
@@ -9,6 +9,11 @@ const CAT_LABEL = {
 
 export default function ProductModal({ product, onClose, onEnquire }) {
   const [closing, setClosing] = useState(false);
+
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = ''; };
+  }, []);
 
   function handleClose() {
     setClosing(true);

@@ -1,7 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function CustomOrderModal({ onClose }) {
   const [closing, setClosing] = useState(false);
+
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = ''; };
+  }, []);
   const waMsg = encodeURIComponent("Hi! I'd like to place a custom crochet order.");
 
   function handleClose() {
