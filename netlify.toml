@@ -1,7 +1,6 @@
 [build]
-  base    = "client"
   publish = "client/dist"
-  command = "npm run build"
+  command = "cd client && npm run build"
 
 # Proxy /api calls to the Render backend
 [[redirects]]
