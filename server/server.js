@@ -22,6 +22,11 @@ app.use('/api/auth', authRoutes);
 
 app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
 
+// Prevent Render free tier spin-down by pinging self every 10 minutes
+setInterval(() => {
+  fetch('https://marvikala-api.onrender.com/api/health').catch(() => {});
+}, 10 * 60 * 1000);
+
 mongoose
   .connect(process.env.MONGODB_URI)
   .then(() => {
