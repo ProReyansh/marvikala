@@ -214,6 +214,9 @@ export default function AdminDashboard() {
                     <div className="admin-product-cat">
                       {CATEGORIES.find((c) => c.key === product.category)?.label || product.category}
                     </div>
+                    {product.description && (
+                      <div className="admin-product-desc">{product.description}</div>
+                    )}
                     <div className="admin-product-actions">
                       <button className="btn-edit"   onClick={() => openEdit(product)}>Edit</button>
                       <button className="btn-delete" onClick={() => handleDelete(product)}>Delete</button>

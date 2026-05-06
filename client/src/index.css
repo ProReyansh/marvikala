@@ -972,7 +972,17 @@ body {
 
 .admin-product-info { padding: 14px 16px; }
 .admin-product-name { font-size: 14px; font-weight: 700; margin-bottom: 3px; }
-.admin-product-cat  { font-size: 11px; color: #888; margin-bottom: 12px; text-transform: capitalize; }
+.admin-product-cat  { font-size: 11px; color: #888; margin-bottom: 6px; text-transform: capitalize; }
+.admin-product-desc {
+  font-size: 11px;
+  color: #aaa;
+  line-height: 1.5;
+  margin-bottom: 10px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
 
 .admin-product-actions {
   display: flex;
