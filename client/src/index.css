@@ -704,9 +704,20 @@ body {
   width: 90%;
   max-width: 480px;
   max-height: 90vh;
-  overflow-y: auto;
+  overflow: hidden;
   animation: slideUp 0.25s ease;
 }
+
+.product-modal-scroll {
+  max-height: 90vh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #f5a623 transparent;
+}
+
+.product-modal-scroll::-webkit-scrollbar       { width: 4px; }
+.product-modal-scroll::-webkit-scrollbar-track { background: transparent; }
+.product-modal-scroll::-webkit-scrollbar-thumb { background: #f5a623; border-radius: 4px; }
 
 .product-modal-img {
   width: 100%;
