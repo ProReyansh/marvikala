@@ -25,12 +25,6 @@ const CAT_LABEL = {
   rakhi: 'Rakhi', custom: 'Custom',
 };
 
-const MARQUEE_ITEMS = [
-  '✦ Handmade with Love', '✦ Crochet Flowers', '✦ Keychains',
-  '✦ Earrings', '✦ Laddu Gopal Dress', '✦ Custom Orders',
-  '✦ Ships from Mumbai', '✦ Shipping in Mumbai',
-  '✦ Hair Accessories', '✦ Jewellery', '✦ Rakhi',
-];
 
 export default function Home() {
   const [products, setProducts]               = useState([]);
@@ -76,8 +70,6 @@ export default function Home() {
     activeCategory === 'all'
       ? products
       : products.filter((p) => p.category === activeCategory);
-
-  const marqueeText = [...MARQUEE_ITEMS, ...MARQUEE_ITEMS];
 
   function ProductCard({ product }) {
     return (
@@ -189,13 +181,6 @@ export default function Home() {
               <div className="mosaic-tile mt7">🎨</div>
             </div>
           </section>
-
-          {/* MARQUEE */}
-          <div className="marquee-strip">
-            <div className="marquee-inner">
-              {marqueeText.map((t, i) => <span key={i}>{t}</span>)}
-            </div>
-          </div>
 
           {/* CATEGORIES */}
           <section className="section">

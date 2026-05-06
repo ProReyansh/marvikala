@@ -133,9 +133,12 @@ export default function AdminDashboard() {
     <div className="admin-page">
       {/* Admin Navbar */}
       <div className="admin-navbar">
-        <h1>Marvi<span>kala</span> Admin</h1>
+        <div className="admin-navbar-brand">
+          <img src="/logo.jpg" alt="Marvikala" className="admin-logo-icon" />
+          <h1>Marvi<span>kala</span> Admin</h1>
+        </div>
         <div className="admin-navbar-right">
-          <a href="/" target="_blank" rel="noreferrer" style={{ fontSize: 13, color: '#888', textDecoration: 'none' }}>
+          <a href="/" target="_blank" rel="noreferrer" className="admin-view-site">
             View Site →
           </a>
           <button className="btn-add" onClick={openAdd}>+ Add Product</button>

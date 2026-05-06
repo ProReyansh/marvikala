@@ -1,9 +1,21 @@
+import { useState } from 'react';
+
 export default function EnquireModal({ product, onClose }) {
+  const [closing, setClosing] = useState(false);
+
+  function handleClose() {
+    setClosing(true);
+    setTimeout(onClose, 230);
+  }
+
   if (!product) return null;
 
   return (
-    <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
-      <div className="modal">
+    <div
+      className={`modal-overlay${closing ? ' closing' : ''}`}
+      onClick={(e) => e.target === e.currentTarget && handleClose()}
+    >
+      <div className={`modal${closing ? ' closing' : ''}`}>
         <div className="modal-emoji">🛍️</div>
         <h3>Love this product?</h3>
         <p>
@@ -28,7 +40,7 @@ export default function EnquireModal({ product, onClose }) {
             <span>📸</span> DM on Instagram
           </a>
         </div>
-        <button className="modal-close" onClick={onClose}>
+        <button className="modal-close" onClick={handleClose}>
           ✕ Close
         </button>
       </div>

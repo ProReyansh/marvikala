@@ -2,7 +2,7 @@ export default function Footer() {
   return (
     <footer className="footer">
       <div className="navbar-logo">
-        <img src="/logo.svg" alt="Marvikala" className="navbar-logo-icon" />
+        <img src="/logo.jpg" alt="Marvikala" className="navbar-logo-icon" />
         <span className="footer-logo-text">
           Marvi<span>kala</span>
         </span>

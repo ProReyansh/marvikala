@@ -1,9 +1,20 @@
+import { useState } from 'react';
+
 export default function CustomOrderModal({ onClose }) {
+  const [closing, setClosing] = useState(false);
   const waMsg = encodeURIComponent("Hi! I'd like to place a custom crochet order.");
 
+  function handleClose() {
+    setClosing(true);
+    setTimeout(onClose, 230);
+  }
+
   return (
-    <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
-      <div className="modal">
+    <div
+      className={`modal-overlay${closing ? ' closing' : ''}`}
+      onClick={(e) => e.target === e.currentTarget && handleClose()}
+    >
+      <div className={`modal${closing ? ' closing' : ''}`}>
         <div className="modal-emoji">✨</div>
         <h3>Custom Order</h3>
         <p>
@@ -27,10 +38,10 @@ export default function CustomOrderModal({ onClose }) {
             rel="noreferrer"
           >
             <span>📸</span>
-            <span>Instagram @marvikala</span>
+            <span>@marvikala on Instagram</span>
           </a>
         </div>
-        <button className="modal-close" onClick={onClose}>✕ Close</button>
+        <button className="modal-close" onClick={handleClose}>✕ Close</button>
       </div>
     </div>
   );

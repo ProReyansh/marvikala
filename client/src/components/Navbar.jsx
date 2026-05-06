@@ -19,7 +19,7 @@ export default function Navbar({ searchQuery, onSearch }) {
   return (
     <nav className="navbar">
       <a href="/" className="navbar-logo" onClick={() => onSearch?.('')}>
-        <img src="/logo.svg" alt="Marvikala" className="navbar-logo-icon" />
+        <img src="/logo.jpg" alt="Marvikala" className="navbar-logo-icon" />
         <span className="navbar-logo-text">
           Marvi<span>kala</span>
         </span>
@@ -53,7 +53,7 @@ export default function Navbar({ searchQuery, onSearch }) {
         )}
       </form>
 
-      <ul className={`navbar-links ${menuOpen ? 'open' : ''}`}>
+      <ul className={`navbar-links${menuOpen ? ' open' : ''}`}>
         <li><a href="/" onClick={(e) => { e.preventDefault(); setMenuOpen(false); onSearch?.(''); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>Home</a></li>
         <li><a href="#products" onClick={(e) => { e.preventDefault(); scrollTo('products'); }}>Products</a></li>
         <li><a href="#custom" onClick={(e) => { e.preventDefault(); scrollTo('custom'); }}>Custom Order</a></li>
@@ -61,7 +61,7 @@ export default function Navbar({ searchQuery, onSearch }) {
       </ul>
 
       <button
-        className={`hamburger ${menuOpen ? 'open' : ''}`}
+        className={`hamburger${menuOpen ? ' open' : ''}`}
         onClick={() => setMenuOpen((v) => !v)}
         aria-label="Menu"
       >

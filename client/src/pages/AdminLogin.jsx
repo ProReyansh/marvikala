@@ -29,7 +29,7 @@ export default function AdminLogin() {
   return (
     <div className="admin-login-page">
       <div className="admin-login-box">
-        <img src="/logo.svg" alt="Marvikala" style={{ width: 56, height: 56, borderRadius: '50%', margin: '0 auto 16px', display: 'block' }} />
+        <img src="/logo.jpg" alt="Marvikala" style={{ width: 56, height: 56, borderRadius: '50%', margin: '0 auto 16px', display: 'block', objectFit: 'cover' }} />
         <h1>Marvikala Admin</h1>
         <p className="subtitle">Sign in to manage your products</p>
 
