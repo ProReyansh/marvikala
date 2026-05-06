@@ -665,6 +665,19 @@ body {
 .footer-logo-text span  { color: #f5a623; }
 .footer a { color: #f5a623; text-decoration: none; font-weight: 600; }
 
+/* ── Hide scrollbars on all modals ── */
+.modal,
+.product-modal,
+.admin-modal {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.modal::-webkit-scrollbar,
+.product-modal::-webkit-scrollbar,
+.admin-modal::-webkit-scrollbar {
+  display: none;
+}
+
 /* ── Enquire Modal ── */
 .modal-overlay {
   position: fixed;
