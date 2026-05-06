@@ -1028,6 +1028,9 @@ body {
   animation: fadeIn 0.2s ease;
 }
 
+.admin-modal-overlay.closing { animation: fadeOut 0.23s ease forwards; }
+.admin-modal.closing         { animation: slideDown 0.23s ease forwards; }
+
 .admin-modal {
   background: white;
   border-radius: 20px;

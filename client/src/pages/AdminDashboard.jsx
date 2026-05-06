@@ -31,11 +31,17 @@ export default function AdminDashboard() {
   const [loading, setLoading]       = useState(true);
   const [filterCat, setFilterCat]   = useState('all');
   const [modalOpen, setModalOpen]   = useState(false);
+  const [modalClosing, setModalClosing] = useState(false);
   const [editing, setEditing]       = useState(null);
   const [form, setForm]             = useState(EMPTY_FORM);
   const [preview, setPreview]       = useState('');
   const [saving, setSaving]         = useState(false);
   const [error, setError]           = useState('');
+
+  function closeModal() {
+    setModalClosing(true);
+    setTimeout(() => { setModalOpen(false); setModalClosing(false); }, 230);
+  }
 
   async function fetchProducts() {
     try {
@@ -104,7 +110,7 @@ export default function AdminDashboard() {
         await axios.post('/api/products', data, { headers: authHeader() });
       }
 
-      setModalOpen(false);
+      closeModal();
       fetchProducts();
     } catch (err) {
       setError(err.response?.data?.message || 'Something went wrong.');
@@ -231,8 +237,8 @@ export default function AdminDashboard() {
 
       {/* Add / Edit Modal */}
       {modalOpen && (
-        <div className="admin-modal-overlay" onClick={(e) => e.target === e.currentTarget && setModalOpen(false)}>
-          <div className="admin-modal">
+        <div className={`admin-modal-overlay${modalClosing ? ' closing' : ''}`} onClick={(e) => e.target === e.currentTarget && closeModal()}>
+          <div className={`admin-modal${modalClosing ? ' closing' : ''}`}>
             <h2>{editing ? 'Edit Product' : 'Add New Product'}</h2>
 
             {error && <div className="error-msg">{error}</div>}
@@ -316,7 +322,7 @@ export default function AdminDashboard() {
               </div>
 
               <div className="modal-actions">
-                <button type="button" className="btn-cancel" onClick={() => setModalOpen(false)}>
+                <button type="button" className="btn-cancel" onClick={closeModal}>
                   Cancel
                 </button>
                 <button type="submit" className="btn-save" disabled={saving}>
