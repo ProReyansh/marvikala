@@ -3,6 +3,7 @@ import axios from 'axios';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import EnquireModal from '../components/EnquireModal';
+import ProductModal from '../components/ProductModal';
 import CustomOrderModal from '../components/CustomOrderModal';
 
 const CATEGORIES = [
@@ -31,6 +32,7 @@ export default function Home() {
   const [loading, setLoading]                 = useState(true);
   const [activeCategory, setActiveCategory]   = useState('all');
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [enquireProduct, setEnquireProduct]   = useState(null);
   const [customModalOpen, setCustomModalOpen] = useState(false);
   const [searchQuery, setSearchQuery]         = useState('');
   const [bouncingCat, setBouncingCat]         = useState(null);
@@ -92,7 +94,11 @@ export default function Home() {
             <div className="product-desc">{product.description}</div>
           )}
           <div className="product-cat">{CAT_LABEL[product.category] || product.category}</div>
-          <button className="enquire-btn" disabled={!product.inStock}>
+          <button
+            className="enquire-btn"
+            disabled={!product.inStock}
+            onClick={(e) => { e.stopPropagation(); product.inStock && setEnquireProduct(product); }}
+          >
             {product.inStock ? 'Enquire Now' : 'Out of Stock'}
           </button>
         </div>
@@ -270,7 +276,11 @@ export default function Home() {
       <Footer />
 
       {selectedProduct && (
-        <EnquireModal product={selectedProduct} onClose={() => setSelectedProduct(null)} />
+        <ProductModal product={selectedProduct} onClose={() => setSelectedProduct(null)} onEnquire={() => setEnquireProduct(selectedProduct)} />
+      )}
+
+      {enquireProduct && (
+        <EnquireModal product={enquireProduct} onClose={() => setEnquireProduct(null)} />
       )}
 
       {customModalOpen && (
