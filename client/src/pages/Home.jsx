@@ -75,7 +75,7 @@ export default function Home() {
     return (
       <div
         className="product-card"
-        onClick={() => product.inStock && setSelectedProduct(product)}
+        onClick={() => setSelectedProduct(product)}
       >
         <div className="product-img">
           {product.image ? (
