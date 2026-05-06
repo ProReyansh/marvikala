@@ -987,6 +987,7 @@ body {
 .admin-product-actions {
   display: flex;
   gap: 8px;
+  flex-wrap: nowrap;
 }
 
 .btn-edit,
@@ -1000,6 +1001,8 @@ body {
   cursor: pointer;
   font-family: 'Poppins', sans-serif;
   transition: opacity 0.15s;
+  white-space: nowrap;
+  min-width: 0;
 }
 
 .btn-edit   { background: #f0f9ff; color: #0369a1; }
