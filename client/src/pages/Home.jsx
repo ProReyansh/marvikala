@@ -87,7 +87,7 @@ export default function Home() {
       >
         <div className="product-img">
           {product.image ? (
-            <img src={`/uploads/${product.image}`} alt={product.name} />
+            <img src={product.image.startsWith('http') ? product.image : `/uploads/${product.image}`} alt={product.name} />
           ) : (
             <span>🧶</span>
           )}

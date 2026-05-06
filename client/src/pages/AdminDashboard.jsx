@@ -73,7 +73,7 @@ export default function AdminDashboard() {
       featured: product.featured,
       image: null,
     });
-    setPreview(product.image ? `/uploads/${product.image}` : '');
+    setPreview(product.image ? (product.image.startsWith('http') ? product.image : `/uploads/${product.image}`) : '');
     setError('');
     setModalOpen(true);
   }
@@ -198,7 +198,7 @@ export default function AdminDashboard() {
                 <div key={product._id} className="admin-product-card">
                   <div className="admin-product-img">
                     {product.image
-                      ? <img src={`/uploads/${product.image}`} alt={product.name} />
+                      ? <img src={product.image.startsWith('http') ? product.image : `/uploads/${product.image}`} alt={product.name} />
                       : <span>🧶</span>
                     }
                     {product.featured && <span className="featured-badge">⭐ Featured</span>}

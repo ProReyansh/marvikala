@@ -1,21 +1,24 @@
 const express = require('express');
 const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const cloudinary = require('cloudinary').v2;
 const Product = require('../models/Product');
 const authMiddleware = require('../middleware/auth');
 
 const router = express.Router();
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const uploadDir = path.join(__dirname, '../uploads');
-    if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
-    cb(null, uploadDir);
-  },
-  filename: (req, file, cb) => {
-    const unique = Date.now() + '-' + Math.round(Math.random() * 1e9);
-    cb(null, unique + path.extname(file.originalname));
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key:    process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: 'marvikala',
+    allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'gif'],
+    transformation: [{ width: 800, height: 800, crop: 'limit' }],
   },
 });
 
@@ -28,7 +31,7 @@ const upload = multer({
   },
 });
 
-// Public: get all products (optional category filter)
+// Public: get all products
 router.get('/', async (req, res) => {
   try {
     const filter = {};
@@ -48,7 +51,7 @@ router.post('/', authMiddleware, upload.single('image'), async (req, res) => {
       name,
       description,
       category,
-      image: req.file ? req.file.filename : '',
+      image: req.file ? req.file.path : '',
       inStock: inStock === 'true' || inStock === true,
       featured: featured === 'true' || featured === true,
     });
@@ -70,8 +73,15 @@ router.put('/:id', authMiddleware, upload.single('image'), async (req, res) => {
       inStock: inStock === 'true' || inStock === true,
       featured: featured === 'true' || featured === true,
     };
-    if (req.file) update.image = req.file.filename;
-
+    if (req.file) {
+      update.image = req.file.path;
+      // delete old image from Cloudinary
+      const old = await Product.findById(req.params.id);
+      if (old?.image && old.image.includes('cloudinary')) {
+        const publicId = old.image.split('/').slice(-2).join('/').replace(/\.[^/.]+$/, '');
+        await cloudinary.uploader.destroy(publicId).catch(() => {});
+      }
+    }
     const product = await Product.findByIdAndUpdate(req.params.id, update, { new: true });
     if (!product) return res.status(404).json({ message: 'Product not found' });
     res.json(product);
@@ -85,10 +95,9 @@ router.delete('/:id', authMiddleware, async (req, res) => {
   try {
     const product = await Product.findByIdAndDelete(req.params.id);
     if (!product) return res.status(404).json({ message: 'Product not found' });
-
-    if (product.image) {
-      const imgPath = path.join(__dirname, '../uploads', product.image);
-      if (fs.existsSync(imgPath)) fs.unlinkSync(imgPath);
+    if (product.image && product.image.includes('cloudinary')) {
+      const publicId = product.image.split('/').slice(-2).join('/').replace(/\.[^/.]+$/, '');
+      await cloudinary.uploader.destroy(publicId).catch(() => {});
     }
     res.json({ message: 'Product deleted' });
   } catch (err) {
