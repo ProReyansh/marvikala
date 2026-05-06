@@ -1,0 +1,24 @@
+[build]
+  base    = "client"
+  publish = "client/dist"
+  command = "npm run build"
+
+# Proxy /api calls to the Render backend
+[[redirects]]
+  from   = "/api/*"
+  to     = "https://marvikala-api.onrender.com/api/:splat"
+  status = 200
+  force  = true
+
+# Proxy /uploads (product images) to Render
+[[redirects]]
+  from   = "/uploads/*"
+  to     = "https://marvikala-api.onrender.com/uploads/:splat"
+  status = 200
+  force  = true
+
+# SPA fallback — all routes serve index.html (needed for React Router)
+[[redirects]]
+  from   = "/*"
+  to     = "/index.html"
+  status = 200
