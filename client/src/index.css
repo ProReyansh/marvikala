@@ -1156,13 +1156,24 @@ body {
 .admin-modal {
   background: white;
   border-radius: 20px;
-  padding: 36px;
   width: 100%;
   max-width: 500px;
   max-height: 90vh;
-  overflow-y: auto;
+  overflow: hidden;
   animation: slideUp 0.25s ease;
 }
+
+.admin-modal-scroll {
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 36px;
+  scrollbar-width: thin;
+  scrollbar-color: #f5a623 transparent;
+}
+
+.admin-modal-scroll::-webkit-scrollbar       { width: 4px; }
+.admin-modal-scroll::-webkit-scrollbar-track { background: transparent; }
+.admin-modal-scroll::-webkit-scrollbar-thumb { background: #f5a623; border-radius: 4px; }
 
 .admin-modal h2 { font-size: 20px; font-weight: 800; margin-bottom: 24px; }
 
@@ -1477,7 +1488,7 @@ body {
   .stat-card        { padding: 16px; }
   .stat-card .stat-value { font-size: 22px; }
   .admin-grid       { grid-template-columns: 1fr; }
-  .admin-modal      { padding: 24px 20px; }
+  .admin-modal-scroll { padding: 24px 20px; }
 }
 
 /* ── Very small mobile (up to 360px) ── */

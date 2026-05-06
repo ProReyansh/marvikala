@@ -239,6 +239,7 @@ export default function AdminDashboard() {
       {modalOpen && (
         <div className={`admin-modal-overlay${modalClosing ? ' closing' : ''}`} onClick={(e) => e.target === e.currentTarget && closeModal()}>
           <div className={`admin-modal${modalClosing ? ' closing' : ''}`}>
+            <div className="admin-modal-scroll">
             <h2>{editing ? 'Edit Product' : 'Add New Product'}</h2>
 
             {error && <div className="error-msg">{error}</div>}
@@ -330,6 +331,7 @@ export default function AdminDashboard() {
                 </button>
               </div>
             </form>
+            </div>
           </div>
         </div>
       )}
