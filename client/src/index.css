@@ -1315,13 +1315,14 @@ body {
   .modal-btn span:last-child { word-break: break-word; }
 
   /* Admin */
-  .admin-navbar     { padding: 0 14px; height: 56px; }
-  .admin-logo-icon  { width: 28px; height: 28px; }
-  .admin-navbar h1  { font-size: 14px; }
-  .admin-view-site  { display: none; }
-  .admin-navbar-right { gap: 8px; }
-  .btn-add          { padding: 7px 12px; font-size: 12px; }
-  .btn-logout       { padding: 6px 10px; font-size: 12px; }
+  .admin-navbar       { padding: 0 12px; height: 56px; }
+  .admin-logo-icon    { width: 26px; height: 26px; }
+  .admin-navbar-brand { gap: 7px; flex-shrink: 0; }
+  .admin-navbar h1    { font-size: 13px; white-space: nowrap; }
+  .admin-view-site    { display: none; }
+  .admin-navbar-right { gap: 6px; }
+  .btn-add            { padding: 5px 10px; font-size: 11px; }
+  .btn-logout         { padding: 5px 9px; font-size: 11px; }
   .admin-content    { padding: 16px; }
   .admin-stats      { grid-template-columns: repeat(2, 1fr); gap: 10px; }
   .stat-card        { padding: 16px; }
