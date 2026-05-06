@@ -1024,6 +1024,10 @@ body {
   padding: 20px;
 }
 
+.admin-modal-overlay {
+  animation: fadeIn 0.2s ease;
+}
+
 .admin-modal {
   background: white;
   border-radius: 20px;
@@ -1032,6 +1036,7 @@ body {
   max-width: 500px;
   max-height: 90vh;
   overflow-y: auto;
+  animation: slideUp 0.25s ease;
 }
 
 .admin-modal h2 { font-size: 20px; font-weight: 800; margin-bottom: 24px; }
