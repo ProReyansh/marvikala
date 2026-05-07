@@ -26,23 +26,34 @@ const CAT_LABEL = {
   rakhi: 'Rakhi', custom: 'Custom',
 };
 
-// Read/write search query to sessionStorage so it persists through back-navigation
+// sessionStorage helpers — persist search query and product cache across navigation
 function getSavedSearch() {
   try { return sessionStorage.getItem('mk_search') || ''; } catch { return ''; }
 }
 function saveSearch(q) {
   try { sessionStorage.setItem('mk_search', q); } catch {}
 }
+function getCachedProducts() {
+  try {
+    const c = sessionStorage.getItem('mk_products');
+    return c ? JSON.parse(c) : [];
+  } catch { return []; }
+}
+function setCachedProducts(list) {
+  try { sessionStorage.setItem('mk_products', JSON.stringify(list)); } catch {}
+}
 
 export default function Home() {
   const navigate = useNavigate();
-  const [products, setProducts]             = useState([]);
-  const [loading, setLoading]               = useState(true);
+
+  // Load from cache immediately — no spinner on back-navigation
+  const [products, setProducts]       = useState(getCachedProducts);
+  const [loading, setLoading]         = useState(() => getCachedProducts().length === 0);
   const [activeCategory, setActiveCategory] = useState('all');
   const [enquireProduct, setEnquireProduct] = useState(null);
   const [customModalOpen, setCustomModalOpen] = useState(false);
-  const [searchQuery, setSearchQuery]       = useState(getSavedSearch);
-  const [bouncingCat, setBouncingCat]       = useState(null);
+  const [searchQuery, setSearchQuery] = useState(getSavedSearch);
+  const [bouncingCat, setBouncingCat] = useState(null);
 
   function handleSearch(q) {
     setSearchQuery(q);
@@ -50,10 +61,13 @@ export default function Home() {
   }
 
   useEffect(() => {
-    axios
-      .get('/api/products')
-      .then((res) => setProducts(res.data))
-      .catch(() => setProducts([]))
+    // Always re-fetch in background to get fresh data
+    axios.get('/api/products')
+      .then((res) => {
+        setProducts(res.data);
+        setCachedProducts(res.data);
+      })
+      .catch(() => {})
       .finally(() => setLoading(false));
   }, []);
 
@@ -94,11 +108,7 @@ export default function Home() {
         onClick={() => navigate(`/product/${product._id}`, { state: { product } })}
       >
         <div className="product-img">
-          {imgSrc ? (
-            <img src={imgSrc} alt={product.name} />
-          ) : (
-            <span>🧶</span>
-          )}
+          {imgSrc ? <img src={imgSrc} alt={product.name} /> : <span>🧶</span>}
           {(product.bestseller || product.featured) && (
             <span className="product-badge bestseller-badge">🏆 Bestseller</span>
           )}
@@ -106,9 +116,7 @@ export default function Home() {
         </div>
         <div className="product-info">
           <div className="product-name">{product.name}</div>
-          {product.description && (
-            <div className="product-desc">{product.description}</div>
-          )}
+          {product.description && <div className="product-desc">{product.description}</div>}
           <div className="product-cat">{CAT_LABEL[product.category] || product.category}</div>
           <button
             className="enquire-btn"
@@ -136,7 +144,7 @@ export default function Home() {
               </span>
               <span className="search-results-query">"{searchQuery}"</span>
             </div>
-            <button className="search-results-clear" onClick={() => { handleSearch(''); }}>
+            <button className="search-results-clear" onClick={() => handleSearch('')}>
               ✕ Clear search
             </button>
           </div>
@@ -177,18 +185,12 @@ export default function Home() {
                 every piece made with love from Mumbai, just for you.
               </p>
               <div className="hero-btns">
-                <a
-                  href="#products"
-                  className="btn-gradient btn-animated"
-                  onClick={(e) => { e.preventDefault(); document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' }); }}
-                >
+                <a href="#products" className="btn-gradient btn-animated"
+                  onClick={(e) => { e.preventDefault(); document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' }); }}>
                   Shop Now 🛍️
                 </a>
-                <a
-                  href="#custom"
-                  className="btn-light btn-animated"
-                  onClick={(e) => { e.preventDefault(); document.getElementById('custom')?.scrollIntoView({ behavior: 'smooth' }); }}
-                >
+                <a href="#custom" className="btn-light btn-animated"
+                  onClick={(e) => { e.preventDefault(); document.getElementById('custom')?.scrollIntoView({ behavior: 'smooth' }); }}>
                   Custom Order →
                 </a>
               </div>
@@ -241,9 +243,7 @@ export default function Home() {
                     <p>No products in this category yet — check back soon!</p>
                   </div>
                 ) : (
-                  filtered.map((product) => (
-                    <ProductCard key={product._id} product={product} />
-                  ))
+                  filtered.map((product) => <ProductCard key={product._id} product={product} />)
                 )}
               </div>
             )}
@@ -257,16 +257,14 @@ export default function Home() {
                 <p>Most loved picks — order yours before they're gone!</p>
               </div>
               <div className="products-grid">
-                {bestsellers.map((product) => (
-                  <ProductCard key={product._id} product={product} />
-                ))}
+                {bestsellers.map((product) => <ProductCard key={product._id} product={product} />)}
               </div>
             </section>
           )}
         </>
       )}
 
-      {/* CUSTOM ORDER BANNER + CONTACT + ABOUT — hidden during search */}
+      {/* CUSTOM ORDER → OUR STORY → CONTACT (hidden during search) */}
       {!q && (
         <>
           <div className="custom-banner" id="custom">
@@ -283,26 +281,7 @@ export default function Home() {
             </button>
           </div>
 
-          <section className="contact-section" id="contact">
-            <div className="contact-head">
-              <h2>Say Hello! 👋</h2>
-              <p>Place an order, ask about a custom piece, or just send us a message</p>
-            </div>
-            <div className="contact-cards">
-              <a href="https://wa.me/919769238160" className="contact-card wa-card" target="_blank" rel="noreferrer">
-                <div className="contact-icon">📱</div>
-                <h3>WhatsApp</h3>
-                <p>+91 97692 38160</p>
-              </a>
-              <a href="https://instagram.com/marvikala" className="contact-card ig-card" target="_blank" rel="noreferrer">
-                <div className="contact-icon">📸</div>
-                <h3>Instagram</h3>
-                <p>@marvikala</p>
-              </a>
-            </div>
-          </section>
-
-          {/* OUR STORY — below custom order & contact */}
+          {/* OUR STORY — below custom order */}
           <section className="about-section" id="about">
             <div className="about-content">
               <div className="about-text">
@@ -343,6 +322,26 @@ export default function Home() {
               </div>
             </div>
           </section>
+
+          {/* SAY HELLO — below our story */}
+          <section className="contact-section" id="contact">
+            <div className="contact-head">
+              <h2>Say Hello! 👋</h2>
+              <p>Place an order, ask about a custom piece, or just send us a message</p>
+            </div>
+            <div className="contact-cards">
+              <a href="https://wa.me/919769238160" className="contact-card wa-card" target="_blank" rel="noreferrer">
+                <div className="contact-icon">📱</div>
+                <h3>WhatsApp</h3>
+                <p>+91 97692 38160</p>
+              </a>
+              <a href="https://instagram.com/marvikala" className="contact-card ig-card" target="_blank" rel="noreferrer">
+                <div className="contact-icon">📸</div>
+                <h3>Instagram</h3>
+                <p>@marvikala</p>
+              </a>
+            </div>
+          </section>
         </>
       )}
 
@@ -351,7 +350,6 @@ export default function Home() {
       {enquireProduct && (
         <EnquireModal product={enquireProduct} onClose={() => setEnquireProduct(null)} />
       )}
-
       {customModalOpen && (
         <CustomOrderModal onClose={() => setCustomModalOpen(false)} />
       )}

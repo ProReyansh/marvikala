@@ -172,7 +172,7 @@ body {
 }
 
 .search-results-page {
-  min-height: 60vh;
+  min-height: calc(100vh - 66px - 80px);
   padding: 40px 48px 68px;
   background: #fffdf8;
   animation: searchPageIn 0.3s ease;
@@ -1417,8 +1417,9 @@ body {
   .navbar-logo-icon { width: 32px; height: 32px; }
   .search-input     { font-size: 12px; padding: 9px 12px; }
   .search-btn       { width: 36px; height: 36px; }
-  .navbar-links     { top: 58px; }
   .search-results-page { padding: 24px 18px 36px; }
+  /* navbar-links drop position updated for two-row mobile navbar */
+  .navbar-links     { top: 114px; }
   .search-results-query { font-size: 18px; }
 
   /* Hero — centered on mobile with mini emoji row */
@@ -1861,6 +1862,30 @@ body {
   gap: 4px;
 }
 
+/* ── Similar products section (ProductPage) ── */
+.pp-similar {
+  margin-top: 48px;
+  padding-top: 40px;
+  border-top: 2px solid #f5f5f5;
+}
+
+.pp-similar-header {
+  margin-bottom: 28px;
+}
+
+.pp-similar-header h2 {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: #1a1a1a;
+  margin-bottom: 6px;
+}
+
+.pp-similar-header p {
+  font-size: 14px;
+  color: #888;
+}
+
 /* ── Multi-image upload grid (admin) ── */
 .multi-img-grid {
   display: grid;
@@ -1947,39 +1972,46 @@ body {
   .product-page-name    { font-size: 24px; }
 }
 
-/* Mobile (≤599px): search toggle + improved mobile navbar */
+/* ── Two-row mobile navbar (≤599px) ── */
 @media (max-width: 599px) {
-  /* Show search toggle inside mobile-icons */
-  .navbar-search-toggle { display: flex; }
+  /* Two-row layout: row1 = logo + hamburger, row2 = search bar */
+  .navbar {
+    flex-wrap: wrap;
+    height: auto;
+    min-height: 56px;
+    padding: 10px 16px 10px;
+    gap: 0;
+    row-gap: 8px;
+    align-items: center;
+  }
 
-  /* Hide desktop search bar; show as animated dropdown when active */
+  .navbar-logo {
+    flex: 1;
+    order: 1;
+  }
+
+  .navbar-mobile-icons {
+    order: 2;
+  }
+
+  /* Search bar always visible as second row */
   .navbar-search {
-    display: none;
-    position: absolute;
-    top: 58px;
-    left: 0;
-    right: 0;
+    display: flex;
+    order: 3;
+    width: 100%;
+    flex-basis: 100%;
     max-width: none;
-    border-radius: 0;
-    border: none;
-    border-top: 1px solid #f0f0f0;
-    border-bottom: 2px solid #f5a623;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.10);
-    z-index: 98;
-    padding: 6px 0;
+    border: 2px solid #e5e5e5;
+    border-radius: 50px;
+    box-shadow: none;
+    position: static;
+    padding: 0;
+    z-index: 1;
     background: white;
   }
 
-  @keyframes mobileSearchIn {
-    from { opacity: 0; transform: translateY(-6px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  .navbar.search-active .navbar-search {
-    display: flex;
-    animation: mobileSearchIn 0.18s ease;
-  }
-  .navbar.search-active .navbar-search-toggle { display: none; }
+  /* Scroll offset for two-row navbar height (~114px total) */
+  [id] { scroll-margin-top: 120px; }
 
   /* About section mobile */
   .about-section     { padding: 36px 18px; }
@@ -1996,4 +2028,8 @@ body {
   .product-page-contact-btn { font-size: 12px; padding: 9px 12px; }
   .product-page-enquire    { font-size: 13px; padding: 12px; }
   .product-page-main-img   { aspect-ratio: 4/3; }
+
+  /* Similar section mobile */
+  .pp-similar       { padding: 28px 0 0; }
+  .pp-similar-header h2 { font-size: 22px; }
 }

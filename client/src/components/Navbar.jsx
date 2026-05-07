@@ -2,12 +2,10 @@ import { useState, useRef } from 'react';
 
 export default function Navbar({ searchQuery, onSearch }) {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
   const inputRef = useRef();
 
   function scrollTo(id) {
     setMenuOpen(false);
-    onSearch?.('');
     const el = document.getElementById(id);
     if (el) el.scrollIntoView({ behavior: 'smooth' });
   }
@@ -17,37 +15,19 @@ export default function Navbar({ searchQuery, onSearch }) {
     inputRef.current?.blur();
   }
 
-  function openMobileSearch() {
-    setSearchOpen(true);
-    setTimeout(() => inputRef.current?.focus(), 60);
-  }
-
-  function closeMobileSearch() {
-    setSearchOpen(false);
-    onSearch?.('');
-  }
-
-  const mobileSearchActive = searchOpen || !!searchQuery;
-
   return (
-    <nav className={`navbar${mobileSearchActive ? ' search-active' : ''}`}>
-      <a
-        href="/"
-        className="navbar-logo"
-        onClick={() => { onSearch?.(''); setSearchOpen(false); }}
-      >
+    <nav className="navbar">
+      <a href="/" className="navbar-logo" onClick={() => onSearch?.('')}>
         <img src="/logo.jpg" alt="Marvikala" className="navbar-logo-icon" />
-        <span className="navbar-logo-text">
-          Marvi<span>kala</span>
-        </span>
+        <span className="navbar-logo-text">Marvi<span>kala</span></span>
       </a>
 
-      {/* Search bar — always on desktop, drops below on mobile when active */}
+      {/* Search bar — always visible on all screen sizes */}
       <form className="navbar-search" onSubmit={handleSearchSubmit}>
         <input
           ref={inputRef}
           type="text"
-          placeholder="Search products…"
+          placeholder="Search crochet products…"
           value={searchQuery}
           onChange={(e) => onSearch?.(e.target.value)}
           className="search-input"
@@ -58,13 +38,6 @@ export default function Navbar({ searchQuery, onSearch }) {
             className="search-btn search-btn-clear"
             onClick={() => { onSearch?.(''); inputRef.current?.focus(); }}
             aria-label="Clear search"
-          >✕</button>
-        ) : mobileSearchActive ? (
-          <button
-            type="button"
-            className="search-btn search-btn-clear"
-            onClick={closeMobileSearch}
-            aria-label="Close search"
           >✕</button>
         ) : (
           <button type="submit" className="search-btn search-btn-icon" aria-label="Search">
@@ -77,31 +50,19 @@ export default function Navbar({ searchQuery, onSearch }) {
 
       <ul className={`navbar-links${menuOpen ? ' open' : ''}`}>
         <li>
-          <a href="/" onClick={(e) => { e.preventDefault(); setMenuOpen(false); onSearch?.(''); setSearchOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
+          <a href="/" onClick={(e) => { e.preventDefault(); setMenuOpen(false); onSearch?.(''); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
             Home
           </a>
         </li>
-        <li><a href="#products" onClick={(e) => { e.preventDefault(); scrollTo('products'); }}>Products</a></li>
-        <li><a href="#custom"   onClick={(e) => { e.preventDefault(); scrollTo('custom'); }}>Custom Order</a></li>
-        <li><a href="#about"    onClick={(e) => { e.preventDefault(); scrollTo('about'); }}>Our Story</a></li>
-        <li><a href="#contact"  onClick={(e) => { e.preventDefault(); scrollTo('contact'); }} className="navbar-cta">Contact Us</a></li>
+        <li><a href="#products"    onClick={(e) => { e.preventDefault(); scrollTo('products'); }}>Products</a></li>
+        <li><a href="#bestsellers" onClick={(e) => { e.preventDefault(); scrollTo('bestsellers'); }}>Bestsellers</a></li>
+        <li><a href="#custom"      onClick={(e) => { e.preventDefault(); scrollTo('custom'); }}>Custom Order</a></li>
+        <li><a href="#about"       onClick={(e) => { e.preventDefault(); scrollTo('about'); }}>Our Story</a></li>
+        <li><a href="#contact"     onClick={(e) => { e.preventDefault(); scrollTo('contact'); }} className="navbar-cta">Contact Us</a></li>
       </ul>
 
-      {/* Right-side icons on mobile */}
+      {/* Hamburger — only visible on mobile via .navbar-mobile-icons */}
       <div className="navbar-mobile-icons">
-        {/* Search toggle — hidden when search is open */}
-        {!mobileSearchActive && (
-          <button
-            className="navbar-search-toggle"
-            onClick={openMobileSearch}
-            aria-label="Open search"
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
-            </svg>
-          </button>
-        )}
-
         <button
           className={`hamburger${menuOpen ? ' open' : ''}`}
           onClick={() => setMenuOpen((v) => !v)}

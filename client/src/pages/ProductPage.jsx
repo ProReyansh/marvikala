@@ -17,12 +17,19 @@ function imgUrl(src) {
   return src.startsWith('http') ? src : `/uploads/${src}`;
 }
 
+function getCachedProducts() {
+  try {
+    const c = sessionStorage.getItem('mk_products');
+    return c ? JSON.parse(c) : [];
+  } catch { return []; }
+}
+
 export default function ProductPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Pre-populate from router state so the page shows instantly
+  // Pre-populate from router state so page shows instantly, no spinner
   const [product, setProduct]       = useState(location.state?.product || null);
   const [loading, setLoading]       = useState(!location.state?.product);
   const [activeImg, setActiveImg]   = useState(0);
@@ -30,11 +37,25 @@ export default function ProductPage() {
   const [enquireOpen, setEnquireOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
+  // Similar products from cache (instant, no extra API call)
+  const [similar, setSimilar] = useState(() => {
+    if (!location.state?.product) return [];
+    const all = getCachedProducts();
+    return all
+      .filter(p => p.category === location.state.product.category && p._id !== location.state.product._id)
+      .slice(0, 4);
+  });
+
   useEffect(() => {
     axios.get(`/api/products/${id}`)
       .then(res => {
         setProduct(res.data);
         document.title = `${res.data.name} — Marvikala`;
+        // Update similar from cache using fresh category
+        const all = getCachedProducts();
+        setSimilar(
+          all.filter(p => p.category === res.data.category && p._id !== res.data._id).slice(0, 4)
+        );
       })
       .catch(() => { if (!product) navigate('/'); })
       .finally(() => setLoading(false));
@@ -46,9 +67,52 @@ export default function ProductPage() {
     setImgAnimKey(k => k + 1);
   }
 
+  function handleSearch(q) {
+    setSearchQuery(q);
+    try { sessionStorage.setItem('mk_search', q); } catch {}
+  }
+
+  // Mini product card reused for similar section
+  function SimilarCard({ p }) {
+    const imgSrc = (() => {
+      const imgs = p.images?.length > 0 ? p.images : (p.image ? [p.image] : []);
+      if (!imgs[0]) return null;
+      return imgs[0].startsWith('http') ? imgs[0] : `/uploads/${imgs[0]}`;
+    })();
+
+    return (
+      <div
+        className="product-card"
+        onClick={() => {
+          navigate(`/product/${p._id}`, { state: { product: p } });
+        }}
+      >
+        <div className="product-img">
+          {imgSrc ? <img src={imgSrc} alt={p.name} /> : <span>🧶</span>}
+          {(p.bestseller || p.featured) && (
+            <span className="product-badge bestseller-badge">🏆 Bestseller</span>
+          )}
+          {!p.inStock && <div className="out-of-stock-overlay">Out of Stock</div>}
+        </div>
+        <div className="product-info">
+          <div className="product-name">{p.name}</div>
+          {p.description && <div className="product-desc">{p.description}</div>}
+          <div className="product-cat">{CAT_LABEL[p.category] || p.category}</div>
+          <button
+            className="enquire-btn"
+            disabled={!p.inStock}
+            onClick={(e) => { e.stopPropagation(); p.inStock && navigate(`/product/${p._id}`, { state: { product: p } }); }}
+          >
+            {p.inStock ? 'View Product' : 'Out of Stock'}
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   if (loading) return (
     <>
-      <Navbar searchQuery={searchQuery} onSearch={setSearchQuery} />
+      <Navbar searchQuery={searchQuery} onSearch={handleSearch} />
       <div style={{ minHeight: 'calc(100vh - 66px - 80px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <div className="spinner" />
       </div>
@@ -62,7 +126,7 @@ export default function ProductPage() {
 
   return (
     <>
-      <Navbar searchQuery={searchQuery} onSearch={setSearchQuery} />
+      <Navbar searchQuery={searchQuery} onSearch={handleSearch} />
 
       <div className="product-page">
         <button className="product-page-back" onClick={() => navigate(-1)}>
@@ -70,7 +134,6 @@ export default function ProductPage() {
         </button>
 
         <div className="product-page-layout">
-
           {/* Image Gallery */}
           <div className="product-page-gallery">
             <div className="product-page-main-img">
@@ -124,7 +187,6 @@ export default function ProductPage() {
             {product.inStock ? (
               <>
                 <p className="product-page-cta">Interested? Reach out to place your order!</p>
-
                 <div className="product-page-action-row">
                   <a
                     href={`https://wa.me/919769238160?text=Hi! I'm interested in: ${encodeURIComponent(product.name)}`}
@@ -143,7 +205,6 @@ export default function ProductPage() {
                     <span>📸</span> Instagram
                   </a>
                 </div>
-
                 <button className="product-page-enquire" onClick={() => setEnquireOpen(true)}>
                   Enquire Now
                 </button>
@@ -164,6 +225,19 @@ export default function ProductPage() {
             )}
           </div>
         </div>
+
+        {/* Similar Products — full width below the main layout */}
+        {similar.length > 0 && (
+          <div className="pp-similar">
+            <div className="pp-similar-header">
+              <h2>Similar Results</h2>
+              <p>More from {CAT_LABEL[product.category] || product.category}</p>
+            </div>
+            <div className="products-grid">
+              {similar.map(p => <SimilarCard key={p._id} p={p} />)}
+            </div>
+          </div>
+        )}
       </div>
 
       <Footer />
