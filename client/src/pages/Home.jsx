@@ -54,18 +54,39 @@ function setCachedProducts(list) {
   try { sessionStorage.setItem('mk_products', JSON.stringify(list)); } catch {}
 }
 
+const STATIC_REVIEWS = [
+  {
+    id: 1,
+    text: "Absolutely loved the crochet flowers! They're so beautifully made — you can really feel the care and craft in every stitch. Perfect gift.",
+    author: "Priya S.",
+    location: "Mumbai",
+  },
+  {
+    id: 2,
+    text: "Ordered a custom Laddu Gopal dress and it was stunning. The colours were exactly what I wanted. Will definitely order again!",
+    author: "Anita M.",
+    location: "Mumbai",
+  },
+  {
+    id: 3,
+    text: "The keychains are so adorable and sturdy. Everyone at the office wanted one! Great quality for the price. Highly recommend.",
+    author: "Sneha R.",
+    location: "Thane",
+  },
+];
+
 export default function Home() {
   const navigate = useNavigate();
   const location = useLocation();
 
   // Load from cache immediately — no spinner on back-navigation
-  const [products, setProducts]       = useState(getCachedProducts);
-  const [loading, setLoading]         = useState(() => getCachedProducts().length === 0);
+  const [products, setProducts]             = useState(getCachedProducts);
+  const [loading, setLoading]               = useState(() => getCachedProducts().length === 0);
   const [activeCategory, setActiveCategory] = useState('all');
   const [enquireProduct, setEnquireProduct] = useState(null);
   const [customModalOpen, setCustomModalOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState(getSavedSearch);
-  const [bouncingCat, setBouncingCat] = useState(null);
+  const [searchQuery, setSearchQuery]       = useState(getSavedSearch);
+  const [bouncingCat, setBouncingCat]       = useState(null);
 
   function handleSearch(q) {
     setSearchQuery(q);
@@ -144,7 +165,7 @@ export default function Home() {
         <div className="product-img">
           {imgSrc ? <img src={imgSrc} alt={product.name} /> : <span>🧶</span>}
           {(product.bestseller || product.featured) && (
-            <span className="product-badge bestseller-badge">🏆 Bestseller</span>
+            <span className="product-badge bestseller-badge">Bestseller</span>
           )}
           {!product.inStock && <div className="out-of-stock-overlay">Out of Stock</div>}
         </div>
@@ -179,7 +200,7 @@ export default function Home() {
               <span className="search-results-query">"{searchQuery}"</span>
             </div>
             <button className="search-results-clear" onClick={() => handleSearch('')}>
-              ✕ Clear search
+              Clear search
             </button>
           </div>
 
@@ -190,7 +211,7 @@ export default function Home() {
               <div className="search-empty-icon">🔍</div>
               <h3>No results found</h3>
               <p>We couldn't find anything matching "<strong>{searchQuery}</strong>". Try a different word!</p>
-              <button className="btn-gradient" style={{ marginTop: 20 }} onClick={() => {
+              <button className="btn-primary" style={{ marginTop: 24 }} onClick={() => {
                 handleSearch('');
                 setTimeout(() => {
                   document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' });
@@ -212,94 +233,175 @@ export default function Home() {
         <>
           {/* HERO */}
           <section className="hero">
-            <div>
-              <div className="hero-eyebrow">🎉 Mumbai · Shipping in Mumbai</div>
-              <h1>
-                Colourful.<br />
-                <span className="accent-yellow">Creative.</span><br />
-                <span className="accent-red">Crochet.</span>
-              </h1>
-              <p className="hero-desc">
-                Handcrafted flowers, keychains, earrings, Laddu Gopal dresses and more —
-                every piece made with love from Mumbai, just for you.
-              </p>
-              <div className="hero-btns">
-                <a href="#products" className="btn-gradient btn-animated"
-                  onClick={(e) => { e.preventDefault(); document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' }); }}>
-                  Shop Now 🛍️
-                </a>
-                <a href="#custom" className="btn-light btn-animated"
-                  onClick={(e) => { e.preventDefault(); document.getElementById('custom')?.scrollIntoView({ behavior: 'smooth' }); }}>
-                  Custom Order →
-                </a>
-              </div>
+            <div className="hero-eyebrow">
+              <span>📍</span> Handmade in Mumbai
             </div>
-            <div className="hero-mosaic">
-              <div className="mosaic-tile mt1">🧶</div>
-              <div className="mosaic-tile mt2">🌸</div>
-              <div className="mosaic-tile mt3">🔑</div>
-              <div className="mosaic-tile mt4">✨</div>
-              <div className="mosaic-tile mt6">🎀</div>
-              <div className="mosaic-tile mt5">🕉️</div>
-              <div className="mosaic-tile mt7">🎨</div>
+            <h1>
+              Crafted with care,<br />
+              made <em>just for you.</em>
+            </h1>
+            <p className="hero-desc">
+              Beautiful handmade crochet — flowers, keychains, bookmarks, jewellery,
+              Laddu Gopal dresses and more. Every piece is made with love, one stitch at a time.
+            </p>
+            <div className="hero-btns">
+              <a
+                href="#products"
+                className="btn-primary btn-animated"
+                onClick={(e) => { e.preventDefault(); document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' }); }}
+              >
+                Shop Now
+              </a>
+              <a
+                href="#custom"
+                className="btn-outline btn-animated"
+                onClick={(e) => { e.preventDefault(); document.getElementById('custom')?.scrollIntoView({ behavior: 'smooth' }); }}
+              >
+                Custom Order
+              </a>
             </div>
           </section>
 
-          {/* CATEGORIES */}
-          <section className="section">
-            <div className="section-head">
-              <h2>What do you need? 🎨</h2>
-              <p>Browse our handmade crochet categories</p>
+          {/* FEATURE BADGES */}
+          <div className="feature-badges">
+            <div className="feature-badges-inner">
+              <div className="feature-badge">
+                <span className="feature-badge-icon">🧶</span>
+                <span>100% Handmade</span>
+              </div>
+              <div className="feature-badge-divider" />
+              <div className="feature-badge">
+                <span className="feature-badge-icon">🌿</span>
+                <span>Natural Materials</span>
+              </div>
+              <div className="feature-badge-divider" />
+              <div className="feature-badge">
+                <span className="feature-badge-icon">📍</span>
+                <span>Made in Mumbai</span>
+              </div>
+              <div className="feature-badge-divider" />
+              <div className="feature-badge">
+                <span className="feature-badge-icon">✨</span>
+                <span>Small Batch</span>
+              </div>
             </div>
-            <div className="categories-grid">
-              {CATEGORIES.map((c) => (
-                <div
-                  key={c.key}
-                  className={`cat-card ${c.cls} ${activeCategory === c.key ? 'active' : ''} ${bouncingCat === c.key ? 'cat-bounce' : ''}`}
-                  onClick={() => handleCatClick(c.key)}
-                >
-                  <div className="cat-icon">{c.icon}</div>
-                  <div className="cat-name">{c.label}</div>
-                  <div className="cat-sub">{c.sub}</div>
-                </div>
-              ))}
-            </div>
-          </section>
+          </div>
+
+          {/* SHOP BY COLLECTION (CATEGORIES) */}
+          <div style={{ background: 'var(--cream)' }}>
+            <section className="section">
+              <div className="section-head">
+                <h2>Shop by Collection 🌸</h2>
+                <p>Browse our handmade crochet categories</p>
+              </div>
+              <div className="categories-grid">
+                {CATEGORIES.map((c) => (
+                  <div
+                    key={c.key}
+                    className={`cat-card ${c.cls} ${activeCategory === c.key ? 'active' : ''} ${bouncingCat === c.key ? 'cat-bounce' : ''}`}
+                    onClick={() => handleCatClick(c.key)}
+                  >
+                    <div className="cat-icon">{c.icon}</div>
+                    <div className="cat-name">{c.label}</div>
+                    <div className="cat-sub">{c.sub}</div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          </div>
 
           {/* ALL PRODUCTS */}
-          <section className="section bg-white" id="products">
-            <div className="section-head">
-              <h2>Our Products 🛍️</h2>
-              <p>Click any product to see details — tap Enquire Now to order!</p>
-            </div>
-            {loading ? (
-              <div className="spinner-wrap"><div className="spinner" /></div>
-            ) : (
-              <div className="products-grid">
-                {filtered.length === 0 ? (
-                  <div className="no-products">
-                    <div className="icon">🧶</div>
-                    <p>No products in this category yet — check back soon!</p>
-                  </div>
-                ) : (
-                  filtered.map((product) => <ProductCard key={product._id} product={product} />)
-                )}
+          <div className="products-section-wrap" style={{ background: 'var(--white)' }}>
+            <section className="section" id="products">
+              <div className="section-head">
+                <h2>Our Products 🛍️</h2>
+                <p>Click any product to see details — tap Enquire Now to order!</p>
               </div>
-            )}
-          </section>
+              {loading ? (
+                <div className="spinner-wrap"><div className="spinner" /></div>
+              ) : (
+                <div className="products-grid">
+                  {filtered.length === 0 ? (
+                    <div className="no-products">
+                      <div className="icon">🧶</div>
+                      <p>No products in this category yet — check back soon!</p>
+                    </div>
+                  ) : (
+                    filtered.map((product) => <ProductCard key={product._id} product={product} />)
+                  )}
+                </div>
+              )}
+            </section>
+          </div>
 
           {/* BESTSELLERS */}
           {!loading && bestsellers.length > 0 && (
-            <section className="section bestsellers-section" id="bestsellers">
+            <div className="bestsellers-section">
+              <section className="section" id="bestsellers">
+                <div className="section-head">
+                  <h2>Most Loved Picks ✦</h2>
+                  <p>Our bestselling products — loved by 100+ happy customers</p>
+                </div>
+                <div className="products-grid">
+                  {bestsellers.map((product) => <ProductCard key={product._id} product={product} />)}
+                </div>
+              </section>
+            </div>
+          )}
+
+          {/* FROM HANDS TO HEART — process section */}
+          <div className="process-section">
+            <section className="section">
               <div className="section-head">
-                <h2>Our Bestsellers 🏆</h2>
-                <p>Most loved picks — order yours before they're gone!</p>
+                <h2>From Hands to Heart 🤍</h2>
+                <p>How every Marvikala piece comes to life</p>
               </div>
-              <div className="products-grid">
-                {bestsellers.map((product) => <ProductCard key={product._id} product={product} />)}
+              <div className="process-grid">
+                <div className="process-step">
+                  <div className="process-step-number">1</div>
+                  <div className="process-step-icon">🌿</div>
+                  <h3>Handpicked Materials</h3>
+                  <p>We carefully choose soft, quality yarns in colours that are warm, vibrant, and long-lasting.</p>
+                </div>
+                <div className="process-step">
+                  <div className="process-step-number">2</div>
+                  <div className="process-step-icon">🧶</div>
+                  <h3>Made with Care</h3>
+                  <p>Each piece is handcrafted stitch by stitch, with attention to every detail — no shortcuts, ever.</p>
+                </div>
+                <div className="process-step">
+                  <div className="process-step-number">3</div>
+                  <div className="process-step-icon">🎁</div>
+                  <h3>A Piece of Happiness</h3>
+                  <p>Your order is lovingly packed and delivered — a little piece of handmade joy, just for you.</p>
+                </div>
               </div>
             </section>
-          )}
+          </div>
+
+          {/* REVIEWS */}
+          <div className="reviews-section">
+            <section className="section">
+              <div className="section-head">
+                <h2>Loved by Customers ♡</h2>
+                <p>Kind words from 100+ happy customers across Mumbai</p>
+              </div>
+              <div className="reviews-grid">
+                {STATIC_REVIEWS.map((r) => (
+                  <div key={r.id} className="review-card">
+                    <div className="review-stars">
+                      {[1,2,3,4,5].map((s) => (
+                        <span key={s} className="review-star">★</span>
+                      ))}
+                    </div>
+                    <p className="review-text">"{r.text}"</p>
+                    <div className="review-author">{r.author}</div>
+                    <div className="review-location">{r.location}</div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          </div>
         </>
       )}
 
@@ -308,15 +410,15 @@ export default function Home() {
         <>
           <div className="custom-banner" id="custom">
             <div>
-              <div className="custom-eyebrow">✦ Custom Orders Open</div>
+              <div className="custom-eyebrow">Custom Orders Open</div>
               <h2>Want something unique?</h2>
               <p>
                 Tell us your idea — colour, size, design — and we'll create something
                 special, handmade just for you.
               </p>
             </div>
-            <button className="btn-glow btn-animated" onClick={() => setCustomModalOpen(true)}>
-              Let's Create! ✨
+            <button className="btn-primary btn-animated" onClick={() => setCustomModalOpen(true)}>
+              Let's Create
             </button>
           </div>
 
@@ -324,8 +426,8 @@ export default function Home() {
           <section className="about-section" id="about">
             <div className="about-content">
               <div className="about-text">
-                <div className="about-eyebrow">✦ Our Story</div>
-                <h2>Made with love, stitch by stitch</h2>
+                <div className="about-eyebrow">Our Story</div>
+                <h2>Made with love,<br />stitch by stitch.</h2>
                 <p>
                   Hi! I'm the founder of Marvikala — a small handmade crochet studio based in Mumbai.
                   What started as a passion for creating beautiful things with yarn has grown into
@@ -343,11 +445,11 @@ export default function Home() {
                   </div>
                   <div className="about-highlight">
                     <span className="about-highlight-icon">🎨</span>
-                    <span>Custom Orders Welcome</span>
+                    <span>Custom Orders</span>
                   </div>
                   <div className="about-highlight">
                     <span className="about-highlight-icon">📦</span>
-                    <span>Shipping in Mumbai</span>
+                    <span>Ships in Mumbai</span>
                   </div>
                 </div>
               </div>
@@ -362,20 +464,20 @@ export default function Home() {
             </div>
           </section>
 
-          {/* SAY HELLO — below our story */}
+          {/* CONTACT */}
           <section className="contact-section" id="contact">
             <div className="contact-head">
-              <h2>Say Hello! 👋</h2>
-              <p>Place an order, ask about a custom piece, or just send us a message</p>
+              <h2>Get in Touch</h2>
+              <p>Place an order, ask about a custom piece, or just say hello</p>
             </div>
             <div className="contact-cards">
               <a href="https://wa.me/919769238160" className="contact-card wa-card" target="_blank" rel="noreferrer">
-                <div className="contact-icon">📱</div>
+                <div className="contact-icon">💬</div>
                 <h3>WhatsApp</h3>
                 <p>+91 97692 38160</p>
               </a>
               <a href="https://instagram.com/marvikala" className="contact-card ig-card" target="_blank" rel="noreferrer">
-                <div className="contact-icon">📸</div>
+                <div className="contact-icon">📷</div>
                 <h3>Instagram</h3>
                 <p>@marvikala</p>
               </a>
