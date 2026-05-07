@@ -87,10 +87,14 @@ export default function Home() {
       .finally(() => setLoading(false));
   }, []);
 
-  // When arriving from another page via a navbar section link, scroll to that section
+  // When arriving from another page via a navbar section link, scroll to that section.
+  // Uses sessionStorage (not location.state) so the target is cleared immediately after
+  // reading — reload and back-navigation never repeat the scroll.
   useEffect(() => {
-    const target = location.state?.scrollTo;
+    let target;
+    try { target = sessionStorage.getItem('mk_scroll_to'); } catch {}
     if (!target) return;
+    try { sessionStorage.removeItem('mk_scroll_to'); } catch {}
     const t = setTimeout(() => {
       document.getElementById(target)?.scrollIntoView({ behavior: 'smooth' });
     }, 120);

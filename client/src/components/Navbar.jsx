@@ -9,13 +9,16 @@ export default function Navbar({ searchQuery, onSearch }) {
   const isHome = location.pathname === '/';
 
   // When arriving from ProductPage search, auto-focus the input so the user
-  // can keep typing without having to click the search bar again
+  // can keep typing without having to click the search bar again.
+  // Reads a sessionStorage flag (cleared immediately) so reload never re-focuses.
   useEffect(() => {
-    if (location.state?.focusSearch) {
-      const t = setTimeout(() => inputRef.current?.focus(), 60);
-      return () => clearTimeout(t);
-    }
-  }, [location.state?.focusSearch]);
+    let should;
+    try { should = sessionStorage.getItem('mk_focus_search'); } catch {}
+    if (!should) return;
+    try { sessionStorage.removeItem('mk_focus_search'); } catch {}
+    const t = setTimeout(() => inputRef.current?.focus(), 60);
+    return () => clearTimeout(t);
+  }, []);
 
   // If already on home: smooth-scroll to the section.
   // If in search mode: clear search first, then scroll.
@@ -32,7 +35,10 @@ export default function Navbar({ searchQuery, onSearch }) {
         setTimeout(() => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' }), 80);
       }
     } else {
-      navigate('/', { state: { scrollTo: id } });
+      // Store in sessionStorage (not location.state) so it's one-shot: cleared on read,
+      // never repeated on reload or back-navigation.
+      try { sessionStorage.setItem('mk_scroll_to', id); } catch {}
+      navigate('/');
     }
   }
 

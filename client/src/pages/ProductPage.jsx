@@ -111,10 +111,13 @@ export default function ProductPage() {
   }
 
   function handleSearch(q) {
-    // Save query then go to home — that's where search results are rendered.
-    // Pass focusSearch so Navbar auto-focuses the input; user can keep typing.
-    try { sessionStorage.setItem('mk_search', q); } catch {}
-    navigate('/', { state: { focusSearch: true } });
+    // Save query and a one-shot focus flag, then go to home (where results render).
+    // Using sessionStorage (cleared on read) so reload never re-focuses.
+    try {
+      sessionStorage.setItem('mk_search', q);
+      sessionStorage.setItem('mk_focus_search', '1');
+    } catch {}
+    navigate('/');
   }
 
   function SimilarCard({ p }) {
