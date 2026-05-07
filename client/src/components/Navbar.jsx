@@ -1,19 +1,36 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 export default function Navbar({ searchQuery, onSearch }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const inputRef = useRef();
   const navigate = useNavigate();
-  const { pathname } = useLocation();
-  const isHome = pathname === '/';
+  const location = useLocation();
+  const isHome = location.pathname === '/';
+
+  // When arriving from ProductPage search, auto-focus the input so the user
+  // can keep typing without having to click the search bar again
+  useEffect(() => {
+    if (location.state?.focusSearch) {
+      const t = setTimeout(() => inputRef.current?.focus(), 60);
+      return () => clearTimeout(t);
+    }
+  }, [location.state?.focusSearch]);
 
   // If already on home: smooth-scroll to the section.
-  // If on any other page: navigate to home and let Home.jsx scroll after render.
+  // If in search mode: clear search first, then scroll.
+  // If on another page: navigate home and let Home.jsx scroll after render.
   function goToSection(id) {
     setMenuOpen(false);
     if (isHome) {
-      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        // Search mode — the section isn't in the DOM yet. Clear search first.
+        onSearch?.('');
+        setTimeout(() => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' }), 80);
+      }
     } else {
       navigate('/', { state: { scrollTo: id } });
     }
@@ -24,10 +41,8 @@ export default function Navbar({ searchQuery, onSearch }) {
     setMenuOpen(false);
     onSearch?.('');
     if (isHome) {
-      // Already home — just scroll to the very top
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
-      // Trigger the same exit animation as the back button, then navigate home
       document.querySelector('.product-page')?.classList.add('pp-exit');
       setTimeout(() => navigate('/'), 250);
     }
@@ -40,7 +55,6 @@ export default function Navbar({ searchQuery, onSearch }) {
     if (isHome) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
-      // Same exit animation as back button and logo click
       document.querySelector('.product-page')?.classList.add('pp-exit');
       setTimeout(() => navigate('/'), 250);
     }

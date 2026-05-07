@@ -2197,6 +2197,154 @@ body {
 }
 
 /* ═══════════════════════════════════════════════
+   ── Global micro-interactions & button animations ──
+   Every clickable element: smooth hover lift + press-down on click
+   ═══════════════════════════════════════════════ */
+
+/* ── btn-gradient: add active press (hover already exists) ── */
+.btn-gradient:active:not(:disabled) {
+  transform: scale(0.95) translateY(0) !important;
+  box-shadow: 0 4px 14px rgba(245,166,35,0.3) !important;
+  transition-duration: 0.08s !important;
+}
+
+/* ── btn-light: missing all interactions ── */
+.btn-light {
+  transition: transform 0.18s cubic-bezier(0.34,1.56,0.64,1),
+              box-shadow 0.18s ease, background 0.15s;
+}
+.btn-light:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+}
+.btn-light:active {
+  transform: scale(0.96);
+  transition-duration: 0.08s !important;
+}
+
+/* ── btn-glow: missing all interactions ── */
+.btn-glow {
+  transition: transform 0.18s cubic-bezier(0.34,1.56,0.64,1),
+              box-shadow 0.18s ease, opacity 0.15s;
+}
+.btn-glow:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 36px rgba(245,166,35,0.5);
+}
+.btn-glow:active {
+  transform: scale(0.95);
+  transition-duration: 0.08s !important;
+}
+
+/* ── enquire-btn: upgrade from opacity-only ── */
+.enquire-btn {
+  transition: transform 0.18s cubic-bezier(0.34,1.56,0.64,1),
+              opacity 0.15s, box-shadow 0.18s !important;
+}
+.enquire-btn:not(:disabled):hover {
+  opacity: 1;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(245,166,35,0.35);
+}
+.enquire-btn:not(:disabled):active {
+  transform: scale(0.95) !important;
+  transition-duration: 0.08s !important;
+}
+
+/* ── product-page-back: add transform + active ── */
+.product-page-back {
+  transition: border-color 0.15s, color 0.15s, background 0.15s,
+              transform 0.15s cubic-bezier(0.34,1.56,0.64,1) !important;
+}
+.product-page-back:active {
+  transform: scale(0.94) !important;
+  transition-duration: 0.08s !important;
+}
+
+/* ── product-page-contact-btn: add transition + active ── */
+.product-page-contact-btn {
+  transition: transform 0.18s cubic-bezier(0.34,1.56,0.64,1),
+              opacity 0.15s, box-shadow 0.18s !important;
+}
+.product-page-contact-btn:active {
+  transform: scale(0.95) !important;
+  transition-duration: 0.08s !important;
+}
+
+/* ── contact-card: add active press ── */
+.contact-card:active {
+  transform: scale(0.97) translateY(-1px) !important;
+  transition-duration: 0.08s !important;
+}
+
+/* ── search buttons: scale on hover/active ── */
+.search-btn {
+  transition: transform 0.12s ease, background 0.15s,
+              color 0.15s, opacity 0.15s !important;
+}
+.search-btn:hover  { transform: scale(1.1); }
+.search-btn:active { transform: scale(0.88); transition-duration: 0.06s !important; }
+
+/* ── search-results-clear: add transform + active ── */
+.search-results-clear {
+  transition: border-color 0.15s, color 0.15s,
+              transform 0.15s cubic-bezier(0.34,1.56,0.64,1) !important;
+}
+.search-results-clear:hover  { transform: translateY(-1px); }
+.search-results-clear:active { transform: scale(0.94); transition-duration: 0.08s !important; }
+
+/* ── product-card: add active press (hover already exists) ── */
+.product-card:active {
+  transform: scale(0.98) translateY(-2px) !important;
+  transition-duration: 0.08s !important;
+}
+
+/* ── perk-item: subtle press ── */
+.perk-item {
+  transition: border-color 0.15s, background 0.15s,
+              transform 0.15s cubic-bezier(0.34,1.56,0.64,1) !important;
+}
+.perk-item:active {
+  transform: scale(0.98) !important;
+  transition-duration: 0.08s !important;
+}
+
+/* ── cat-card: smoother transition property ── */
+.cat-card {
+  transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1),
+              box-shadow 0.2s ease, background 0.2s !important;
+}
+
+/* ── navbar links: lift on hover, press on click ── */
+.navbar-links a {
+  display: inline-block;
+  transition: color 0.15s, transform 0.15s cubic-bezier(0.34,1.56,0.64,1) !important;
+}
+.navbar-links a:hover  { transform: translateY(-1px); }
+.navbar-links a:active { transform: scale(0.94); transition-duration: 0.08s !important; }
+
+/* ── hamburger: press on click ── */
+.hamburger {
+  transition: transform 0.12s ease !important;
+}
+.hamburger:active {
+  transform: scale(0.86) !important;
+  transition-duration: 0.06s !important;
+}
+
+/* ── pp-bs-banner: subtle press ── */
+.pp-bs-banner:active {
+  transform: scale(0.97);
+  transition: transform 0.08s ease;
+}
+
+/* ── notfound btn: active ── */
+.notfound-btn:active {
+  transform: scale(0.95) translateY(0) !important;
+  transition-duration: 0.08s !important;
+}
+
+/* ═══════════════════════════════════════════════
    ── 404 Not Found page ──
    ═══════════════════════════════════════════════ */
 
