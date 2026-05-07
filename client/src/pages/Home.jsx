@@ -182,7 +182,12 @@ export default function Home() {
               <div className="search-empty-icon">🔍</div>
               <h3>No results found</h3>
               <p>We couldn't find anything matching "<strong>{searchQuery}</strong>". Try a different word!</p>
-              <button className="btn-gradient" style={{ marginTop: 20 }} onClick={() => handleSearch('')}>
+              <button className="btn-gradient" style={{ marginTop: 20 }} onClick={() => {
+                handleSearch('');
+                setTimeout(() => {
+                  document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' });
+                }, 80);
+              }}>
                 Browse all products
               </button>
             </div>

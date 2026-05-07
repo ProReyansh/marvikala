@@ -6,27 +6,39 @@ import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
 import NotFound from './pages/NotFound';
 
-// Scroll to top on forward navigation and reload.
-// Restore saved scroll position only on genuine back/forward navigation (POP).
+// Module-level flag — false on every fresh page load/reload (JS module re-executes),
+// true after the first SPA navigation happens. This reliably tells us whether a POP
+// is a genuine back-button press (restore scroll) vs the initial page load (go to top).
+// The Performance API approach had a bug: perfType stays 'reload' for the whole SPA
+// session if the page was originally loaded via refresh, causing back-nav to wrongly
+// scroll to top.
+let _appNavigated = false;
+
 function ScrollToTop() {
   const { pathname } = useLocation();
   const navType = useNavigationType();
   useEffect(() => {
-    // Performance API distinguishes a reload (type='reload') from a back/forward POP
-    const perfType = performance.getEntriesByType?.('navigation')?.[0]?.type;
-    const isReload = perfType === 'reload';
-
-    if (isReload || navType !== 'POP') {
-      // Reload or forward navigation — always go to top
+    if (!_appNavigated) {
+      // Very first render after any page load or reload — always go to top
+      _appNavigated = true;
       window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-    } else {
-      // Genuine back/forward — restore where the user was
+      return;
+    }
+
+    if (navType === 'POP') {
+      // Genuine SPA back/forward — restore saved scroll position
       const saved = sessionStorage.getItem(`mk_scroll_${pathname}`);
       if (saved) {
+        // Double rAF: first ensures React has committed, second ensures browser has painted
         requestAnimationFrame(() => {
-          window.scrollTo({ top: parseInt(saved, 10), behavior: 'instant' });
+          requestAnimationFrame(() => {
+            window.scrollTo({ top: parseInt(saved, 10), behavior: 'instant' });
+          });
         });
       }
+    } else {
+      // PUSH or REPLACE — always go to top
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
     }
   }, [pathname]);
   return null;

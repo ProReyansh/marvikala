@@ -111,8 +111,9 @@ export default function ProductPage() {
   }
 
   function handleSearch(q) {
-    setSearchQuery(q);
+    // Save query then go to home — that's where search results are rendered
     try { sessionStorage.setItem('mk_search', q); } catch {}
+    navigate('/');
   }
 
   function SimilarCard({ p }) {
