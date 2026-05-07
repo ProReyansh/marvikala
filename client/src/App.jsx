@@ -5,6 +5,8 @@ import ProductPage from './pages/ProductPage';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
 import NotFound from './pages/NotFound';
+import OurStoryPage from './pages/OurStoryPage';
+import AllBestsellersPage from './pages/AllBestsellersPage';
 
 // Module-level flag — false on every fresh page load/reload (JS module re-executes),
 // true after the first SPA navigation happens. This reliably tells us whether a POP
@@ -60,6 +62,8 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/product/:slug" element={<ProductPage />} />
+        <Route path="/our-story" element={<OurStoryPage />} />
+        <Route path="/bestsellers" element={<AllBestsellersPage />} />
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route
           path="/admin"

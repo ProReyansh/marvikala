@@ -70,6 +70,8 @@ router.post('/', authMiddleware, upload.array('images', 5), async (req, res) => 
       inStock:    inStock    === 'true' || inStock    === true,
       bestseller: bestseller === 'true' || bestseller === true,
       featured:   bestseller === 'true' || bestseller === true,
+      price:         req.body.price         ? Number(req.body.price)         : null,
+      originalPrice: req.body.originalPrice ? Number(req.body.originalPrice) : null,
     });
     await product.save();
     res.status(201).json(product);
@@ -105,6 +107,8 @@ router.put('/:id', authMiddleware, upload.array('images', 5), async (req, res) =
       inStock:    inStock    === 'true' || inStock    === true,
       bestseller: bestseller === 'true' || bestseller === true,
       featured:   bestseller === 'true' || bestseller === true,
+      price:         req.body.price         ? Number(req.body.price)         : null,
+      originalPrice: req.body.originalPrice ? Number(req.body.originalPrice) : null,
     };
 
     const product = await Product.findByIdAndUpdate(req.params.id, update, { new: true });

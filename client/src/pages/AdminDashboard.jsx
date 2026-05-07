@@ -17,6 +17,7 @@ const CATEGORIES = [
 const EMPTY_FORM = {
   name: '', description: '', category: 'flowers',
   inStock: true, bestseller: false,
+  price: '', originalPrice: '',
   existingImages: [],
   newImageFiles: [],
 };
@@ -83,6 +84,8 @@ export default function AdminDashboard() {
       category: product.category,
       inStock: product.inStock,
       bestseller: product.bestseller || product.featured || false,
+      price: product.price || '',
+      originalPrice: product.originalPrice || '',
       existingImages: imgs,
       newImageFiles: [],
     });
@@ -119,6 +122,8 @@ export default function AdminDashboard() {
       data.append('category', form.category);
       data.append('inStock', form.inStock);
       data.append('bestseller', form.bestseller);
+      if (form.price !== '' && form.price !== null) data.append('price', form.price);
+      if (form.originalPrice !== '' && form.originalPrice !== null) data.append('originalPrice', form.originalPrice);
 
       if (editing) {
         data.append('existingImages', JSON.stringify(form.existingImages));
@@ -297,6 +302,30 @@ export default function AdminDashboard() {
                     value={form.description}
                     onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
                     placeholder="Describe the product…"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Price (₹)</label>
+                  <input
+                    type="number"
+                    placeholder="e.g. 249"
+                    value={form.price || ''}
+                    onChange={(e) => setForm((f) => ({ ...f, price: e.target.value }))}
+                    className="form-input"
+                    min="0"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Original Price ₹ <small style={{ color: '#999' }}>(crossed out — leave blank to hide)</small></label>
+                  <input
+                    type="number"
+                    placeholder="e.g. 349"
+                    value={form.originalPrice || ''}
+                    onChange={(e) => setForm((f) => ({ ...f, originalPrice: e.target.value }))}
+                    className="form-input"
+                    min="0"
                   />
                 </div>
 

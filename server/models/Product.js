@@ -14,6 +14,8 @@ const productSchema = new mongoose.Schema(
     inStock:    { type: Boolean, default: true },
     featured:   { type: Boolean, default: false }, // kept for backward compat
     bestseller: { type: Boolean, default: false },
+    price:         { type: Number, default: null },
+    originalPrice: { type: Number, default: null },
   },
   { timestamps: true }
 );
