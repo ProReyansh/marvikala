@@ -2134,4 +2134,118 @@ body {
   .perk-icon  { font-size: 20px; }
   .perk-text strong { font-size: 12px; }
   .perk-text span   { font-size: 11px; }
+
+  /* Bestseller page mobile */
+  .pp-bs-banner { font-size: 12px; padding: 8px 16px; gap: 8px; }
+  .pp-bestseller .product-page-main-img { box-shadow: 0 0 0 3px #f5a623, 0 8px 28px rgba(245,166,35,0.28); }
+}
+
+/* ═══════════════════════════════════════════════
+   ── Page transition animations ──
+   ═══════════════════════════════════════════════ */
+
+@keyframes ppSlideIn {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+@keyframes ppSlideOut {
+  from { opacity: 1; transform: translateY(0);     }
+  to   { opacity: 0; transform: translateY(-16px); }
+}
+
+.pp-enter   { opacity: 0; transform: translateY(22px); }
+.pp-visible { animation: ppSlideIn 0.32s cubic-bezier(0.22,1,0.36,1) forwards; }
+.pp-exit    { animation: ppSlideOut 0.25s ease forwards; pointer-events: none; }
+
+/* ═══════════════════════════════════════════════
+   ── Bestseller Product Page design ──
+   ═══════════════════════════════════════════════ */
+
+/* Warm golden background tint on the whole page */
+.pp-bestseller {
+  background: linear-gradient(160deg, #fffdf5 0%, #fff8e8 50%, #fffdf8 100%);
+}
+
+/* Golden glow ring around the main image */
+.pp-bestseller .product-page-main-img {
+  box-shadow:
+    0 0 0 4px #f5a623,
+    0 0 0 8px rgba(245,166,35,0.18),
+    0 12px 40px rgba(245,166,35,0.32);
+  border-radius: 20px;
+}
+
+/* Gold gradient product name */
+.pp-bestseller .product-page-name {
+  background: linear-gradient(135deg, #c87800 0%, #f5a623 45%, #e8832a 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Bestseller banner pill above the name */
+.pp-bs-banner {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(135deg, #fff3d0 0%, #fde68a 50%, #fcd34d 100%);
+  border: 1.5px solid #f5a623;
+  color: #92400e;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  padding: 9px 20px;
+  border-radius: 50px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 12px rgba(245,166,35,0.28);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Shimmer sweep on the banner */
+.pp-bs-banner::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, transparent 20%, rgba(255,255,255,0.55) 50%, transparent 80%);
+  transform: translateX(-100%);
+  animation: bsBannerShimmer 2.4s ease-in-out infinite;
+}
+
+@keyframes bsBannerShimmer {
+  0%   { transform: translateX(-100%); }
+  60%  { transform: translateX(100%);  }
+  100% { transform: translateX(100%);  }
+}
+
+/* Gold-tinted perks section on bestseller page */
+.pp-bestseller .perk-item {
+  border-color: #fde68a;
+  background: #fffbf0;
+}
+.pp-bestseller .perk-item:hover {
+  background: #fff8dc;
+  border-color: #f5a623;
+}
+
+/* Subtle golden divider line */
+.pp-bestseller .product-page-divider {
+  background: linear-gradient(90deg, transparent, #f5a623 30%, #fcd34d 70%, transparent);
+  height: 2px;
+  border: none;
+}
+
+/* Golden category label */
+.pp-bestseller .product-page-cat {
+  color: #b45309;
+  font-weight: 700;
+}
+
+/* Gold badge on bestseller image (always shown on pp-bestseller) */
+.pp-bestseller .product-page-badge {
+  background: linear-gradient(135deg, #f59e0b 0%, #fcd34d 100%);
+  color: #78350f;
+  border: 1.5px solid rgba(245,158,11,0.4);
+  box-shadow: 0 2px 8px rgba(245,158,11,0.4);
 }

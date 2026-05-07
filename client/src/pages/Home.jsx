@@ -26,6 +26,17 @@ const CAT_LABEL = {
   rakhi: 'Rakhi', custom: 'Custom',
 };
 
+// Build a pretty SEO-friendly URL: /product/crochet-flower-bouquet-<mongoId>
+function slugify(name) {
+  return name.toLowerCase()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/[\s_]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+function productUrl(product) {
+  return `/product/${slugify(product.name)}-${product._id}`;
+}
+
 // sessionStorage helpers — persist search query and product cache across navigation
 function getSavedSearch() {
   try { return sessionStorage.getItem('mk_search') || ''; } catch { return ''; }
@@ -105,7 +116,7 @@ export default function Home() {
     return (
       <div
         className="product-card"
-        onClick={() => navigate(`/product/${product._id}`, { state: { product } })}
+        onClick={() => navigate(productUrl(product), { state: { product } })}
       >
         <div className="product-img">
           {imgSrc ? <img src={imgSrc} alt={product.name} /> : <span>🧶</span>}

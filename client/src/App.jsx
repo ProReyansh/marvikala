@@ -29,7 +29,7 @@ export default function App() {
       <ScrollToTop />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/product/:id" element={<ProductPage />} />
+        <Route path="/product/:slug" element={<ProductPage />} />
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route
           path="/admin"

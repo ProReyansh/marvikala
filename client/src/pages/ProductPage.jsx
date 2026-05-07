@@ -23,8 +23,29 @@ function getCachedProducts() {
   } catch { return []; }
 }
 
+// Extract MongoDB ObjectID (24 hex chars) from the end of a slug
+function extractId(slug) {
+  const parts = slug.split('-');
+  for (let i = parts.length - 1; i >= 0; i--) {
+    if (/^[a-f0-9]{24}$/.test(parts[i])) return parts[i];
+  }
+  // fallback — maybe it's a raw ID
+  return slug;
+}
+
+function slugify(name) {
+  return name.toLowerCase()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/[\s_]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+function productUrl(product) {
+  return `/product/${slugify(product.name)}-${product._id}`;
+}
+
 export default function ProductPage() {
-  const { id } = useParams();
+  const { slug } = useParams();
+  const id = extractId(slug);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -34,6 +55,10 @@ export default function ProductPage() {
   const [imgAnimKey, setImgAnimKey] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
 
+  // Page enter/exit animation
+  const [pageAnim, setPageAnim]     = useState('pp-enter');
+  const [exiting, setExiting]       = useState(false);
+
   const [similar, setSimilar] = useState(() => {
     if (!location.state?.product) return [];
     const all = getCachedProducts();
@@ -41,6 +66,16 @@ export default function ProductPage() {
       .filter(p => p.category === location.state.product.category && p._id !== location.state.product._id)
       .slice(0, 4);
   });
+
+  // Reset and play enter animation whenever the product ID changes (similar card click)
+  useEffect(() => {
+    setPageAnim('pp-enter');
+    setExiting(false);
+    setActiveImg(0);
+    setImgAnimKey(0);
+    const t = setTimeout(() => setPageAnim('pp-visible'), 20);
+    return () => clearTimeout(t);
+  }, [id]);
 
   useEffect(() => {
     axios.get(`/api/products/${id}`)
@@ -62,6 +97,11 @@ export default function ProductPage() {
     setImgAnimKey(k => k + 1);
   }
 
+  function handleBack() {
+    setExiting(true);
+    setTimeout(() => navigate(-1), 260);
+  }
+
   function handleSearch(q) {
     setSearchQuery(q);
     try { sessionStorage.setItem('mk_search', q); } catch {}
@@ -74,7 +114,10 @@ export default function ProductPage() {
       return imgs[0].startsWith('http') ? imgs[0] : `/uploads/${imgs[0]}`;
     })();
     return (
-      <div className="product-card" onClick={() => navigate(`/product/${p._id}`, { state: { product: p } })}>
+      <div
+        className="product-card"
+        onClick={() => navigate(productUrl(p), { state: { product: p } })}
+      >
         <div className="product-img">
           {imgSrc ? <img src={imgSrc} alt={p.name} /> : <span>🧶</span>}
           {(p.bestseller || p.featured) && <span className="product-badge bestseller-badge">🏆 Bestseller</span>}
@@ -105,13 +148,14 @@ export default function ProductPage() {
   if (!product) return null;
 
   const images = product.images?.length > 0 ? product.images : (product.image ? [product.image] : []);
+  const isBestseller = product.bestseller || product.featured;
 
   return (
     <>
       <Navbar searchQuery={searchQuery} onSearch={handleSearch} />
 
-      <div className="product-page">
-        <button className="product-page-back" onClick={() => navigate(-1)}>← Back</button>
+      <div className={`product-page ${pageAnim}${exiting ? ' pp-exit' : ''}${isBestseller ? ' pp-bestseller' : ''}`}>
+        <button className="product-page-back" onClick={handleBack}>← Back</button>
 
         <div className="product-page-layout">
 
@@ -122,7 +166,7 @@ export default function ProductPage() {
                 ? <img key={imgAnimKey} src={imgUrl(images[activeImg])} alt={product.name} className="product-page-img-anim" />
                 : <span className="product-page-placeholder">🧶</span>
               }
-              {product.bestseller && <span className="product-page-badge bestseller-badge">🏆 Bestseller</span>}
+              {isBestseller && <span className="product-page-badge bestseller-badge">🏆 Bestseller</span>}
               {!product.inStock && <div className="product-page-oos-overlay">Out of Stock</div>}
             </div>
 
@@ -139,6 +183,14 @@ export default function ProductPage() {
 
           {/* ── Product Info ── */}
           <div className="product-page-info">
+
+            {/* Bestseller banner — only shown for bestseller products */}
+            {isBestseller && (
+              <div className="pp-bs-banner">
+                <span>🏆</span> Most Loved · Bestselling Product
+              </div>
+            )}
+
             <div className="product-page-cat">{CAT_LABEL[product.category] || product.category}</div>
             <h1 className="product-page-name">{product.name}</h1>
 
@@ -158,34 +210,26 @@ export default function ProductPage() {
                     href={`https://wa.me/919769238160?text=Hi! I'm interested in: ${encodeURIComponent(product.name)}`}
                     className="product-page-contact-btn pp-wa"
                     target="_blank" rel="noreferrer"
-                  >
-                    <span>📱</span> WhatsApp
-                  </a>
+                  ><span>📱</span> WhatsApp</a>
                   <a
                     href="https://instagram.com/marvikala"
                     className="product-page-contact-btn pp-ig"
                     target="_blank" rel="noreferrer"
-                  >
-                    <span>📸</span> Instagram
-                  </a>
+                  ><span>📸</span> Instagram</a>
                 </div>
               </>
             ) : (
               <div className="product-page-oos-msg">
                 <p>This product is currently out of stock. Follow us on Instagram to be notified when it's back!</p>
-                <a
-                  href="https://instagram.com/marvikala"
-                  className="product-page-contact-btn pp-ig"
-                  target="_blank" rel="noreferrer"
-                  style={{ marginTop: 12, display: 'inline-flex', width: 'fit-content' }}
-                >
+                <a href="https://instagram.com/marvikala" className="product-page-contact-btn pp-ig" target="_blank" rel="noreferrer" style={{ marginTop: 12, display: 'inline-flex', width: 'fit-content' }}>
                   <span>📸</span> @marvikala on Instagram
                 </a>
               </div>
             )}
 
-            {/* ── Extra details ── */}
             <div className="product-page-divider" />
+
+            {/* Perks */}
             <div className="product-page-perks">
               <div className="perk-item">
                 <span className="perk-icon">🧶</span>
@@ -198,7 +242,7 @@ export default function ProductPage() {
                 <span className="perk-icon">🎨</span>
                 <div className="perk-text">
                   <strong>Custom Colours & Sizes</strong>
-                  <span>Just tell us your preferences — we'll make it!</span>
+                  <span>Tell us your preferences — we'll make it just for you!</span>
                 </div>
               </div>
               <div className="perk-item">
