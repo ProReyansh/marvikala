@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import EnquireModal from '../components/EnquireModal';
-import ProductModal from '../components/ProductModal';
 import CustomOrderModal from '../components/CustomOrderModal';
 
 const CATEGORIES = [
@@ -28,14 +28,14 @@ const CAT_LABEL = {
 
 
 export default function Home() {
-  const [products, setProducts]               = useState([]);
-  const [loading, setLoading]                 = useState(true);
-  const [activeCategory, setActiveCategory]   = useState('all');
-  const [selectedProduct, setSelectedProduct] = useState(null);
-  const [enquireProduct, setEnquireProduct]   = useState(null);
+  const navigate = useNavigate();
+  const [products, setProducts]             = useState([]);
+  const [loading, setLoading]               = useState(true);
+  const [activeCategory, setActiveCategory] = useState('all');
+  const [enquireProduct, setEnquireProduct] = useState(null);
   const [customModalOpen, setCustomModalOpen] = useState(false);
-  const [searchQuery, setSearchQuery]         = useState('');
-  const [bouncingCat, setBouncingCat]         = useState(null);
+  const [searchQuery, setSearchQuery]       = useState('');
+  const [bouncingCat, setBouncingCat]       = useState(null);
 
   useEffect(() => {
     axios
@@ -74,18 +74,24 @@ export default function Home() {
       : products.filter((p) => p.category === activeCategory);
 
   function ProductCard({ product }) {
+    const imgSrc = (() => {
+      const imgs = product.images?.length > 0 ? product.images : (product.image ? [product.image] : []);
+      if (!imgs[0]) return null;
+      return imgs[0].startsWith('http') ? imgs[0] : `/uploads/${imgs[0]}`;
+    })();
+
     return (
       <div
         className="product-card"
-        onClick={() => setSelectedProduct(product)}
+        onClick={() => navigate(`/product/${product._id}`)}
       >
         <div className="product-img">
-          {product.image ? (
-            <img src={product.image.startsWith('http') ? product.image : `/uploads/${product.image}`} alt={product.name} />
+          {imgSrc ? (
+            <img src={imgSrc} alt={product.name} />
           ) : (
             <span>🧶</span>
           )}
-          {product.featured && <span className="product-badge">⭐ Featured</span>}
+          {product.bestseller && <span className="product-badge bestseller-badge">🏆 Bestseller</span>}
           {!product.inStock && <div className="out-of-stock-overlay">Out of Stock</div>}
         </div>
         <div className="product-info">
@@ -212,8 +218,8 @@ export default function Home() {
           {/* PRODUCTS */}
           <section className="section bg-white" id="products">
             <div className="section-head">
-              <h2>Featured Products 🛍️</h2>
-              <p>Tap any product to enquire — we'll get back to you!</p>
+              <h2>Our Products 🛍️</h2>
+              <p>Click any product to see details — tap Enquire Now to order!</p>
             </div>
             {loading ? (
               <div className="spinner-wrap"><div className="spinner" /></div>
@@ -231,6 +237,48 @@ export default function Home() {
                 )}
               </div>
             )}
+          </section>
+
+          {/* ABOUT US / OUR STORY */}
+          <section className="about-section" id="about">
+            <div className="about-content">
+              <div className="about-text">
+                <div className="about-eyebrow">✦ Our Story</div>
+                <h2>Made with love, stitch by stitch</h2>
+                <p>
+                  Hi! I'm the founder of Marvikala — a small handmade crochet studio based in Mumbai.
+                  What started as a passion for creating beautiful things with yarn has grown into
+                  a little business bringing joy to people across the city.
+                </p>
+                <p>
+                  Every flower bouquet, keychain, bookmark, and Laddu Gopal dress is handcrafted
+                  with care and attention to detail. No two pieces are ever exactly the same —
+                  that's the magic of handmade!
+                </p>
+                <div className="about-highlights">
+                  <div className="about-highlight">
+                    <span className="about-highlight-icon">🧶</span>
+                    <span>100% Handmade</span>
+                  </div>
+                  <div className="about-highlight">
+                    <span className="about-highlight-icon">🎨</span>
+                    <span>Custom Orders Welcome</span>
+                  </div>
+                  <div className="about-highlight">
+                    <span className="about-highlight-icon">📦</span>
+                    <span>Shipping in Mumbai</span>
+                  </div>
+                </div>
+              </div>
+              <div className="about-mosaic">
+                <div className="about-tile at1">🌸</div>
+                <div className="about-tile at2">🧶</div>
+                <div className="about-tile at3">🎀</div>
+                <div className="about-tile at4">💍</div>
+                <div className="about-tile at5">🕉️</div>
+                <div className="about-tile at6">🎨</div>
+              </div>
+            </div>
           </section>
         </>
       )}
@@ -274,10 +322,6 @@ export default function Home() {
       )}
 
       <Footer />
-
-      {selectedProduct && (
-        <ProductModal product={selectedProduct} onClose={() => setSelectedProduct(null)} onEnquire={() => setEnquireProduct(selectedProduct)} />
-      )}
 
       {enquireProduct && (
         <EnquireModal product={enquireProduct} onClose={() => setEnquireProduct(null)} />

@@ -9,9 +9,11 @@ const productSchema = new mongoose.Schema(
       required: true,
       enum: ['flowers', 'keychains', 'bookmarks', 'laddugopaldress', 'homedecor', 'hairaccessories', 'jewellery', 'rakhi', 'custom'],
     },
-    image: { type: String, default: '' },
-    inStock: { type: Boolean, default: true },
-    featured: { type: Boolean, default: false },
+    image:  { type: String, default: '' },        // kept for backward compat
+    images: { type: [String], default: [] },       // multiple images
+    inStock:    { type: Boolean, default: true },
+    featured:   { type: Boolean, default: false }, // kept for backward compat
+    bestseller: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

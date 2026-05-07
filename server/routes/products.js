@@ -18,7 +18,7 @@ const storage = new CloudinaryStorage({
   params: {
     folder: 'marvikala',
     allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'gif'],
-    transformation: [{ width: 800, height: 800, crop: 'limit' }],
+    transformation: [{ width: 1200, height: 1200, crop: 'limit' }],
   },
 });
 
@@ -31,29 +31,45 @@ const upload = multer({
   },
 });
 
+function getPublicId(url) {
+  return url.split('/').slice(-2).join('/').replace(/\.[^/.]+$/, '');
+}
+
 // Public: get all products
 router.get('/', async (req, res) => {
   try {
     const filter = {};
     if (req.query.category) filter.category = req.query.category;
-    const products = await Product.find(filter).sort({ featured: -1, createdAt: -1 });
+    const products = await Product.find(filter).sort({ bestseller: -1, featured: -1, createdAt: -1 });
     res.json(products);
   } catch (err) {
     res.status(500).json({ message: 'Server error' });
   }
 });
 
-// Admin: add product
-router.post('/', authMiddleware, upload.single('image'), async (req, res) => {
+// Public: get single product by id
+router.get('/:id', async (req, res) => {
   try {
-    const { name, description, category, inStock, featured } = req.body;
+    const product = await Product.findById(req.params.id);
+    if (!product) return res.status(404).json({ message: 'Product not found' });
+    res.json(product);
+  } catch (err) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Admin: add product (up to 5 images)
+router.post('/', authMiddleware, upload.array('images', 5), async (req, res) => {
+  try {
+    const { name, description, category, inStock, bestseller } = req.body;
+    const images = req.files ? req.files.map(f => f.path) : [];
     const product = new Product({
-      name,
-      description,
-      category,
-      image: req.file ? req.file.path : '',
-      inStock: inStock === 'true' || inStock === true,
-      featured: featured === 'true' || featured === true,
+      name, description, category,
+      image:  images[0] || '',
+      images,
+      inStock:    inStock    === 'true' || inStock    === true,
+      bestseller: bestseller === 'true' || bestseller === true,
+      featured:   bestseller === 'true' || bestseller === true,
     });
     await product.save();
     res.status(201).json(product);
@@ -63,25 +79,34 @@ router.post('/', authMiddleware, upload.single('image'), async (req, res) => {
 });
 
 // Admin: update product
-router.put('/:id', authMiddleware, upload.single('image'), async (req, res) => {
+router.put('/:id', authMiddleware, upload.array('images', 5), async (req, res) => {
   try {
-    const { name, description, category, inStock, featured } = req.body;
-    const update = {
-      name,
-      description,
-      category,
-      inStock: inStock === 'true' || inStock === true,
-      featured: featured === 'true' || featured === true,
-    };
-    if (req.file) {
-      update.image = req.file.path;
-      // delete old image from Cloudinary
-      const old = await Product.findById(req.params.id);
-      if (old?.image && old.image.includes('cloudinary')) {
-        const publicId = old.image.split('/').slice(-2).join('/').replace(/\.[^/.]+$/, '');
-        await cloudinary.uploader.destroy(publicId).catch(() => {});
+    const { name, description, category, inStock, bestseller, existingImages } = req.body;
+    let keptImages = [];
+    try { keptImages = JSON.parse(existingImages || '[]'); } catch { keptImages = []; }
+    const newImages = req.files ? req.files.map(f => f.path) : [];
+    const allImages = [...keptImages, ...newImages];
+
+    // delete removed images from Cloudinary
+    const old = await Product.findById(req.params.id);
+    if (old) {
+      const oldUrls = old.images.length > 0 ? old.images : (old.image ? [old.image] : []);
+      for (const url of oldUrls) {
+        if (url && url.includes('cloudinary') && !keptImages.includes(url)) {
+          await cloudinary.uploader.destroy(getPublicId(url)).catch(() => {});
+        }
       }
     }
+
+    const update = {
+      name, description, category,
+      images: allImages,
+      image:  allImages[0] || '',
+      inStock:    inStock    === 'true' || inStock    === true,
+      bestseller: bestseller === 'true' || bestseller === true,
+      featured:   bestseller === 'true' || bestseller === true,
+    };
+
     const product = await Product.findByIdAndUpdate(req.params.id, update, { new: true });
     if (!product) return res.status(404).json({ message: 'Product not found' });
     res.json(product);
@@ -95,9 +120,11 @@ router.delete('/:id', authMiddleware, async (req, res) => {
   try {
     const product = await Product.findByIdAndDelete(req.params.id);
     if (!product) return res.status(404).json({ message: 'Product not found' });
-    if (product.image && product.image.includes('cloudinary')) {
-      const publicId = product.image.split('/').slice(-2).join('/').replace(/\.[^/.]+$/, '');
-      await cloudinary.uploader.destroy(publicId).catch(() => {});
+    const urls = product.images.length > 0 ? product.images : (product.image ? [product.image] : []);
+    for (const url of urls) {
+      if (url && url.includes('cloudinary')) {
+        await cloudinary.uploader.destroy(getPublicId(url)).catch(() => {});
+      }
     }
     res.json({ message: 'Product deleted' });
   } catch (err) {
