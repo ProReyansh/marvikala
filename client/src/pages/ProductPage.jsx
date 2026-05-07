@@ -3,7 +3,6 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import EnquireModal from '../components/EnquireModal';
 
 const CAT_LABEL = {
   flowers: 'Flowers', keychains: 'Keychains', bookmarks: 'Bookmarks',
@@ -29,15 +28,12 @@ export default function ProductPage() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Pre-populate from router state so page shows instantly, no spinner
   const [product, setProduct]       = useState(location.state?.product || null);
   const [loading, setLoading]       = useState(!location.state?.product);
   const [activeImg, setActiveImg]   = useState(0);
   const [imgAnimKey, setImgAnimKey] = useState(0);
-  const [enquireOpen, setEnquireOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Similar products from cache (instant, no extra API call)
   const [similar, setSimilar] = useState(() => {
     if (!location.state?.product) return [];
     const all = getCachedProducts();
@@ -51,7 +47,6 @@ export default function ProductPage() {
       .then(res => {
         setProduct(res.data);
         document.title = `${res.data.name} — Marvikala`;
-        // Update similar from cache using fresh category
         const all = getCachedProducts();
         setSimilar(
           all.filter(p => p.category === res.data.category && p._id !== res.data._id).slice(0, 4)
@@ -72,38 +67,25 @@ export default function ProductPage() {
     try { sessionStorage.setItem('mk_search', q); } catch {}
   }
 
-  // Mini product card reused for similar section
   function SimilarCard({ p }) {
     const imgSrc = (() => {
       const imgs = p.images?.length > 0 ? p.images : (p.image ? [p.image] : []);
       if (!imgs[0]) return null;
       return imgs[0].startsWith('http') ? imgs[0] : `/uploads/${imgs[0]}`;
     })();
-
     return (
-      <div
-        className="product-card"
-        onClick={() => {
-          navigate(`/product/${p._id}`, { state: { product: p } });
-        }}
-      >
+      <div className="product-card" onClick={() => navigate(`/product/${p._id}`, { state: { product: p } })}>
         <div className="product-img">
           {imgSrc ? <img src={imgSrc} alt={p.name} /> : <span>🧶</span>}
-          {(p.bestseller || p.featured) && (
-            <span className="product-badge bestseller-badge">🏆 Bestseller</span>
-          )}
+          {(p.bestseller || p.featured) && <span className="product-badge bestseller-badge">🏆 Bestseller</span>}
           {!p.inStock && <div className="out-of-stock-overlay">Out of Stock</div>}
         </div>
         <div className="product-info">
           <div className="product-name">{p.name}</div>
           {p.description && <div className="product-desc">{p.description}</div>}
           <div className="product-cat">{CAT_LABEL[p.category] || p.category}</div>
-          <button
-            className="enquire-btn"
-            disabled={!p.inStock}
-            onClick={(e) => { e.stopPropagation(); p.inStock && navigate(`/product/${p._id}`, { state: { product: p } }); }}
-          >
-            {p.inStock ? 'View Product' : 'Out of Stock'}
+          <button className="enquire-btn" style={{ pointerEvents: 'none' }}>
+            View Product →
           </button>
         </div>
       </div>
@@ -129,39 +111,25 @@ export default function ProductPage() {
       <Navbar searchQuery={searchQuery} onSearch={handleSearch} />
 
       <div className="product-page">
-        <button className="product-page-back" onClick={() => navigate(-1)}>
-          ← Back
-        </button>
+        <button className="product-page-back" onClick={() => navigate(-1)}>← Back</button>
 
         <div className="product-page-layout">
-          {/* Image Gallery */}
+
+          {/* ── Image Gallery ── */}
           <div className="product-page-gallery">
             <div className="product-page-main-img">
               {images.length > 0
-                ? <img
-                    key={imgAnimKey}
-                    src={imgUrl(images[activeImg])}
-                    alt={product.name}
-                    className="product-page-img-anim"
-                  />
+                ? <img key={imgAnimKey} src={imgUrl(images[activeImg])} alt={product.name} className="product-page-img-anim" />
                 : <span className="product-page-placeholder">🧶</span>
               }
-              {product.bestseller && (
-                <span className="product-page-badge bestseller-badge">🏆 Bestseller</span>
-              )}
-              {!product.inStock && (
-                <div className="product-page-oos-overlay">Out of Stock</div>
-              )}
+              {product.bestseller && <span className="product-page-badge bestseller-badge">🏆 Bestseller</span>}
+              {!product.inStock && <div className="product-page-oos-overlay">Out of Stock</div>}
             </div>
 
             {images.length > 1 && (
               <div className="product-page-thumbs">
                 {images.map((img, i) => (
-                  <div
-                    key={i}
-                    className={`product-page-thumb${activeImg === i ? ' active' : ''}`}
-                    onClick={() => changeImage(i)}
-                  >
+                  <div key={i} className={`product-page-thumb${activeImg === i ? ' active' : ''}`} onClick={() => changeImage(i)}>
                     <img src={imgUrl(img)} alt={`${product.name} ${i + 1}`} />
                   </div>
                 ))}
@@ -169,7 +137,7 @@ export default function ProductPage() {
             )}
           </div>
 
-          {/* Product Info */}
+          {/* ── Product Info ── */}
           <div className="product-page-info">
             <div className="product-page-cat">{CAT_LABEL[product.category] || product.category}</div>
             <h1 className="product-page-name">{product.name}</h1>
@@ -178,9 +146,7 @@ export default function ProductPage() {
               {product.inStock ? '✅ In Stock' : '❌ Out of Stock'}
             </div>
 
-            {product.description && (
-              <p className="product-page-desc">{product.description}</p>
-            )}
+            {product.description && <p className="product-page-desc">{product.description}</p>}
 
             <div className="product-page-divider" />
 
@@ -191,23 +157,18 @@ export default function ProductPage() {
                   <a
                     href={`https://wa.me/919769238160?text=Hi! I'm interested in: ${encodeURIComponent(product.name)}`}
                     className="product-page-contact-btn pp-wa"
-                    target="_blank"
-                    rel="noreferrer"
+                    target="_blank" rel="noreferrer"
                   >
                     <span>📱</span> WhatsApp
                   </a>
                   <a
                     href="https://instagram.com/marvikala"
                     className="product-page-contact-btn pp-ig"
-                    target="_blank"
-                    rel="noreferrer"
+                    target="_blank" rel="noreferrer"
                   >
                     <span>📸</span> Instagram
                   </a>
                 </div>
-                <button className="product-page-enquire" onClick={() => setEnquireOpen(true)}>
-                  Enquire Now
-                </button>
               </>
             ) : (
               <div className="product-page-oos-msg">
@@ -215,18 +176,50 @@ export default function ProductPage() {
                 <a
                   href="https://instagram.com/marvikala"
                   className="product-page-contact-btn pp-ig"
-                  target="_blank"
-                  rel="noreferrer"
+                  target="_blank" rel="noreferrer"
                   style={{ marginTop: 12, display: 'inline-flex', width: 'fit-content' }}
                 >
                   <span>📸</span> @marvikala on Instagram
                 </a>
               </div>
             )}
+
+            {/* ── Extra details ── */}
+            <div className="product-page-divider" />
+            <div className="product-page-perks">
+              <div className="perk-item">
+                <span className="perk-icon">🧶</span>
+                <div className="perk-text">
+                  <strong>100% Handmade</strong>
+                  <span>Every piece crafted stitch by stitch with care</span>
+                </div>
+              </div>
+              <div className="perk-item">
+                <span className="perk-icon">🎨</span>
+                <div className="perk-text">
+                  <strong>Custom Colours & Sizes</strong>
+                  <span>Just tell us your preferences — we'll make it!</span>
+                </div>
+              </div>
+              <div className="perk-item">
+                <span className="perk-icon">📦</span>
+                <div className="perk-text">
+                  <strong>Delivery in Mumbai</strong>
+                  <span>Quick local delivery across Mumbai city</span>
+                </div>
+              </div>
+              <div className="perk-item">
+                <span className="perk-icon">💛</span>
+                <div className="perk-text">
+                  <strong>Made with Love</strong>
+                  <span>From a small studio in Mumbai, just for you</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Similar Products — full width below the main layout */}
+        {/* ── Similar Results ── */}
         {similar.length > 0 && (
           <div className="pp-similar">
             <div className="pp-similar-header">
@@ -241,10 +234,6 @@ export default function ProductPage() {
       </div>
 
       <Footer />
-
-      {enquireOpen && (
-        <EnquireModal product={product} onClose={() => setEnquireOpen(false)} />
-      )}
     </>
   );
 }

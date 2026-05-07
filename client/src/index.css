@@ -1528,9 +1528,58 @@ body {
   border-radius: 20px;
 }
 
-/* ── Bestsellers section ── */
+/* ── Bestsellers section — premium look ── */
 .bestsellers-section {
-  background: linear-gradient(160deg, #fff8ee 0%, #fffdf8 100%);
+  background: linear-gradient(160deg, #fff8ee 0%, #fffcf2 50%, #fff8ee 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle decorative background pattern */
+.bestsellers-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 10% 20%, rgba(245,166,35,0.07) 0%, transparent 50%),
+    radial-gradient(circle at 90% 80%, rgba(255,107,107,0.06) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+/* Gold-accented section heading */
+.bestsellers-section .section-head h2 {
+  background: linear-gradient(135deg, #f5a623, #e08800);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Premium card — golden border + warm glow */
+.bestsellers-section .product-card {
+  border: 2px solid rgba(245, 166, 35, 0.25);
+  box-shadow: 0 4px 20px rgba(245, 166, 35, 0.12), 0 1px 4px rgba(0,0,0,0.06);
+  background: linear-gradient(180deg, #fffdf8 0%, #fff 100%);
+  position: relative;
+}
+
+.bestsellers-section .product-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #f5a623, #ff6b6b, #f5a623);
+  border-radius: 20px 20px 0 0;
+}
+
+.bestsellers-section .product-card:hover {
+  border-color: rgba(245, 166, 35, 0.55);
+  box-shadow: 0 20px 48px rgba(245, 166, 35, 0.22), 0 4px 12px rgba(0,0,0,0.08);
+  transform: translateY(-6px);
+}
+
+/* Warm image background for bestseller cards */
+.bestsellers-section .product-img {
+  background: linear-gradient(135deg, #fff3cd, #ffe082);
 }
 
 /* ── Mobile search toggle ── */
@@ -1862,6 +1911,53 @@ body {
   gap: 4px;
 }
 
+/* ── Product page perks / details section ── */
+.product-page-perks {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.perk-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 14px 16px;
+  background: #fafafa;
+  border-radius: 14px;
+  border: 1.5px solid #f0f0f0;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.perk-item:hover {
+  background: #fff9ee;
+  border-color: #f5e0a0;
+}
+
+.perk-icon {
+  font-size: 22px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.perk-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.perk-text strong {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.perk-text span {
+  font-size: 12px;
+  color: #888;
+  line-height: 1.4;
+}
+
 /* ── Similar products section (ProductPage) ── */
 .pp-similar {
   margin-top: 48px;
@@ -2032,4 +2128,10 @@ body {
   /* Similar section mobile */
   .pp-similar       { padding: 28px 0 0; }
   .pp-similar-header h2 { font-size: 22px; }
+
+  /* Perks section mobile */
+  .perk-item  { padding: 12px 14px; gap: 12px; }
+  .perk-icon  { font-size: 20px; }
+  .perk-text strong { font-size: 12px; }
+  .perk-text span   { font-size: 11px; }
 }
