@@ -40,7 +40,9 @@ export default function Navbar({ searchQuery, onSearch }) {
     if (isHome) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
-      navigate('/');
+      // Same exit animation as back button and logo click
+      document.querySelector('.product-page')?.classList.add('pp-exit');
+      setTimeout(() => navigate('/'), 250);
     }
   }
 

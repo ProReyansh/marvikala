@@ -2196,3 +2196,99 @@ body {
   100% { transform: translateX(100%);  }
 }
 
+/* ═══════════════════════════════════════════════
+   ── 404 Not Found page ──
+   ═══════════════════════════════════════════════ */
+
+.notfound-page {
+  min-height: calc(100vh - 66px - 80px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  background: linear-gradient(160deg, #fffdf8 0%, #fff8ee 100%);
+}
+
+.notfound-card {
+  max-width: 480px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  text-align: center;
+  background: white;
+  border-radius: 28px;
+  padding: 48px 40px 44px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.08);
+  border: 1.5px solid #f5f0e8;
+}
+
+.notfound-emoji {
+  font-size: 64px;
+  line-height: 1;
+  margin-bottom: 4px;
+  animation: nfBounce 2s ease-in-out infinite;
+}
+
+@keyframes nfBounce {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-10px); }
+}
+
+.notfound-code {
+  font-size: 80px;
+  font-weight: 900;
+  letter-spacing: -4px;
+  line-height: 1;
+  background: linear-gradient(135deg, #f5a623 0%, #e8832a 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.notfound-title {
+  font-size: 24px;
+  font-weight: 800;
+  color: #1a1a1a;
+  letter-spacing: -0.3px;
+  margin: 0;
+}
+
+.notfound-desc {
+  font-size: 14px;
+  color: #888;
+  line-height: 1.7;
+  margin: 0;
+}
+
+.notfound-countdown {
+  font-size: 13px;
+  color: #aaa;
+  background: #fafafa;
+  border: 1.5px solid #f0f0f0;
+  border-radius: 50px;
+  padding: 8px 20px;
+}
+
+.notfound-countdown span {
+  font-weight: 800;
+  color: #f5a623;
+  font-size: 15px;
+}
+
+.notfound-btn {
+  margin-top: 6px;
+  width: 100%;
+  max-width: 240px;
+  text-align: center;
+  justify-content: center;
+}
+
+@media (max-width: 599px) {
+  .notfound-card    { padding: 36px 24px 32px; gap: 12px; }
+  .notfound-code    { font-size: 64px; }
+  .notfound-emoji   { font-size: 52px; }
+  .notfound-title   { font-size: 20px; }
+}
+

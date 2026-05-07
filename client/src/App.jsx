@@ -4,22 +4,29 @@ import Home from './pages/Home';
 import ProductPage from './pages/ProductPage';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
+import NotFound from './pages/NotFound';
 
-// Scroll to top on PUSH/REPLACE; restore saved position on POP (back button)
+// Scroll to top on forward navigation and reload.
+// Restore saved scroll position only on genuine back/forward navigation (POP).
 function ScrollToTop() {
   const { pathname } = useLocation();
   const navType = useNavigationType();
   useEffect(() => {
-    if (navType === 'POP') {
-      // Restore wherever the user was on this page before they navigated away
+    // Performance API distinguishes a reload (type='reload') from a back/forward POP
+    const perfType = performance.getEntriesByType?.('navigation')?.[0]?.type;
+    const isReload = perfType === 'reload';
+
+    if (isReload || navType !== 'POP') {
+      // Reload or forward navigation — always go to top
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    } else {
+      // Genuine back/forward — restore where the user was
       const saved = sessionStorage.getItem(`mk_scroll_${pathname}`);
       if (saved) {
         requestAnimationFrame(() => {
           window.scrollTo({ top: parseInt(saved, 10), behavior: 'instant' });
         });
       }
-    } else {
-      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
     }
   }, [pathname]);
   return null;
@@ -50,6 +57,8 @@ export default function App() {
             </ProtectedRoute>
           }
         />
+        {/* Catch-all — any unknown URL gets the 404 page */}
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );
