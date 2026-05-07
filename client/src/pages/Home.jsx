@@ -73,6 +73,10 @@ export default function Home() {
   }
 
   useEffect(() => {
+    document.title = 'Marvikala — Handmade Crochet';
+  }, []);
+
+  useEffect(() => {
     // Always re-fetch in background to get fresh data
     axios.get('/api/products')
       .then((res) => {
