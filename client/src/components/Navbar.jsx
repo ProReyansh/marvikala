@@ -1,13 +1,47 @@
 import { useState, useRef } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 export default function Navbar({ searchQuery, onSearch }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const inputRef = useRef();
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const isHome = pathname === '/';
 
-  function scrollTo(id) {
+  // If already on home: smooth-scroll to the section.
+  // If on any other page: navigate to home and let Home.jsx scroll after render.
+  function goToSection(id) {
     setMenuOpen(false);
-    const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
+    if (isHome) {
+      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      navigate('/', { state: { scrollTo: id } });
+    }
+  }
+
+  function handleLogoClick(e) {
+    e.preventDefault();
+    setMenuOpen(false);
+    onSearch?.('');
+    if (isHome) {
+      // Already home — just scroll to the very top
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      // Trigger the same exit animation as the back button, then navigate home
+      document.querySelector('.product-page')?.classList.add('pp-exit');
+      setTimeout(() => navigate('/'), 250);
+    }
+  }
+
+  function handleHomeClick(e) {
+    e.preventDefault();
+    setMenuOpen(false);
+    onSearch?.('');
+    if (isHome) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      navigate('/');
+    }
   }
 
   function handleSearchSubmit(e) {
@@ -17,7 +51,7 @@ export default function Navbar({ searchQuery, onSearch }) {
 
   return (
     <nav className="navbar">
-      <a href="/" className="navbar-logo" onClick={() => onSearch?.('')}>
+      <a href="/" className="navbar-logo" onClick={handleLogoClick}>
         <img src="/logo.jpg" alt="Marvikala" className="navbar-logo-icon" />
         <span className="navbar-logo-text">Marvi<span>kala</span></span>
       </a>
@@ -50,15 +84,13 @@ export default function Navbar({ searchQuery, onSearch }) {
 
       <ul className={`navbar-links${menuOpen ? ' open' : ''}`}>
         <li>
-          <a href="/" onClick={(e) => { e.preventDefault(); setMenuOpen(false); onSearch?.(''); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
-            Home
-          </a>
+          <a href="/" onClick={handleHomeClick}>Home</a>
         </li>
-        <li><a href="#products"    onClick={(e) => { e.preventDefault(); scrollTo('products'); }}>Products</a></li>
-        <li><a href="#bestsellers" onClick={(e) => { e.preventDefault(); scrollTo('bestsellers'); }}>Bestsellers</a></li>
-        <li><a href="#custom"      onClick={(e) => { e.preventDefault(); scrollTo('custom'); }}>Custom Order</a></li>
-        <li><a href="#about"       onClick={(e) => { e.preventDefault(); scrollTo('about'); }}>Our Story</a></li>
-        <li><a href="#contact"     onClick={(e) => { e.preventDefault(); scrollTo('contact'); }} className="navbar-cta">Contact Us</a></li>
+        <li><a href="#products"    onClick={(e) => { e.preventDefault(); goToSection('products'); }}>Products</a></li>
+        <li><a href="#bestsellers" onClick={(e) => { e.preventDefault(); goToSection('bestsellers'); }}>Bestsellers</a></li>
+        <li><a href="#custom"      onClick={(e) => { e.preventDefault(); goToSection('custom'); }}>Custom Order</a></li>
+        <li><a href="#about"       onClick={(e) => { e.preventDefault(); goToSection('about'); }}>Our Story</a></li>
+        <li><a href="#contact"     onClick={(e) => { e.preventDefault(); goToSection('contact'); }} className="navbar-cta">Contact Us</a></li>
       </ul>
 
       {/* Hamburger — only visible on mobile via .navbar-mobile-icons */}

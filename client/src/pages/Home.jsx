@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -26,7 +26,7 @@ const CAT_LABEL = {
   rakhi: 'Rakhi', custom: 'Custom',
 };
 
-// Build a pretty SEO-friendly URL: /product/crochet-flower-bouquet-<mongoId>
+// Build a clean SEO-friendly URL: /product/crochet-flower-bouquet
 function slugify(name) {
   return name.toLowerCase()
     .replace(/[^\w\s-]/g, '')
@@ -34,7 +34,7 @@ function slugify(name) {
     .replace(/^-+|-+$/g, '');
 }
 function productUrl(product) {
-  return `/product/${slugify(product.name)}-${product._id}`;
+  return `/product/${slugify(product.name)}`;
 }
 
 // sessionStorage helpers — persist search query and product cache across navigation
@@ -56,6 +56,7 @@ function setCachedProducts(list) {
 
 export default function Home() {
   const navigate = useNavigate();
+  const location = useLocation();
 
   // Load from cache immediately — no spinner on back-navigation
   const [products, setProducts]       = useState(getCachedProducts);
@@ -80,6 +81,16 @@ export default function Home() {
       })
       .catch(() => {})
       .finally(() => setLoading(false));
+  }, []);
+
+  // When arriving from another page via a navbar section link, scroll to that section
+  useEffect(() => {
+    const target = location.state?.scrollTo;
+    if (!target) return;
+    const t = setTimeout(() => {
+      document.getElementById(target)?.scrollIntoView({ behavior: 'smooth' });
+    }, 120);
+    return () => clearTimeout(t);
   }, []);
 
   function handleCatClick(key) {

@@ -16,6 +16,17 @@ function imgUrl(src) {
   return src.startsWith('http') ? src : `/uploads/${src}`;
 }
 
+function slugify(name) {
+  return name.toLowerCase()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/[\s_]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+function productUrl(product) {
+  return `/product/${slugify(product.name)}`;
+}
+
 function getCachedProducts() {
   try {
     const c = sessionStorage.getItem('mk_products');
@@ -23,34 +34,13 @@ function getCachedProducts() {
   } catch { return []; }
 }
 
-// Extract MongoDB ObjectID (24 hex chars) from the end of a slug
-function extractId(slug) {
-  const parts = slug.split('-');
-  for (let i = parts.length - 1; i >= 0; i--) {
-    if (/^[a-f0-9]{24}$/.test(parts[i])) return parts[i];
-  }
-  // fallback — maybe it's a raw ID
-  return slug;
-}
-
-function slugify(name) {
-  return name.toLowerCase()
-    .replace(/[^\w\s-]/g, '')
-    .replace(/[\s_]+/g, '-')
-    .replace(/^-+|-+$/g, '');
-}
-function productUrl(product) {
-  return `/product/${slugify(product.name)}-${product._id}`;
-}
-
 export default function ProductPage() {
   const { slug } = useParams();
-  const id = extractId(slug);
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [product, setProduct]       = useState(location.state?.product || null);
-  const [loading, setLoading]       = useState(!location.state?.product);
+  const [product, setProduct]       = useState(null);
+  const [loading, setLoading]       = useState(true);
   const [activeImg, setActiveImg]   = useState(0);
   const [imgAnimKey, setImgAnimKey] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
@@ -59,43 +49,55 @@ export default function ProductPage() {
   const [pageAnim, setPageAnim]     = useState('pp-enter');
   const [exiting, setExiting]       = useState(false);
 
-  const [similar, setSimilar] = useState(() => {
-    if (!location.state?.product) return [];
-    const all = getCachedProducts();
-    return all
-      .filter(p => p.category === location.state.product.category && p._id !== location.state.product._id)
-      .slice(0, 4);
-  });
+  const [similar, setSimilar] = useState([]);
 
-  // Reset and play enter animation whenever the product ID changes (similar card click)
+  // Single unified effect — runs whenever the slug changes (new product navigated to)
   useEffect(() => {
+    // 1. Reset UI state immediately so old content never lingers
     setPageAnim('pp-enter');
     setExiting(false);
     setActiveImg(0);
     setImgAnimKey(0);
-    // Pre-populate from router state immediately — eliminates the 1-second lag where
-    // the old product content lingers while the API call for the new product is in flight
-    if (location.state?.product) {
-      setProduct(location.state.product);
+    setSimilar([]);   // ← clears old similar cards instantly, no more ghost cards
+
+    function resolve(prod, allProducts) {
+      setProduct(prod);
+      document.title = `${prod.name} — Marvikala`;
+      const pool = allProducts || getCachedProducts();
+      setSimilar(pool.filter(p => p.category === prod.category && p._id !== prod._id).slice(0, 4));
       setLoading(false);
     }
+
+    // 2. Router state has the product already — use it instantly (no lag)
+    if (location.state?.product && slugify(location.state.product.name) === slug) {
+      resolve(location.state.product, null);
+      const t = setTimeout(() => setPageAnim('pp-visible'), 20);
+      return () => clearTimeout(t);
+    }
+
+    // 3. Try sessionStorage cache (handles back-navigation / refresh when cache exists)
+    const cached = getCachedProducts();
+    const fromCache = cached.find(p => slugify(p.name) === slug);
+    if (fromCache) {
+      resolve(fromCache, cached);
+      const t = setTimeout(() => setPageAnim('pp-visible'), 20);
+      return () => clearTimeout(t);
+    }
+
+    // 4. Direct URL visit with no cache — fetch all products and find by slug
+    setLoading(true);
+    axios.get('/api/products')
+      .then(res => {
+        const found = res.data.find(p => slugify(p.name) === slug);
+        if (found) resolve(found, res.data);
+        else navigate('/');
+      })
+      .catch(() => navigate('/'))
+      .finally(() => setLoading(false));
+
     const t = setTimeout(() => setPageAnim('pp-visible'), 20);
     return () => clearTimeout(t);
-  }, [id]);
-
-  useEffect(() => {
-    axios.get(`/api/products/${id}`)
-      .then(res => {
-        setProduct(res.data);
-        document.title = `${res.data.name} — Marvikala`;
-        const all = getCachedProducts();
-        setSimilar(
-          all.filter(p => p.category === res.data.category && p._id !== res.data._id).slice(0, 4)
-        );
-      })
-      .catch(() => { if (!product) navigate('/'); })
-      .finally(() => setLoading(false));
-  }, [id]);
+  }, [slug]);
 
   function changeImage(i) {
     if (i === activeImg) return;
