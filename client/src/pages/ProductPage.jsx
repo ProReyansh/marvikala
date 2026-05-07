@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -20,23 +20,38 @@ function imgUrl(src) {
 export default function ProductPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [product, setProduct]       = useState(null);
-  const [loading, setLoading]       = useState(true);
+  const location = useLocation();
+
+  // Pre-populate from router state so the page shows instantly
+  const [product, setProduct]       = useState(location.state?.product || null);
+  const [loading, setLoading]       = useState(!location.state?.product);
   const [activeImg, setActiveImg]   = useState(0);
+  const [imgAnimKey, setImgAnimKey] = useState(0);
   const [enquireOpen, setEnquireOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     axios.get(`/api/products/${id}`)
-      .then(res => { setProduct(res.data); document.title = `${res.data.name} — Marvikala`; })
-      .catch(() => navigate('/'))
+      .then(res => {
+        setProduct(res.data);
+        document.title = `${res.data.name} — Marvikala`;
+      })
+      .catch(() => { if (!product) navigate('/'); })
       .finally(() => setLoading(false));
   }, [id]);
+
+  function changeImage(i) {
+    if (i === activeImg) return;
+    setActiveImg(i);
+    setImgAnimKey(k => k + 1);
+  }
 
   if (loading) return (
     <>
       <Navbar searchQuery={searchQuery} onSearch={setSearchQuery} />
-      <div className="spinner-wrap" style={{ minHeight: '60vh' }}><div className="spinner" /></div>
+      <div style={{ minHeight: 'calc(100vh - 66px - 80px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div className="spinner" />
+      </div>
       <Footer />
     </>
   );
@@ -60,11 +75,20 @@ export default function ProductPage() {
           <div className="product-page-gallery">
             <div className="product-page-main-img">
               {images.length > 0
-                ? <img src={imgUrl(images[activeImg])} alt={product.name} />
+                ? <img
+                    key={imgAnimKey}
+                    src={imgUrl(images[activeImg])}
+                    alt={product.name}
+                    className="product-page-img-anim"
+                  />
                 : <span className="product-page-placeholder">🧶</span>
               }
-              {product.bestseller && <span className="product-page-badge bestseller-badge">🏆 Bestseller</span>}
-              {!product.inStock && <div className="product-page-oos-overlay">Out of Stock</div>}
+              {product.bestseller && (
+                <span className="product-page-badge bestseller-badge">🏆 Bestseller</span>
+              )}
+              {!product.inStock && (
+                <div className="product-page-oos-overlay">Out of Stock</div>
+              )}
             </div>
 
             {images.length > 1 && (
@@ -73,7 +97,7 @@ export default function ProductPage() {
                   <div
                     key={i}
                     className={`product-page-thumb${activeImg === i ? ' active' : ''}`}
-                    onClick={() => setActiveImg(i)}
+                    onClick={() => changeImage(i)}
                   >
                     <img src={imgUrl(img)} alt={`${product.name} ${i + 1}`} />
                   </div>
@@ -99,44 +123,45 @@ export default function ProductPage() {
 
             {product.inStock ? (
               <>
-                <p className="product-page-cta">Interested? Contact us to place your order!</p>
-                <div className="product-page-btns">
+                <p className="product-page-cta">Interested? Reach out to place your order!</p>
+
+                <div className="product-page-action-row">
                   <a
                     href={`https://wa.me/919769238160?text=Hi! I'm interested in: ${encodeURIComponent(product.name)}`}
-                    className="product-page-btn btn-wa"
+                    className="product-page-contact-btn pp-wa"
                     target="_blank"
                     rel="noreferrer"
                   >
-                    <span>📱</span> Chat on WhatsApp
+                    <span>📱</span> WhatsApp
                   </a>
                   <a
                     href="https://instagram.com/marvikala"
-                    className="product-page-btn btn-ig"
+                    className="product-page-contact-btn pp-ig"
                     target="_blank"
                     rel="noreferrer"
                   >
-                    <span>📸</span> DM on Instagram
+                    <span>📸</span> Instagram
                   </a>
                 </div>
+
                 <button className="product-page-enquire" onClick={() => setEnquireOpen(true)}>
                   Enquire Now
                 </button>
               </>
             ) : (
               <div className="product-page-oos-msg">
-                This product is currently out of stock. Follow us on Instagram to be notified when it's back!
-                <a href="https://instagram.com/marvikala" className="product-page-btn btn-ig" target="_blank" rel="noreferrer" style={{ marginTop: 14 }}>
+                <p>This product is currently out of stock. Follow us on Instagram to be notified when it's back!</p>
+                <a
+                  href="https://instagram.com/marvikala"
+                  className="product-page-contact-btn pp-ig"
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{ marginTop: 12, display: 'inline-flex', width: 'fit-content' }}
+                >
                   <span>📸</span> @marvikala on Instagram
                 </a>
               </div>
             )}
-
-            <div className="product-page-divider" />
-
-            <div className="product-page-contact-row">
-              <a href="https://wa.me/919769238160" className="product-page-contact-link wa" target="_blank" rel="noreferrer">📱 +91 97692 38160</a>
-              <a href="https://instagram.com/marvikala" className="product-page-contact-link ig" target="_blank" rel="noreferrer">📸 @marvikala</a>
-            </div>
           </div>
         </div>
       </div>

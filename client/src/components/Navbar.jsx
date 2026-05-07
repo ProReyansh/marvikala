@@ -31,19 +31,23 @@ export default function Navbar({ searchQuery, onSearch }) {
 
   return (
     <nav className={`navbar${mobileSearchActive ? ' search-active' : ''}`}>
-      <a href="/" className="navbar-logo" onClick={() => { onSearch?.(''); setSearchOpen(false); }}>
+      <a
+        href="/"
+        className="navbar-logo"
+        onClick={() => { onSearch?.(''); setSearchOpen(false); }}
+      >
         <img src="/logo.jpg" alt="Marvikala" className="navbar-logo-icon" />
         <span className="navbar-logo-text">
           Marvi<span>kala</span>
         </span>
       </a>
 
-      {/* Search bar — always visible on desktop, toggles on mobile */}
+      {/* Search bar — always on desktop, drops below on mobile when active */}
       <form className="navbar-search" onSubmit={handleSearchSubmit}>
         <input
           ref={inputRef}
           type="text"
-          placeholder="Search crochet products…"
+          placeholder="Search products…"
           value={searchQuery}
           onChange={(e) => onSearch?.(e.target.value)}
           className="search-input"
@@ -54,54 +58,58 @@ export default function Navbar({ searchQuery, onSearch }) {
             className="search-btn search-btn-clear"
             onClick={() => { onSearch?.(''); inputRef.current?.focus(); }}
             aria-label="Clear search"
-          >
-            ✕
-          </button>
+          >✕</button>
         ) : mobileSearchActive ? (
           <button
             type="button"
             className="search-btn search-btn-clear"
             onClick={closeMobileSearch}
             aria-label="Close search"
-          >
-            ✕
-          </button>
+          >✕</button>
         ) : (
           <button type="submit" className="search-btn search-btn-icon" aria-label="Search">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="11" cy="11" r="8" />
-              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
             </svg>
           </button>
         )}
       </form>
 
-      {/* Mobile-only search icon (hidden when search is open) */}
-      <button
-        className="navbar-search-toggle"
-        onClick={openMobileSearch}
-        aria-label="Open search"
-      >
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-          <circle cx="11" cy="11" r="8" />
-          <line x1="21" y1="21" x2="16.65" y2="16.65" />
-        </svg>
-      </button>
-
       <ul className={`navbar-links${menuOpen ? ' open' : ''}`}>
-        <li><a href="/" onClick={(e) => { e.preventDefault(); setMenuOpen(false); onSearch?.(''); setSearchOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>Home</a></li>
+        <li>
+          <a href="/" onClick={(e) => { e.preventDefault(); setMenuOpen(false); onSearch?.(''); setSearchOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
+            Home
+          </a>
+        </li>
         <li><a href="#products" onClick={(e) => { e.preventDefault(); scrollTo('products'); }}>Products</a></li>
-        <li><a href="#custom" onClick={(e) => { e.preventDefault(); scrollTo('custom'); }}>Custom Order</a></li>
-        <li><a href="#contact" onClick={(e) => { e.preventDefault(); scrollTo('contact'); }} className="navbar-cta">Contact Us</a></li>
+        <li><a href="#custom"   onClick={(e) => { e.preventDefault(); scrollTo('custom'); }}>Custom Order</a></li>
+        <li><a href="#about"    onClick={(e) => { e.preventDefault(); scrollTo('about'); }}>Our Story</a></li>
+        <li><a href="#contact"  onClick={(e) => { e.preventDefault(); scrollTo('contact'); }} className="navbar-cta">Contact Us</a></li>
       </ul>
 
-      <button
-        className={`hamburger${menuOpen ? ' open' : ''}`}
-        onClick={() => setMenuOpen((v) => !v)}
-        aria-label="Menu"
-      >
-        <span /><span /><span />
-      </button>
+      {/* Right-side icons on mobile */}
+      <div className="navbar-mobile-icons">
+        {/* Search toggle — hidden when search is open */}
+        {!mobileSearchActive && (
+          <button
+            className="navbar-search-toggle"
+            onClick={openMobileSearch}
+            aria-label="Open search"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+          </button>
+        )}
+
+        <button
+          className={`hamburger${menuOpen ? ' open' : ''}`}
+          onClick={() => setMenuOpen((v) => !v)}
+          aria-label="Menu"
+        >
+          <span /><span /><span />
+        </button>
+      </div>
     </nav>
   );
 }

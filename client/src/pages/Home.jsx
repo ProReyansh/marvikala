@@ -26,6 +26,13 @@ const CAT_LABEL = {
   rakhi: 'Rakhi', custom: 'Custom',
 };
 
+// Read/write search query to sessionStorage so it persists through back-navigation
+function getSavedSearch() {
+  try { return sessionStorage.getItem('mk_search') || ''; } catch { return ''; }
+}
+function saveSearch(q) {
+  try { sessionStorage.setItem('mk_search', q); } catch {}
+}
 
 export default function Home() {
   const navigate = useNavigate();
@@ -34,8 +41,13 @@ export default function Home() {
   const [activeCategory, setActiveCategory] = useState('all');
   const [enquireProduct, setEnquireProduct] = useState(null);
   const [customModalOpen, setCustomModalOpen] = useState(false);
-  const [searchQuery, setSearchQuery]       = useState('');
+  const [searchQuery, setSearchQuery]       = useState(getSavedSearch);
   const [bouncingCat, setBouncingCat]       = useState(null);
+
+  function handleSearch(q) {
+    setSearchQuery(q);
+    saveSearch(q);
+  }
 
   useEffect(() => {
     axios
@@ -44,12 +56,6 @@ export default function Home() {
       .catch(() => setProducts([]))
       .finally(() => setLoading(false));
   }, []);
-
-  useEffect(() => {
-    if (searchQuery.trim()) {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  }, [searchQuery]);
 
   function handleCatClick(key) {
     setBouncingCat(key);
@@ -73,6 +79,8 @@ export default function Home() {
       ? products
       : products.filter((p) => p.category === activeCategory);
 
+  const bestsellers = products.filter((p) => p.bestseller || p.featured);
+
   function ProductCard({ product }) {
     const imgSrc = (() => {
       const imgs = product.images?.length > 0 ? product.images : (product.image ? [product.image] : []);
@@ -83,7 +91,7 @@ export default function Home() {
     return (
       <div
         className="product-card"
-        onClick={() => navigate(`/product/${product._id}`)}
+        onClick={() => navigate(`/product/${product._id}`, { state: { product } })}
       >
         <div className="product-img">
           {imgSrc ? (
@@ -91,7 +99,9 @@ export default function Home() {
           ) : (
             <span>🧶</span>
           )}
-          {product.bestseller && <span className="product-badge bestseller-badge">🏆 Bestseller</span>}
+          {(product.bestseller || product.featured) && (
+            <span className="product-badge bestseller-badge">🏆 Bestseller</span>
+          )}
           {!product.inStock && <div className="out-of-stock-overlay">Out of Stock</div>}
         </div>
         <div className="product-info">
@@ -114,7 +124,7 @@ export default function Home() {
 
   return (
     <>
-      <Navbar searchQuery={searchQuery} onSearch={setSearchQuery} />
+      <Navbar searchQuery={searchQuery} onSearch={handleSearch} />
 
       {/* ── SEARCH MODE ── */}
       {q ? (
@@ -126,7 +136,7 @@ export default function Home() {
               </span>
               <span className="search-results-query">"{searchQuery}"</span>
             </div>
-            <button className="search-results-clear" onClick={() => setSearchQuery('')}>
+            <button className="search-results-clear" onClick={() => { handleSearch(''); }}>
               ✕ Clear search
             </button>
           </div>
@@ -138,7 +148,7 @@ export default function Home() {
               <div className="search-empty-icon">🔍</div>
               <h3>No results found</h3>
               <p>We couldn't find anything matching "<strong>{searchQuery}</strong>". Try a different word!</p>
-              <button className="btn-gradient" style={{ marginTop: 20 }} onClick={() => setSearchQuery('')}>
+              <button className="btn-gradient" style={{ marginTop: 20 }} onClick={() => handleSearch('')}>
                 Browse all products
               </button>
             </div>
@@ -215,7 +225,7 @@ export default function Home() {
             </div>
           </section>
 
-          {/* PRODUCTS */}
+          {/* ALL PRODUCTS */}
           <section className="section bg-white" id="products">
             <div className="section-head">
               <h2>Our Products 🛍️</h2>
@@ -239,7 +249,60 @@ export default function Home() {
             )}
           </section>
 
-          {/* ABOUT US / OUR STORY */}
+          {/* BESTSELLERS */}
+          {!loading && bestsellers.length > 0 && (
+            <section className="section bestsellers-section" id="bestsellers">
+              <div className="section-head">
+                <h2>Our Bestsellers 🏆</h2>
+                <p>Most loved picks — order yours before they're gone!</p>
+              </div>
+              <div className="products-grid">
+                {bestsellers.map((product) => (
+                  <ProductCard key={product._id} product={product} />
+                ))}
+              </div>
+            </section>
+          )}
+        </>
+      )}
+
+      {/* CUSTOM ORDER BANNER + CONTACT + ABOUT — hidden during search */}
+      {!q && (
+        <>
+          <div className="custom-banner" id="custom">
+            <div>
+              <div className="custom-eyebrow">✦ Custom Orders Open</div>
+              <h2>Want something unique?</h2>
+              <p>
+                Tell us your idea — colour, size, design — and we'll create something
+                special, handmade just for you.
+              </p>
+            </div>
+            <button className="btn-glow btn-animated" onClick={() => setCustomModalOpen(true)}>
+              Let's Create! ✨
+            </button>
+          </div>
+
+          <section className="contact-section" id="contact">
+            <div className="contact-head">
+              <h2>Say Hello! 👋</h2>
+              <p>Place an order, ask about a custom piece, or just send us a message</p>
+            </div>
+            <div className="contact-cards">
+              <a href="https://wa.me/919769238160" className="contact-card wa-card" target="_blank" rel="noreferrer">
+                <div className="contact-icon">📱</div>
+                <h3>WhatsApp</h3>
+                <p>+91 97692 38160</p>
+              </a>
+              <a href="https://instagram.com/marvikala" className="contact-card ig-card" target="_blank" rel="noreferrer">
+                <div className="contact-icon">📸</div>
+                <h3>Instagram</h3>
+                <p>@marvikala</p>
+              </a>
+            </div>
+          </section>
+
+          {/* OUR STORY — below custom order & contact */}
           <section className="about-section" id="about">
             <div className="about-content">
               <div className="about-text">
@@ -278,44 +341,6 @@ export default function Home() {
                 <div className="about-tile at5">🕉️</div>
                 <div className="about-tile at6">🎨</div>
               </div>
-            </div>
-          </section>
-        </>
-      )}
-
-      {/* CUSTOM ORDER BANNER + CONTACT — hidden during search */}
-      {!q && (
-        <>
-          <div className="custom-banner" id="custom">
-            <div>
-              <div className="custom-eyebrow">✦ Custom Orders Open</div>
-              <h2>Want something unique?</h2>
-              <p>
-                Tell us your idea — colour, size, design — and we'll create something
-                special, handmade just for you.
-              </p>
-            </div>
-            <button className="btn-glow btn-animated" onClick={() => setCustomModalOpen(true)}>
-              Let's Create! ✨
-            </button>
-          </div>
-
-          <section className="contact-section" id="contact">
-            <div className="contact-head">
-              <h2>Say Hello! 👋</h2>
-              <p>Place an order, ask about a custom piece, or just send us a message</p>
-            </div>
-            <div className="contact-cards">
-              <a href="https://wa.me/919769238160" className="contact-card wa-card" target="_blank" rel="noreferrer">
-                <div className="contact-icon">📱</div>
-                <h3>WhatsApp</h3>
-                <p>+91 97692 38160</p>
-              </a>
-              <a href="https://instagram.com/marvikala" className="contact-card ig-card" target="_blank" rel="noreferrer">
-                <div className="contact-icon">📸</div>
-                <h3>Instagram</h3>
-                <p>@marvikala</p>
-              </a>
             </div>
           </section>
         </>
