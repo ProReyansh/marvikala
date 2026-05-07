@@ -73,6 +73,12 @@ export default function ProductPage() {
     setExiting(false);
     setActiveImg(0);
     setImgAnimKey(0);
+    // Pre-populate from router state immediately — eliminates the 1-second lag where
+    // the old product content lingers while the API call for the new product is in flight
+    if (location.state?.product) {
+      setProduct(location.state.product);
+      setLoading(false);
+    }
     const t = setTimeout(() => setPageAnim('pp-visible'), 20);
     return () => clearTimeout(t);
   }, [id]);
@@ -116,7 +122,7 @@ export default function ProductPage() {
     return (
       <div
         className="product-card"
-        onClick={() => navigate(productUrl(p), { state: { product: p } })}
+        onClick={() => navigate(productUrl(p), { state: { product: p }, replace: true })}
       >
         <div className="product-img">
           {imgSrc ? <img src={imgSrc} alt={p.name} /> : <span>🧶</span>}
@@ -154,7 +160,7 @@ export default function ProductPage() {
     <>
       <Navbar searchQuery={searchQuery} onSearch={handleSearch} />
 
-      <div className={`product-page ${pageAnim}${exiting ? ' pp-exit' : ''}${isBestseller ? ' pp-bestseller' : ''}`}>
+      <div className={`product-page ${pageAnim}${exiting ? ' pp-exit' : ''}`}>
         <button className="product-page-back" onClick={handleBack}>← Back</button>
 
         <div className="product-page-layout">

@@ -116,7 +116,11 @@ export default function Home() {
     return (
       <div
         className="product-card"
-        onClick={() => navigate(productUrl(product), { state: { product } })}
+        onClick={() => {
+          // Save scroll position so back button returns here
+          try { sessionStorage.setItem('mk_scroll_/', String(window.scrollY)); } catch {}
+          navigate(productUrl(product), { state: { product } });
+        }}
       >
         <div className="product-img">
           {imgSrc ? <img src={imgSrc} alt={product.name} /> : <span>🧶</span>}
