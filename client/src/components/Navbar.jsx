@@ -246,15 +246,19 @@ export default function Navbar({ searchQuery, onSearch }) {
 
         {/* Nav items */}
         <nav className="drawer-nav">
-          <button className="drawer-nav-item" onClick={() => {
-            setDrawerOpen(false); onSearch?.('');
-            if (isHome) window.scrollTo({ top: 0, behavior: 'smooth' }); else navigate('/');
-          }}>Shop All</button>
-          <button className="drawer-nav-item" onClick={() => goToSection('products')}>Collections</button>
-          <button className="drawer-nav-item" onClick={() => { setDrawerOpen(false); navigate('/our-story'); }}>Our Story</button>
-          <button className="drawer-nav-item" onClick={() => goToSection('contact')}>Workshops</button>
-          <button className="drawer-nav-item" onClick={() => goToSection('contact')}>Contact Us</button>
-          <button className="drawer-nav-item" onClick={() => goToSection('contact')}>FAQs</button>
+          {[
+            { label: 'Shop All',    action: () => { setDrawerOpen(false); onSearch?.(''); if (isHome) window.scrollTo({ top: 0, behavior: 'smooth' }); else navigate('/'); } },
+            { label: 'Collections', action: () => goToSection('products') },
+            { label: 'Our Story',   action: () => { setDrawerOpen(false); navigate('/our-story'); } },
+            { label: 'Workshops',   action: () => goToSection('contact') },
+            { label: 'Contact Us',  action: () => goToSection('contact') },
+            { label: 'FAQs',        action: () => goToSection('contact') },
+          ].map(({ label, action }) => (
+            <button key={label} className="drawer-nav-item" onClick={action}>
+              <span className="drawer-nav-label">{label}</span>
+              <span className="drawer-nav-arrow">→</span>
+            </button>
+          ))}
         </nav>
 
         {/* Social icons */}
