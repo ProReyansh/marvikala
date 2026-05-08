@@ -525,11 +525,27 @@ body {
 
 .hero {
   padding: 80px 48px 88px;
-  background: var(--cream);
   position: relative;
-  max-width: 1200px;
-  margin: 0 auto;
+  background-image: url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=1600&q=80');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
+/* Gradient overlay — keeps left side readable, shows image on right */
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    rgba(250,247,242,0.92) 0%,
+    rgba(250,247,242,0.75) 50%,
+    rgba(250,247,242,0.20) 100%
+  );
+  pointer-events: none;
+}
+/* All content sits above the overlay */
+.hero > * { position: relative; z-index: 1; }
 
 .hero-eyebrow {
   display: inline-flex;
@@ -575,15 +591,6 @@ body {
   gap: 12px;
   align-items: center;
   flex-wrap: wrap;
-}
-
-/* Hero image */
-.hero-mosaic-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  display: block;
 }
 
 /* ── Feature Badges ── */
@@ -3088,18 +3095,15 @@ body {
 
 /* ═══ HERO MOBILE ═══ */
 @media (max-width: 768px) {
-  .hero { padding: 28px 20px 32px; display: flex; align-items: center; gap: 16px; min-height: auto; background: var(--cream); max-width: none; }
-  .hero > div:first-child { flex: 1; }
-  .hero h1 { font-size: 24px; line-height: 1.25; margin-bottom: 10px; }
-  .hero-desc { font-size: 12px; line-height: 1.6; margin-bottom: 16px; color: var(--text-mid); max-width: 100%; }
+  .hero { padding: 48px 20px 52px; min-height: 280px; }
+  .hero::before { background: linear-gradient(to bottom, rgba(250,247,242,0.88) 0%, rgba(250,247,242,0.72) 100%); }
+  .hero h1 { font-size: 26px; line-height: 1.25; margin-bottom: 10px; }
+  .hero-desc { font-size: 13px; line-height: 1.6; margin-bottom: 16px; color: var(--text-mid); max-width: 100%; }
   .hero-btns { flex-direction: column; gap: 10px; }
   .hero-btns .btn-primary, .hero-btns .btn-outline { width: 100%; text-align: center; font-size: 13px; padding: 11px 20px; }
-  .hero-mosaic { width: 140px; flex-shrink: 0; height: 180px; border-radius: 20px; overflow: hidden; }
 }
 @media (min-width: 769px) {
-  .hero { display: flex; align-items: center; gap: 48px; justify-content: space-between; }
-  .hero > div:first-child { flex: 1; }
-  .hero-mosaic { width: 340px; flex-shrink: 0; height: 420px; border-radius: 24px; overflow: hidden; }
+  .hero { min-height: 440px; display: flex; align-items: center; }
 }
 
 /* ═══ FEATURE BADGES (mobile override) ═══ */
