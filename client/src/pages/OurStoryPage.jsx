@@ -1,10 +1,16 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
 export default function OurStoryPage() {
   const navigate = useNavigate();
+  const [exiting, setExiting] = useState(false);
+
+  function goHome() {
+    setExiting(true);
+    setTimeout(() => navigate('/'), 230);
+  }
 
   useEffect(() => {
     document.title = 'Our Story — Marvikala';
@@ -32,12 +38,12 @@ export default function OurStoryPage() {
 
       <Navbar searchQuery="" onSearch={() => {}} />
 
-      <main className="story-page-wrapper">
+      <main className={`story-page-wrapper${exiting ? ' page-exiting' : ''}`}>
 
         {/* ── Header Row ── */}
         <div className="story-page-header">
           <h1 className="story-page-title">Our Story</h1>
-          <button className="story-page-back" onClick={() => navigate('/')}>
+          <button className="story-page-back" onClick={goHome}>
             ← Back to Home
           </button>
         </div>

@@ -157,15 +157,21 @@ function ShopCard({ product, onEnquire }) {
 export default function ShopAllPage() {
   const navigate = useNavigate();
 
-  const [products, setProducts]           = useState(getCachedProducts);
-  const [loading, setLoading]             = useState(() => getCachedProducts().length === 0);
-  const [searchQuery, setSearchQuery]     = useState('');
+  const [products, setProducts]             = useState(getCachedProducts);
+  const [loading, setLoading]               = useState(() => getCachedProducts().length === 0);
+  const [searchQuery, setSearchQuery]       = useState('');
   const [enquireProduct, setEnquireProduct] = useState(null);
+  const [exiting, setExiting]               = useState(false);
 
   const [activeFilter, setActiveFilter]   = useState('all');
   const [activeSort, setActiveSort]       = useState('default');
   const [filterOpen, setFilterOpen]       = useState(false);
   const [sortOpen, setSortOpen]           = useState(false);
+
+  function goHome() {
+    setExiting(true);
+    setTimeout(() => navigate('/'), 230);
+  }
 
   useEffect(() => {
     document.title = 'Shop All — Marvikala';
@@ -227,13 +233,13 @@ export default function ShopAllPage() {
 
       <Navbar searchQuery={searchQuery} onSearch={handleSearch} />
 
-      <div className="sa-page">
+      <div className={`sa-page${exiting ? ' page-exiting' : ''}`}>
 
         {/* ── Header Row ── */}
         <div className="sa-header-row">
           <h1 className="sa-title">Shop All</h1>
-          <button className="sa-back-btn" onClick={() => navigate('/')}>
-            ← Home
+          <button className="sa-back-btn" onClick={goHome}>
+            ← Go to Home
           </button>
         </div>
 

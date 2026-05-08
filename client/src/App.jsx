@@ -8,6 +8,7 @@ import NotFound from './pages/NotFound';
 import OurStoryPage from './pages/OurStoryPage';
 import AllBestsellersPage from './pages/AllBestsellersPage';
 import ShopAllPage from './pages/ShopAllPage';
+import ContactPage from './pages/ContactPage';
 
 // Module-level flag — false on every fresh page load/reload (JS module re-executes),
 // true after the first SPA navigation happens. This reliably tells us whether a POP
@@ -66,6 +67,7 @@ export default function App() {
         <Route path="/our-story" element={<OurStoryPage />} />
         <Route path="/bestsellers" element={<AllBestsellersPage />} />
         <Route path="/shop" element={<ShopAllPage />} />
+        <Route path="/contact" element={<ContactPage />} />
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route
           path="/admin"

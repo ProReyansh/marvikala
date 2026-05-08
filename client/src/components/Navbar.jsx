@@ -159,7 +159,7 @@ export default function Navbar({ searchQuery, onSearch }) {
           <li><a href="#products" onClick={(e) => { e.preventDefault(); goToSection('products'); }}>Shop</a></li>
           <li><a href="#collections" onClick={(e) => { e.preventDefault(); goToSection('collections'); }}>Collections</a></li>
           <li><a href="/our-story" onClick={(e) => { e.preventDefault(); navigate('/our-story'); }}>Our Story</a></li>
-          <li><a href="#contact" onClick={(e) => { e.preventDefault(); goToSection('contact'); }} className="navbar-cta">Contact</a></li>
+          <li><a href="/contact" onClick={(e) => { e.preventDefault(); navigate('/contact'); }} className="navbar-cta">Contact</a></li>
         </ul>
 
         {/* ── RIGHT: Icons ── */}
@@ -171,20 +171,11 @@ export default function Navbar({ searchQuery, onSearch }) {
             </button>
           )}
 
-          {/* Mobile: search + WA + cart */}
+          {/* Mobile: search + cart */}
           <div className="navbar-mobile-icons">
             <button className="navbar-icon-btn" onClick={searchOpen ? closeSearch : openSearch} aria-label="Search">
               <SearchIcon />
             </button>
-            <a
-              href="https://wa.me/919769238160"
-              target="_blank"
-              rel="noreferrer"
-              className="navbar-icon-btn navbar-wa-btn"
-              aria-label="WhatsApp"
-            >
-              <WaIcon />
-            </a>
             <button className="navbar-icon-btn navbar-cart-btn" aria-label="Cart">
               <CartIcon />
             </button>
@@ -251,7 +242,7 @@ export default function Navbar({ searchQuery, onSearch }) {
             { label: 'Collections', action: () => goToSection('collections') },
             { label: 'Our Story',   action: () => { setDrawerOpen(false); navigate('/our-story'); } },
             { label: 'Workshops',   action: () => goToSection('contact') },
-            { label: 'Contact Us',  action: () => goToSection('contact') },
+            { label: 'Contact Us',  action: () => { setDrawerOpen(false); navigate('/contact'); } },
             { label: 'FAQs',        action: () => goToSection('contact') },
           ].map(({ label, action }) => (
             <button key={label} className="drawer-nav-item" onClick={action}>
