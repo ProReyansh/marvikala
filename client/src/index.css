@@ -2910,7 +2910,7 @@ body {
 
 /* ═══ MOBILE SEARCH DROPDOWN ═══ */
 .mobile-search-dropdown {
-  position: fixed; top: 56px; left: 0; right: 0;
+  position: fixed; top: 56px; left: 0; right: 0; /* top overridden dynamically by JS */
   background: white;
   padding: 10px 14px 12px;
   box-shadow: 0 6px 24px rgba(42,32,22,0.12);
@@ -2986,7 +2986,7 @@ body {
 .drawer-close:hover  { background: var(--border); color: var(--text); }
 .drawer-close:active { transform: scale(0.88); }
 
-/* ── Brand — centered ── */
+/* ── Brand — centered, tappable ── */
 .drawer-brand {
   flex-shrink: 0;
   font-family: var(--serif); font-size: 28px; font-weight: 700;
@@ -2994,7 +2994,13 @@ body {
   padding: 6px 24px 18px;
   border-bottom: 1px solid var(--border);
   letter-spacing: 0.3px;
+  /* reset button styles */
+  background: none; border-top: none; border-left: none; border-right: none;
+  width: 100%; cursor: pointer;
+  transition: opacity 0.15s;
 }
+.drawer-brand:hover { opacity: 0.72; }
+.drawer-brand:active { opacity: 0.5; }
 .drawer-brand span { color: var(--olive); }
 
 /* ── Nav items — stretch to fill remaining space ── */
