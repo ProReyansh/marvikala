@@ -274,7 +274,10 @@ body {
   gap: 10px;
   text-decoration: none;
   flex-shrink: 0;
+  transition: transform 0.22s cubic-bezier(0.34,1.56,0.64,1), opacity 0.15s;
 }
+.navbar-logo:hover  { transform: scale(1.06); opacity: 0.85; }
+.navbar-logo:active { transform: scale(0.93) !important; opacity: 0.6 !important; transition-duration: 0.08s !important; }
 
 .navbar-logo-icon {
   width: 36px;
