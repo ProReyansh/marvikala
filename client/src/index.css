@@ -3230,11 +3230,35 @@ body {
    SHOP ALL PAGE
    ═══════════════════════════════════════════ */
 
+/* ── Keyframes ── */
+@keyframes saPageIn {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes saCardIn {
+  from { opacity: 0; transform: translateY(20px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0)    scale(1);    }
+}
+@keyframes saChipPop {
+  0%   { opacity: 0; transform: scale(0.75); }
+  60%  { transform: scale(1.08); }
+  100% { opacity: 1; transform: scale(1); }
+}
+@keyframes saHeaderIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes saControlsIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
 /* Page wrapper */
 .sa-page {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px 16px 80px;
+  animation: saPageIn 0.35s cubic-bezier(0.22,1,0.36,1) both;
 }
 
 /* ── Header Row ── */
@@ -3243,6 +3267,7 @@ body {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 18px;
+  animation: saHeaderIn 0.38s cubic-bezier(0.22,1,0.36,1) 0.05s both;
 }
 .sa-title {
   font-family: var(--serif);
@@ -3275,6 +3300,7 @@ body {
   align-items: center;
   gap: 10px;
   margin-bottom: 14px;
+  animation: saControlsIn 0.38s cubic-bezier(0.22,1,0.36,1) 0.12s both;
 }
 .sa-ctrl-btn {
   display: inline-flex;
@@ -3329,6 +3355,7 @@ body {
   padding: 5px 12px;
   cursor: pointer;
   transition: background 0.15s;
+  animation: saChipPop 0.28s cubic-bezier(0.34,1.56,0.64,1) both;
 }
 .sa-chip:hover { background: rgba(61,74,34,0.15); }
 
@@ -3357,6 +3384,21 @@ body {
 @media (min-width: 600px) { .sa-grid { grid-template-columns: repeat(3, 1fr); gap: 18px; } }
 @media (min-width: 900px) { .sa-grid { grid-template-columns: repeat(4, 1fr); gap: 22px; } }
 @media (min-width: 1200px) { .sa-grid { grid-template-columns: repeat(5, 1fr); } }
+
+/* ── Staggered card entrance (first 12 cards) ── */
+.sa-grid .sa-card:nth-child(1)  { animation: saCardIn 0.38s cubic-bezier(0.22,1,0.36,1) 0.10s both; }
+.sa-grid .sa-card:nth-child(2)  { animation: saCardIn 0.38s cubic-bezier(0.22,1,0.36,1) 0.16s both; }
+.sa-grid .sa-card:nth-child(3)  { animation: saCardIn 0.38s cubic-bezier(0.22,1,0.36,1) 0.22s both; }
+.sa-grid .sa-card:nth-child(4)  { animation: saCardIn 0.38s cubic-bezier(0.22,1,0.36,1) 0.28s both; }
+.sa-grid .sa-card:nth-child(5)  { animation: saCardIn 0.38s cubic-bezier(0.22,1,0.36,1) 0.34s both; }
+.sa-grid .sa-card:nth-child(6)  { animation: saCardIn 0.38s cubic-bezier(0.22,1,0.36,1) 0.40s both; }
+.sa-grid .sa-card:nth-child(7)  { animation: saCardIn 0.38s cubic-bezier(0.22,1,0.36,1) 0.46s both; }
+.sa-grid .sa-card:nth-child(8)  { animation: saCardIn 0.38s cubic-bezier(0.22,1,0.36,1) 0.52s both; }
+.sa-grid .sa-card:nth-child(9)  { animation: saCardIn 0.38s cubic-bezier(0.22,1,0.36,1) 0.58s both; }
+.sa-grid .sa-card:nth-child(10) { animation: saCardIn 0.38s cubic-bezier(0.22,1,0.36,1) 0.62s both; }
+.sa-grid .sa-card:nth-child(11) { animation: saCardIn 0.38s cubic-bezier(0.22,1,0.36,1) 0.66s both; }
+.sa-grid .sa-card:nth-child(12) { animation: saCardIn 0.38s cubic-bezier(0.22,1,0.36,1) 0.70s both; }
+.sa-grid .sa-card:nth-child(n+13) { animation: saCardIn 0.38s cubic-bezier(0.22,1,0.36,1) 0.72s both; }
 
 /* ── Product Card ── */
 .sa-card {

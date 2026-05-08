@@ -287,7 +287,7 @@ export default function ShopAllPage() {
             <p>No products found</p>
           </div>
         ) : (
-          <div className="sa-grid">
+          <div className="sa-grid" key={`${activeFilter}-${activeSort}`}>
             {sorted.map(p => (
               <ShopCard key={p._id} product={p} onEnquire={setEnquireProduct} />
             ))}
