@@ -273,7 +273,8 @@ export default function Home() {
         <>
           {/* HERO */}
           <section className="hero">
-            <div>
+            {/* Left: text */}
+            <div className="hero-content">
               <div className="hero-eyebrow">✦ Handmade in Mumbai</div>
               <h1>
                 Handmade with love,<br />
@@ -297,6 +298,15 @@ export default function Home() {
                   Our Story
                 </button>
               </div>
+            </div>
+            {/* Right: crochet flowers image */}
+            <div className="hero-image-col">
+              <img
+                src="https://images.unsplash.com/photo-1599934697836-0f05dade7f42?auto=format&fit=crop&w=900&q=85"
+                alt="Handmade crochet flowers"
+                className="hero-img"
+              />
+              <div className="hero-img-blend" />
             </div>
           </section>
 
