@@ -2856,13 +2856,13 @@ body {
 @media (max-width: 768px) {
   .navbar {
     display: grid;
-    grid-template-columns: 1fr auto 1fr;
+    grid-template-columns: 1fr auto 1.5fr;
     align-items: center;
     padding: 0 10px;
     height: 56px;
     gap: 0;
-    row-gap: 0;       /* reset the 8px set by the 599px block */
-    flex-wrap: nowrap; /* in case display falls back to flex */
+    row-gap: 0;
+    flex-wrap: nowrap;
   }
   /* Col 1 — hamburger left-aligned, same size as other icons */
   .navbar-hamburger-btn {
