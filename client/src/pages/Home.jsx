@@ -298,13 +298,8 @@ export default function Home() {
                 </button>
               </div>
             </div>
-            {/* Right: crochet flowers image */}
+            {/* Right: crochet flowers image (CSS background for reliable loading) */}
             <div className="hero-image-col">
-              <img
-                src="https://images.unsplash.com/photo-1490750967868-88df5691cc3e?auto=format&fit=crop&w=900&q=85"
-                alt="Handmade crochet flowers"
-                className="hero-img"
-              />
               <div className="hero-img-blend" />
             </div>
           </section>
