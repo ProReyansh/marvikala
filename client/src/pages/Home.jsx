@@ -298,7 +298,13 @@ export default function Home() {
                 </button>
               </div>
             </div>
-            <div className="hero-mosaic">🧶</div>
+            <div className="hero-mosaic">
+              <img
+                src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=700&q=80"
+                alt="Handmade crochet creations"
+                className="hero-mosaic-img"
+              />
+            </div>
           </section>
 
           {/* SHOP BY COLLECTION (horizontal scroll) */}
