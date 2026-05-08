@@ -2861,33 +2861,35 @@ body {
     padding: 0 10px;
     height: 56px;
     gap: 0;
+    row-gap: 0;       /* reset the 8px set by the 599px block */
+    flex-wrap: nowrap; /* in case display falls back to flex */
   }
   /* Col 1 — hamburger left-aligned, same size as other icons */
   .navbar-hamburger-btn {
     display: flex !important;
-    grid-column: 1;
-    justify-self: start;
-    width: 30px;
-    height: 30px;
+    grid-column: 1; grid-row: 1;
+    justify-self: start; align-self: center;
+    order: 0;
+    width: 30px; height: 30px;
   }
   .navbar-hamburger-btn span { width: 17px; }
-  /* Col 2 — logo truly centered */
+  /* Col 2 — logo truly centered (must reset order:1 from the 599px block) */
   .navbar-logo {
-    position: static;
-    transform: none;
-    grid-column: 2;
-    justify-self: center;
+    position: static; transform: none;
+    grid-column: 2; grid-row: 1;   /* force row 1 */
+    order: 0;                       /* reset 599px's order:1 */
+    flex: none;                     /* reset 599px's flex:1 */
+    justify-self: center; align-self: center;
     gap: 6px;
-    align-items: center;
   }
   .navbar-logo-icon { width: 26px; height: 26px; flex-shrink: 0; }
   .navbar-logo-text { font-size: 18px; white-space: nowrap; line-height: 1; }
   /* Col 3 — icons right-aligned */
   .navbar-right-group {
-    grid-column: 3;
-    justify-self: end;
-    display: flex;
-    align-items: center;
+    grid-column: 3; grid-row: 1;
+    order: 0;
+    justify-self: end; align-self: center;
+    display: flex; align-items: center;
   }
   /* Hide desktop-only elements */
   .navbar-links-desktop       { display: none !important; }
