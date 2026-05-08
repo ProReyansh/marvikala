@@ -2852,32 +2852,49 @@ body {
 .navbar-wa-btn:hover { background: rgba(37,211,102,0.1) !important; }
 .navbar-right-group { display: flex; align-items: center; gap: 2px; flex-shrink: 0; }
 
-/* ═══ MOBILE NAVBAR OVERRIDES ═══ */
+/* ═══ MOBILE NAVBAR — 3-column grid (no overlap, no congestion) ═══ */
 @media (max-width: 768px) {
   .navbar {
-    padding: 0 12px; height: 56px;
-    display: flex; align-items: center; justify-content: space-between;
-    position: relative; flex-wrap: nowrap;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    padding: 0 10px;
+    height: 56px;
+    gap: 0;
   }
-  /* Logo: absolutely centered, doesn't affect flex flow */
+  /* Col 1 — hamburger left-aligned */
+  .navbar-hamburger-btn {
+    display: flex !important;
+    grid-column: 1;
+    justify-self: start;
+  }
+  /* Col 2 — logo truly centered */
   .navbar-logo {
-    position: absolute; left: 50%; transform: translateX(-50%);
-    flex: none; z-index: 1;
+    position: static;
+    transform: none;
+    grid-column: 2;
+    justify-self: center;
+    gap: 7px;
   }
-  .navbar-logo-text { font-family: var(--serif); font-size: 20px; }
+  .navbar-logo-icon { width: 26px; height: 26px; }
+  .navbar-logo-text { font-size: 18px; }
+  /* Col 3 — icons right-aligned */
+  .navbar-right-group {
+    grid-column: 3;
+    justify-self: end;
+    display: flex;
+    align-items: center;
+  }
   /* Hide desktop-only elements */
   .navbar-links-desktop       { display: none !important; }
   .navbar-search-wrap-desktop { display: none !important; }
   .navbar-desktop-only        { display: none !important; }
-  /* Hamburger: left */
-  .navbar-hamburger-btn { display: flex !important; flex-shrink: 0; }
-  /* Right icons group */
-  .navbar-right-group   { display: flex; align-items: center; gap: 0; flex-shrink: 0; }
-  .navbar-mobile-icons  { display: flex !important; gap: 0; align-items: center; }
-  .navbar-icon-btn      { width: 34px; height: 34px; }
+  /* Mobile icons */
+  .navbar-mobile-icons { display: flex !important; align-items: center; gap: 0; }
+  .navbar-icon-btn     { width: 30px; height: 30px; }
 }
 
-/* Desktop: hide hamburger + mobile icons */
+/* Desktop: restore flex, hide mobile-only elements */
 @media (min-width: 769px) {
   .navbar-hamburger-btn { display: none !important; }
   .navbar-links-desktop { display: flex !important; }
