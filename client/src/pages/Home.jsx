@@ -4,7 +4,6 @@ import axios from 'axios';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import EnquireModal from '../components/EnquireModal';
-import CustomOrderModal from '../components/CustomOrderModal';
 
 const CATEGORIES = [
   { key: 'all',              label: 'All',              icon: '✨', sub: 'Everything',           cls: 'cc1' },
@@ -98,7 +97,6 @@ export default function Home() {
   const [loading, setLoading]               = useState(() => getCachedProducts().length === 0);
   const [activeCategory, setActiveCategory] = useState('all');
   const [enquireProduct, setEnquireProduct] = useState(null);
-  const [customModalOpen, setCustomModalOpen] = useState(false);
   const [searchQuery, setSearchQuery]       = useState(getSavedSearch);
   const [bouncingCat, setBouncingCat]       = useState(null);
 
@@ -288,7 +286,7 @@ export default function Home() {
               <div className="hero-btns">
                 <button
                   className="btn-primary btn-animated"
-                  onClick={() => document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' })}
+                  onClick={() => navigate('/shop')}
                 >
                   Shop Now
                 </button>
@@ -302,26 +300,6 @@ export default function Home() {
             </div>
             <div className="hero-mosaic">🧶</div>
           </section>
-
-          {/* FEATURE BADGES */}
-          <div className="feature-badges">
-            <div className="feature-badge">
-              <span className="feature-badge-icon">🧶</span>
-              <span>100% Handmade</span>
-            </div>
-            <div className="feature-badge">
-              <span className="feature-badge-icon">🌿</span>
-              <span>Sustainable Materials</span>
-            </div>
-            <div className="feature-badge">
-              <span className="feature-badge-icon">📍</span>
-              <span>Made in Mumbai</span>
-            </div>
-            <div className="feature-badge">
-              <span className="feature-badge-icon">✨</span>
-              <span>Small Batch</span>
-            </div>
-          </div>
 
           {/* SHOP BY COLLECTION (horizontal scroll) */}
           <div style={{ background: 'var(--cream)' }}>
@@ -420,40 +398,6 @@ export default function Home() {
             </section>
           )}
 
-          {/* VIEW ALL PRODUCTS button */}
-          <div style={{ textAlign: 'center', padding: '8px 20px 0' }}>
-            <button
-              className="view-all-btn"
-              onClick={() => document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' })}
-            >
-              View All Products →
-            </button>
-          </div>
-
-          {/* ALL PRODUCTS */}
-          <div className="products-section-wrap" style={{ background: 'var(--white)' }}>
-            <section className="section" id="products">
-              <div className="section-head">
-                <h2>Our Products 🛍️</h2>
-                <p>Click any product to see details — tap Enquire Now to order!</p>
-              </div>
-              {loading ? (
-                <div className="spinner-wrap"><div className="spinner" /></div>
-              ) : (
-                <div className="products-grid">
-                  {filtered.length === 0 ? (
-                    <div className="no-products">
-                      <div className="icon">🧶</div>
-                      <p>No products in this category yet — check back soon!</p>
-                    </div>
-                  ) : (
-                    filtered.map((product) => <ProductCard key={product._id} product={product} />)
-                  )}
-                </div>
-              )}
-            </section>
-          </div>
-
           {/* STORY TEASER */}
           <section className="story-teaser">
             <div className="story-teaser-img">🪡</div>
@@ -518,82 +462,6 @@ export default function Home() {
             </a>
           </section>
 
-          {/* CUSTOM ORDER */}
-          <div className="custom-banner" id="custom">
-            <div>
-              <div className="custom-eyebrow">Custom Orders Open</div>
-              <h2>Want something unique?</h2>
-              <p>
-                Tell us your idea — colour, size, design — and we'll create something
-                special, handmade just for you.
-              </p>
-            </div>
-            <button className="btn-primary btn-animated" onClick={() => setCustomModalOpen(true)}>
-              Let's Create
-            </button>
-          </div>
-
-          {/* OUR STORY — detailed section */}
-          <section className="about-section" id="about">
-            <div className="about-content">
-              <div className="about-text">
-                <div className="about-eyebrow">Our Story</div>
-                <h2>Made with love,<br />stitch by stitch.</h2>
-                <p>
-                  Hi! I'm the founder of Marvikala — a small handmade crochet studio based in Mumbai.
-                  What started as a passion for creating beautiful things with yarn has grown into
-                  a little business bringing joy to people across the city.
-                </p>
-                <p>
-                  Every flower bouquet, keychain, bookmark, and Laddu Gopal dress is handcrafted
-                  with care and attention to detail. No two pieces are ever exactly the same —
-                  that's the magic of handmade!
-                </p>
-                <div className="about-highlights">
-                  <div className="about-highlight">
-                    <span className="about-highlight-icon">🧶</span>
-                    <span>100% Handmade</span>
-                  </div>
-                  <div className="about-highlight">
-                    <span className="about-highlight-icon">🎨</span>
-                    <span>Custom Orders</span>
-                  </div>
-                  <div className="about-highlight">
-                    <span className="about-highlight-icon">📦</span>
-                    <span>Ships Pan India</span>
-                  </div>
-                </div>
-              </div>
-              <div className="about-mosaic">
-                <div className="about-tile at1">🌸</div>
-                <div className="about-tile at2">🧶</div>
-                <div className="about-tile at3">🎀</div>
-                <div className="about-tile at4">💍</div>
-                <div className="about-tile at5">🕉️</div>
-                <div className="about-tile at6">🎨</div>
-              </div>
-            </div>
-          </section>
-
-          {/* CONTACT */}
-          <section className="contact-section" id="contact">
-            <div className="contact-head">
-              <h2>Get in Touch</h2>
-              <p>Place an order, ask about a custom piece, or just say hello</p>
-            </div>
-            <div className="contact-cards">
-              <a href="https://wa.me/919769238160" className="contact-card wa-card" target="_blank" rel="noreferrer">
-                <div className="contact-icon">💬</div>
-                <h3>WhatsApp</h3>
-                <p>+91 97692 38160</p>
-              </a>
-              <a href="https://instagram.com/marvikala" className="contact-card ig-card" target="_blank" rel="noreferrer">
-                <div className="contact-icon">📷</div>
-                <h3>Instagram</h3>
-                <p>@marvikala</p>
-              </a>
-            </div>
-          </section>
         </>
       )}
 
@@ -601,9 +469,6 @@ export default function Home() {
 
       {enquireProduct && (
         <EnquireModal product={enquireProduct} onClose={() => setEnquireProduct(null)} />
-      )}
-      {customModalOpen && (
-        <CustomOrderModal onClose={() => setCustomModalOpen(false)} />
       )}
     </>
   );
