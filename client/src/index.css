@@ -3163,7 +3163,16 @@ body {
 .categories-row-mobile { display: none; }
 @media (max-width: 768px) {
   .categories-grid-desktop { display: none !important; }
-  .categories-row-mobile { display: flex; padding-left: 16px; padding-right: 16px; }
+  .categories-row-mobile { display: flex; }
+  /* Pseudo-element spacers are the only reliable way to get left/right
+     gaps in overflow-x:auto rows when the section has padding:0 */
+  .categories-row-mobile::before,
+  .categories-row-mobile::after {
+    content: '';
+    display: block;
+    min-width: 16px;
+    flex-shrink: 0;
+  }
 }
 
 /* ═══ HORIZONTAL SCROLL ROWS ═══ */
