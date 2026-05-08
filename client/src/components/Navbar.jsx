@@ -84,12 +84,33 @@ export default function Navbar({ searchQuery, onSearch }) {
     }
   }
 
+  function animateOutThenGo(destination) {
+    // Try each known page wrapper in order and apply its exit class
+    const productPage = document.querySelector('.product-page');
+    if (productPage) {
+      productPage.classList.add('pp-exit');
+      setTimeout(() => navigate(destination), 260);
+      return;
+    }
+    const pageWrapper =
+      document.querySelector('.sa-page') ||
+      document.querySelector('.story-page-wrapper') ||
+      document.querySelector('.contact-page-wrapper');
+    if (pageWrapper) {
+      pageWrapper.classList.add('page-exiting');
+      setTimeout(() => navigate(destination), 230);
+      return;
+    }
+    // Fallback — just navigate
+    navigate(destination);
+  }
+
   function handleLogoClick(e) {
     e.preventDefault();
     setDrawerOpen(false);
     onSearch?.('');
     if (isHome) window.scrollTo({ top: 0, behavior: 'smooth' });
-    else { document.querySelector('.product-page')?.classList.add('pp-exit'); setTimeout(() => navigate('/'), 250); }
+    else animateOutThenGo('/');
   }
 
   function handleHomeClick(e) {
@@ -97,15 +118,14 @@ export default function Navbar({ searchQuery, onSearch }) {
     setDrawerOpen(false);
     onSearch?.('');
     if (isHome) window.scrollTo({ top: 0, behavior: 'smooth' });
-    else { document.querySelector('.product-page')?.classList.add('pp-exit'); setTimeout(() => navigate('/'), 250); }
+    else animateOutThenGo('/');
   }
 
   function handleDrawerBrandClick() {
     setDrawerOpen(false);
     onSearch?.('');
-    // Wait for drawer slide-out animation (0.32s) before navigating
     if (isHome) setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 120);
-    else setTimeout(() => navigate('/'), 340);
+    else setTimeout(() => animateOutThenGo('/'), 340); // wait for drawer close first
   }
 
   function handleSearchSubmit(e) { e.preventDefault(); }
