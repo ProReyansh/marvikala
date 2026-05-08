@@ -331,11 +331,14 @@ export default function Home() {
               </div>
               {/* Mobile horizontal scroll */}
               <div className="h-scroll-row categories-row-mobile">
-                <div className="h-scroll-edge" />
-                {CATEGORIES.filter((c) => c.key !== 'all').map((c) => (
+                {CATEGORIES.filter((c) => c.key !== 'all').map((c, i, arr) => (
                   <div
                     key={c.key}
                     className={`collection-card-h${activeCategory === c.key ? ' active' : ''}`}
+                    style={{
+                      marginLeft: i === 0 ? 16 : 0,
+                      marginRight: i === arr.length - 1 ? 16 : 0,
+                    }}
                     onClick={() => handleCatClick(c.key)}
                   >
                     <div
@@ -345,7 +348,6 @@ export default function Home() {
                     <span className="collection-card-h-name">{c.label}</span>
                   </div>
                 ))}
-                <div className="h-scroll-edge" />
               </div>
             </section>
           </div>
