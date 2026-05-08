@@ -2745,10 +2745,11 @@ body {
 
   [id] { scroll-margin-top: 120px; }
 
-  /* Hero — stacked on small mobile, content padding only */
-  .hero-content     { padding: 36px 16px 28px; }
-  .hero h1          { font-size: 26px; }
-  .hero-desc        { font-size: 13px; max-width: 100%; }
+  /* Hero — very small screens */
+  .hero             { min-height: 220px; }
+  .hero-content     { padding: 24px 10px 24px 16px; }
+  .hero h1          { font-size: 17px; }
+  .hero-desc        { font-size: 11px; margin-bottom: 12px; }
   .hero-btns        { flex-direction: row; justify-content: flex-start; gap: 10px; flex-wrap: wrap; }
   .btn-primary, .btn-gradient { padding: 12px 24px; font-size: 13px; }
   .btn-light, .btn-outline    { padding: 11px 20px; font-size: 13px; }
@@ -3122,28 +3123,20 @@ body {
 
 /* ═══ HERO MOBILE ═══ */
 @media (max-width: 768px) {
-  /* Stack image below text on small screens */
+  /* Keep side-by-side, shrink text to fit */
   .hero {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto auto;
-    min-height: unset;
-    background: #FFF0F3;
+    grid-template-columns: 52% 48%;
+    min-height: 260px;
   }
   .hero-content {
-    padding: 44px 20px 36px;
-    order: 1;
+    padding: 32px 12px 32px 20px;
   }
-  .hero-image-col {
-    order: 2;
-    height: 220px;
-  }
-  .hero-img-blend {
-    background: linear-gradient(to bottom, #FFF0F3 0%, rgba(255,240,243,0.3) 30%, transparent 70%);
-  }
-  .hero h1 { font-size: 28px; line-height: 1.25; margin-bottom: 10px; }
-  .hero-desc { font-size: 13px; line-height: 1.6; margin-bottom: 20px; max-width: 100%; }
-  .hero-btns { flex-direction: row; gap: 10px; flex-wrap: wrap; }
-  .hero-btns .btn-primary, .hero-btns .btn-outline { font-size: 13px; padding: 11px 20px; }
+  .hero h1 { font-size: 20px; line-height: 1.25; margin-bottom: 8px; }
+  .hero-desc { font-size: 12px; line-height: 1.55; margin-bottom: 16px; max-width: 100%; }
+  .hero-btns { flex-direction: column; gap: 8px; align-items: flex-start; }
+  .hero-btns .btn-primary { font-size: 12px; padding: 10px 18px; }
+  /* Hide Our Story button on mobile */
+  .hero-btn-story { display: none !important; }
 }
 @media (min-width: 769px) {
   .hero { min-height: 480px; }

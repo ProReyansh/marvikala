@@ -275,7 +275,6 @@ export default function Home() {
           <section className="hero">
             {/* Left: text */}
             <div className="hero-content">
-              <div className="hero-eyebrow">✦ Handmade in Mumbai</div>
               <h1>
                 Handmade with love,<br />
                 crafted for your<br />
@@ -292,7 +291,7 @@ export default function Home() {
                   Shop Now
                 </button>
                 <button
-                  className="btn-outline btn-animated"
+                  className="btn-outline btn-animated hero-btn-story"
                   onClick={() => navigate('/our-story')}
                 >
                   Our Story
@@ -302,7 +301,7 @@ export default function Home() {
             {/* Right: crochet flowers image */}
             <div className="hero-image-col">
               <img
-                src="https://images.unsplash.com/photo-1599934697836-0f05dade7f42?auto=format&fit=crop&w=900&q=85"
+                src="https://images.unsplash.com/photo-1490750967868-88df5691cc3e?auto=format&fit=crop&w=900&q=85"
                 alt="Handmade crochet flowers"
                 className="hero-img"
               />
