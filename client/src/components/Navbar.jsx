@@ -247,7 +247,7 @@ export default function Navbar({ searchQuery, onSearch }) {
         {/* Nav items */}
         <nav className="drawer-nav">
           {[
-            { label: 'Shop All',    action: () => { setDrawerOpen(false); onSearch?.(''); if (isHome) window.scrollTo({ top: 0, behavior: 'smooth' }); else navigate('/'); } },
+            { label: 'Shop All',    action: () => { setDrawerOpen(false); navigate('/shop'); } },
             { label: 'Collections', action: () => goToSection('products') },
             { label: 'Our Story',   action: () => { setDrawerOpen(false); navigate('/our-story'); } },
             { label: 'Workshops',   action: () => goToSection('contact') },
