@@ -2862,22 +2862,26 @@ body {
     height: 56px;
     gap: 0;
   }
-  /* Col 1 — hamburger left-aligned */
+  /* Col 1 — hamburger left-aligned, same size as other icons */
   .navbar-hamburger-btn {
     display: flex !important;
     grid-column: 1;
     justify-self: start;
+    width: 30px;
+    height: 30px;
   }
+  .navbar-hamburger-btn span { width: 17px; }
   /* Col 2 — logo truly centered */
   .navbar-logo {
     position: static;
     transform: none;
     grid-column: 2;
     justify-self: center;
-    gap: 7px;
+    gap: 6px;
+    align-items: center;
   }
-  .navbar-logo-icon { width: 26px; height: 26px; }
-  .navbar-logo-text { font-size: 18px; }
+  .navbar-logo-icon { width: 26px; height: 26px; flex-shrink: 0; }
+  .navbar-logo-text { font-size: 18px; white-space: nowrap; line-height: 1; }
   /* Col 3 — icons right-aligned */
   .navbar-right-group {
     grid-column: 3;
