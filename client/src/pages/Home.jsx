@@ -6,16 +6,16 @@ import Footer from '../components/Footer';
 import EnquireModal from '../components/EnquireModal';
 
 const CATEGORIES = [
-  { key: 'all',              label: 'All',              icon: '✨', sub: 'Everything',           cls: 'cc1' },
-  { key: 'flowers',          label: 'Flowers',           icon: '🌸', sub: 'Crochet blooms',       cls: 'cc2' },
-  { key: 'keychains',        label: 'Keychains',         icon: '🔑', sub: 'Cute & colourful',     cls: 'cc3' },
-  { key: 'bookmarks',        label: 'Bookmarks',         icon: '🔖', sub: 'Cute page markers',    cls: 'cc4' },
-  { key: 'laddugopaldress',  label: 'Laddu Gopal',       icon: '🕉️', sub: 'Devotional dress',     cls: 'cc5' },
-  { key: 'homedecor',        label: 'Home Decor',        icon: '🏠', sub: 'Curtain ties & more',  cls: 'cc6' },
-  { key: 'hairaccessories',  label: 'Hair Accessories',  icon: '🎀', sub: 'Clips & bands',        cls: 'cc7' },
-  { key: 'jewellery',        label: 'Jewellery',         icon: '💍', sub: 'Crochet gems',         cls: 'cc8' },
-  { key: 'rakhi',            label: 'Rakhi',             icon: '🪢', sub: 'Festive & special',    cls: 'cc9' },
-  { key: 'custom',           label: 'Custom',            icon: '🎨', sub: 'Your idea, our hands', cls: 'cc10' },
+  { key: 'all',              label: 'All',              icon: '✨', sub: 'Everything',           cls: 'cc1',  img: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=400&q=80' },
+  { key: 'flowers',          label: 'Flowers',           icon: '🌸', sub: 'Crochet blooms',       cls: 'cc2',  img: 'https://images.unsplash.com/photo-1490750967868-88df5691cc3e?auto=format&fit=crop&w=400&q=80' },
+  { key: 'keychains',        label: 'Keychains',         icon: '🔑', sub: 'Cute & colourful',     cls: 'cc3',  img: 'https://images.unsplash.com/photo-1611171711912-e3f25836d185?auto=format&fit=crop&w=400&q=80' },
+  { key: 'bookmarks',        label: 'Bookmarks',         icon: '🔖', sub: 'Cute page markers',    cls: 'cc4',  img: 'https://images.unsplash.com/photo-1456694721596-ab9e5e79a8fa?auto=format&fit=crop&w=400&q=80' },
+  { key: 'laddugopaldress',  label: 'Laddu Gopal',       icon: '🕉️', sub: 'Devotional dress',     cls: 'cc5',  img: 'https://images.unsplash.com/photo-1545378816-c09a8614047c?auto=format&fit=crop&w=400&q=80' },
+  { key: 'homedecor',        label: 'Home Decor',        icon: '🏠', sub: 'Curtain ties & more',  cls: 'cc6',  img: 'https://images.unsplash.com/photo-1484101403633-562f891dc89a?auto=format&fit=crop&w=400&q=80' },
+  { key: 'hairaccessories',  label: 'Hair Accessories',  icon: '🎀', sub: 'Clips & bands',        cls: 'cc7',  img: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=400&q=80' },
+  { key: 'jewellery',        label: 'Jewellery',         icon: '💍', sub: 'Crochet gems',         cls: 'cc8',  img: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=400&q=80' },
+  { key: 'rakhi',            label: 'Rakhi',             icon: '🪢', sub: 'Festive & special',    cls: 'cc9',  img: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=400&q=80' },
+  { key: 'custom',           label: 'Custom',            icon: '🎨', sub: 'Your idea, our hands', cls: 'cc10', img: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=400&q=80' },
 ];
 
 const CAT_LABEL = {
@@ -316,12 +316,16 @@ export default function Home() {
                 {CATEGORIES.map((c) => (
                   <div
                     key={c.key}
-                    className={`cat-card ${c.cls} ${activeCategory === c.key ? 'active' : ''} ${bouncingCat === c.key ? 'cat-bounce' : ''}`}
+                    className={`cat-card ${activeCategory === c.key ? 'active' : ''} ${bouncingCat === c.key ? 'cat-bounce' : ''}`}
                     onClick={() => handleCatClick(c.key)}
                   >
-                    <div className="cat-icon">{c.icon}</div>
-                    <div className="cat-name">{c.label}</div>
-                    <div className="cat-sub">{c.sub}</div>
+                    <div
+                      className={`cat-card-img ${c.cls}`}
+                      style={{ backgroundImage: `url('${c.img}')` }}
+                    />
+                    <div className="cat-card-body">
+                      <div className="cat-name">{c.label}</div>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -333,7 +337,10 @@ export default function Home() {
                     className={`collection-card-h${activeCategory === c.key ? ' active' : ''}`}
                     onClick={() => handleCatClick(c.key)}
                   >
-                    <div className={`collection-card-h-img ${CAT_COLOR_CLASS[c.key] || ''}`}>{c.icon}</div>
+                    <div
+                      className={`collection-card-h-img ${c.cls}`}
+                      style={{ backgroundImage: `url('${c.img}')` }}
+                    />
                     <span className="collection-card-h-name">{c.label}</span>
                   </div>
                 ))}
