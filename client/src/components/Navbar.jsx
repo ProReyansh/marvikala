@@ -157,7 +157,7 @@ export default function Navbar({ searchQuery, onSearch }) {
         <ul className="navbar-links navbar-links-desktop">
           <li><a href="/" onClick={handleHomeClick}>Home</a></li>
           <li><a href="#products" onClick={(e) => { e.preventDefault(); goToSection('products'); }}>Shop</a></li>
-          <li><a href="#products" onClick={(e) => { e.preventDefault(); goToSection('products'); }}>Collections</a></li>
+          <li><a href="#collections" onClick={(e) => { e.preventDefault(); goToSection('collections'); }}>Collections</a></li>
           <li><a href="/our-story" onClick={(e) => { e.preventDefault(); navigate('/our-story'); }}>Our Story</a></li>
           <li><a href="#contact" onClick={(e) => { e.preventDefault(); goToSection('contact'); }} className="navbar-cta">Contact</a></li>
         </ul>
@@ -248,7 +248,7 @@ export default function Navbar({ searchQuery, onSearch }) {
         <nav className="drawer-nav">
           {[
             { label: 'Shop All',    action: () => { setDrawerOpen(false); navigate('/shop'); } },
-            { label: 'Collections', action: () => goToSection('products') },
+            { label: 'Collections', action: () => goToSection('collections') },
             { label: 'Our Story',   action: () => { setDrawerOpen(false); navigate('/our-story'); } },
             { label: 'Workshops',   action: () => goToSection('contact') },
             { label: 'Contact Us',  action: () => goToSection('contact') },

@@ -325,7 +325,7 @@ export default function Home() {
 
           {/* SHOP BY COLLECTION (horizontal scroll) */}
           <div style={{ background: 'var(--cream)' }}>
-            <section className="section">
+            <section className="section" id="collections">
               <div className="section-head">
                 <h2>Shop by Collection 🍃</h2>
                 <p>Browse our handmade categories</p>

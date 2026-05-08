@@ -3206,9 +3206,66 @@ body {
 @media (min-width: 900px) { .bestsellers-grid { grid-template-columns: repeat(4, 1fr); } }
 
 /* ═══ OUR STORY PAGE ═══ */
-.story-page { max-width: 700px; margin: 0 auto; padding: 40px 24px 80px; }
-.story-page-hero { width: 100%; aspect-ratio: 16/9; background: linear-gradient(160deg, var(--cream-mid), #d4b89a); border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 80px; margin-bottom: 32px; }
-.story-page h1 { font-family: var(--serif); font-size: 32px; color: var(--text); margin-bottom: 20px; line-height: 1.3; }
+@keyframes storyPageIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes storyHeroIn {
+  from { opacity: 0; transform: scale(0.96) translateY(10px); }
+  to   { opacity: 1; transform: scale(1)    translateY(0); }
+}
+
+/* Outer page wrapper — for page-enter animation */
+.story-page-wrapper {
+  background: var(--cream);
+  min-height: calc(100vh - 64px);
+  animation: storyPageIn 0.38s cubic-bezier(0.22,1,0.36,1) both;
+}
+
+/* Header row: "Our Story" + back button */
+.story-page-header {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 20px 24px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  animation: saHeaderIn 0.40s cubic-bezier(0.22,1,0.36,1) 0.05s both;
+}
+.story-page-title {
+  font-family: var(--serif);
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--text);
+}
+.story-page-back {
+  background: none;
+  border: 1.5px solid var(--border);
+  color: var(--text-mid);
+  font-size: 13px;
+  font-weight: 600;
+  font-family: var(--sans);
+  border-radius: 50px;
+  padding: 7px 16px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color 0.18s, color 0.18s, background 0.18s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.18s;
+  animation: saBackBtnIn 0.42s cubic-bezier(0.22,1,0.36,1) 0.18s both;
+}
+.story-page-back:hover {
+  border-color: var(--olive);
+  color: var(--olive);
+  background: rgba(61,74,34,0.06);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(61,74,34,0.14);
+}
+.story-page-back:active {
+  transform: scale(0.94) !important;
+  transition-duration: 0.08s !important;
+}
+
+.story-page { max-width: 700px; margin: 0 auto; padding: 24px 24px 80px; }
+.story-page-hero { width: 100%; aspect-ratio: 16/9; background: linear-gradient(160deg, var(--cream-mid), #d4b89a); border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 80px; margin-bottom: 32px; animation: storyHeroIn 0.50s cubic-bezier(0.22,1,0.36,1) 0.10s both; }
 .story-page h2 { font-family: var(--serif); font-size: 22px; color: var(--text); margin: 32px 0 12px; }
 .story-page p { font-size: 15px; color: var(--text-mid); line-height: 1.8; margin-bottom: 16px; }
 .story-values { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin: 24px 0; }
@@ -3216,7 +3273,7 @@ body {
 .story-value-icon { font-size: 28px; margin-bottom: 8px; }
 .story-value h3 { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 4px; font-family: var(--sans); }
 .story-value p { font-size: 12px; color: var(--text-light); margin: 0; line-height: 1.5; }
-@media (max-width: 599px) { .story-values { grid-template-columns: 1fr !important; } .story-page h1 { font-size: 26px; } }
+@media (max-width: 599px) { .story-values { grid-template-columns: 1fr !important; } .story-page-title { font-size: 22px; } }
 
 /* ═══ ALL BESTSELLERS PAGE ═══ */
 .bestsellers-page { max-width: 1200px; margin: 0 auto; padding: 32px 20px 80px; }
@@ -3285,13 +3342,24 @@ body {
   border-radius: 50px;
   padding: 7px 16px;
   cursor: pointer;
-  transition: border-color 0.15s, color 0.15s, background 0.15s;
+  transition: border-color 0.18s, color 0.18s, background 0.18s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.18s;
   white-space: nowrap;
+  animation: saBackBtnIn 0.42s cubic-bezier(0.22,1,0.36,1) 0.18s both;
+}
+@keyframes saBackBtnIn {
+  from { opacity: 0; transform: translateX(12px); }
+  to   { opacity: 1; transform: translateX(0); }
 }
 .sa-back-btn:hover {
   border-color: var(--olive);
   color: var(--olive);
-  background: rgba(61,74,34,0.04);
+  background: rgba(61,74,34,0.06);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(61,74,34,0.14);
+}
+.sa-back-btn:active {
+  transform: scale(0.94) !important;
+  transition-duration: 0.08s !important;
 }
 
 /* ── Controls Row ── */

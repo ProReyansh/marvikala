@@ -12,18 +12,40 @@ export default function OurStoryPage() {
 
   return (
     <>
+      {/* TOP RIBBON */}
+      <div className="top-ribbon">
+        <div className="top-ribbon-track">
+          <span>📍 Based in Mumbai</span>
+          <span className="ribbon-sep">|</span>
+          <span>🚛 Free delivery over ₹999</span>
+          <span className="ribbon-sep">|</span>
+          <span>🌍 Shipping Pan India</span>
+          <span className="ribbon-gap">✦</span>
+          <span>📍 Based in Mumbai</span>
+          <span className="ribbon-sep">|</span>
+          <span>🚛 Free delivery over ₹999</span>
+          <span className="ribbon-sep">|</span>
+          <span>🌍 Shipping Pan India</span>
+          <span className="ribbon-gap">✦</span>
+        </div>
+      </div>
+
       <Navbar searchQuery="" onSearch={() => {}} />
 
-      <main style={{ background: 'var(--cream)', minHeight: 'calc(100vh - 64px)' }}>
+      <main className="story-page-wrapper">
+
+        {/* ── Header Row ── */}
+        <div className="story-page-header">
+          <h1 className="story-page-title">Our Story</h1>
+          <button className="story-page-back" onClick={() => navigate('/')}>
+            ← Back to Home
+          </button>
+        </div>
+
         <div className="story-page">
 
           {/* Hero image area */}
-          <div className="story-page-hero">
-            🧶
-          </div>
-
-          {/* Main heading */}
-          <h1>A mother's creativity. A daughter's dream.</h1>
+          <div className="story-page-hero">🧶</div>
 
           {/* Story paragraphs */}
           <p>
@@ -92,15 +114,6 @@ export default function OurStoryPage() {
               </svg>
               Chat with us on WhatsApp
             </a>
-          </div>
-
-          <div style={{ textAlign: 'center', marginTop: 24 }}>
-            <button
-              className="btn-outline"
-              onClick={() => navigate('/')}
-            >
-              ← Back to Shop
-            </button>
           </div>
 
         </div>
