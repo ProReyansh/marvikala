@@ -33,7 +33,7 @@ export default function Navbar({ searchQuery, onSearch }) {
     };
   }, [searchOpen]);
 
-  // ── Close search on outside click ──
+  // ── Hide search on outside click (keeps query, just closes the dropdown UI) ──
   useEffect(() => {
     if (!searchOpen) return;
     // Short delay so the same click that opens it doesn't immediately close it
@@ -41,7 +41,7 @@ export default function Navbar({ searchQuery, onSearch }) {
       function handleOutside(e) {
         if (dropdownRef.current?.contains(e.target)) return;
         if (navRef.current?.contains(e.target)) return;
-        closeSearch();
+        hideSearch();
       }
       document.addEventListener('pointerdown', handleOutside);
       return () => document.removeEventListener('pointerdown', handleOutside);
@@ -103,8 +103,9 @@ export default function Navbar({ searchQuery, onSearch }) {
   function handleDrawerBrandClick() {
     setDrawerOpen(false);
     onSearch?.('');
-    if (isHome) window.scrollTo({ top: 0, behavior: 'smooth' });
-    else navigate('/');
+    // Wait for drawer slide-out animation (0.32s) before navigating
+    if (isHome) setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 120);
+    else setTimeout(() => navigate('/'), 340);
   }
 
   function handleSearchSubmit(e) { e.preventDefault(); }
@@ -117,9 +118,15 @@ export default function Navbar({ searchQuery, onSearch }) {
     }, 80);
   }
 
+  // Full close: hides dropdown AND clears the query (used by ✕ button)
   function closeSearch() {
     setSearchOpen(false);
     onSearch?.('');
+  }
+
+  // Soft hide: only hides the dropdown, keeps the query intact (used by outside click)
+  function hideSearch() {
+    setSearchOpen(false);
   }
 
   // ── Icons ──────────────────────────────────────────────────────
