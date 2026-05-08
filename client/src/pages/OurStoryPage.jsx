@@ -44,7 +44,7 @@ export default function OurStoryPage() {
         <div className="story-page-header">
           <h1 className="story-page-title">Our Story</h1>
           <button className="story-page-back" onClick={goHome}>
-            ← Back to Home
+            ← Go to Home
           </button>
         </div>
 
