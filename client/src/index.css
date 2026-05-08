@@ -3163,7 +3163,7 @@ body {
 .categories-row-mobile { display: none; }
 @media (max-width: 768px) {
   .categories-grid-desktop { display: none !important; }
-  .categories-row-mobile { display: flex; }
+  .categories-row-mobile { display: flex; padding-left: 16px; padding-right: 16px; }
 }
 
 /* ═══ HORIZONTAL SCROLL ROWS ═══ */
