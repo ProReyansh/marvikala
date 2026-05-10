@@ -528,7 +528,7 @@ body {
 .hero {
   position: relative;
   width: 100%;
-  min-height: 480px;
+  min-height: 440px;
   background-image: url('/hero-bg.jpg');
   background-size: cover;
   background-position: center center;
@@ -3143,7 +3143,7 @@ body {
 /* Mobile */
 @media (max-width: 600px) {
   .hero {
-    min-height: 380px;
+    min-height: 340px;
     background-position: 68% center;
     align-items: flex-end;
   }
