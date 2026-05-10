@@ -18,6 +18,7 @@ import PrivacyPage from './pages/PrivacyPage';
 import ShippingPage from './pages/ShippingPage';
 import { CartProvider } from './context/CartContext';
 import { ToastProvider } from './context/ToastContext';
+import WelcomePopup from './components/WelcomePopup';
 
 // Module-level flag — false on every fresh page load/reload (JS module re-executes),
 // true after the first SPA navigation happens. This reliably tells us whether a POP
@@ -72,6 +73,7 @@ export default function App() {
       <CartProvider>
         <ToastProvider>
         <ScrollToTop />
+        <WelcomePopup />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/product/:slug" element={<ProductPage />} />
