@@ -207,8 +207,7 @@ export default function Navbar({ searchQuery, onSearch }) {
 
         {/* ── CENTER: Logo ── */}
         <a href="/" className="navbar-logo" onClick={handleLogoClick}>
-          <img src="/logo.jpg" alt="Marvikala" className="navbar-logo-icon" />
-          <span className="navbar-logo-text">Marvi<span>kala</span></span>
+          <img src="/logo-new.png" alt="Marvikala" className="navbar-logo-img" />
         </a>
 
         {/* ── Desktop inline search bar ── */}
@@ -323,9 +322,9 @@ export default function Navbar({ searchQuery, onSearch }) {
           </button>
         </div>
 
-        {/* Brand name — tappable, navigates home */}
+        {/* Brand logo — tappable, navigates home */}
         <button className="drawer-brand" onClick={handleDrawerBrandClick}>
-          Marvi<span>kala</span>
+          <img src="/logo-new.png" alt="Marvikala" className="drawer-brand-logo" />
         </button>
 
         {/* Nav items */}
