@@ -24,7 +24,7 @@ export default function Footer() {
 
         {/* Column 1 — Brand (spans full width on mobile) */}
         <div className="footer-brand">
-          <span className="footer-logo-text">Marvi<span>kala</span></span>
+          <img src="/logo-new.png" alt="Marvikala" className="footer-logo-img" />
           <p className="footer-tagline">
             Handmade with love, just for you.<br />
             From Mumbai.
