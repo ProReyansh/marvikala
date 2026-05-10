@@ -289,15 +289,19 @@ export default function Home() {
         <>
           {/* HERO */}
           <section className="hero">
-            {/* Left: text */}
+            {/* Full-bleed background image overlay */}
+            <div className="hero-overlay" />
+            {/* Text content — positioned over the image */}
             <div className="hero-content">
+              <p className="hero-eyebrow">✦ Handmade in Mumbai ✦</p>
               <h1>
                 Handmade with love,<br />
                 crafted for your<br />
                 everyday joy ♡
               </h1>
               <p className="hero-desc">
-                Thoughtfully handmade creations that bring warmth, charm and happiness into your life.
+                Thoughtfully handmade creations that bring warmth,<br className="hero-br" />
+                charm and happiness into your life.
               </p>
               <div className="hero-btns">
                 <button
@@ -313,10 +317,6 @@ export default function Home() {
                   Our Story
                 </button>
               </div>
-            </div>
-            {/* Right: crochet flowers image (CSS background for reliable loading) */}
-            <div className="hero-image-col">
-              <div className="hero-img-blend" />
             </div>
           </section>
 
