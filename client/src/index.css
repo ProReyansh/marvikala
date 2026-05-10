@@ -528,7 +528,7 @@ body {
 .hero {
   position: relative;
   width: 100%;
-  min-height: 92vh;
+  min-height: 540px;
   background-image: url('/hero-bg.jpg');
   background-size: cover;
   background-position: center center;
@@ -2581,9 +2581,9 @@ body {
   .navbar-search    { max-width: 480px; }
   .navbar-links     { gap: 44px; }
   .navbar-links a   { font-size: 16px; }
-  .hero             { min-height: 92vh; }
-  .hero-content     { padding: 120px 80px 120px 140px; max-width: 620px; }
-  .hero h1          { font-size: 74px; }
+  .hero             { min-height: 620px; }
+  .hero-content     { padding: 100px 80px 100px 140px; max-width: 620px; }
+  .hero h1          { font-size: 72px; }
   .section          { padding: 90px 120px; }
   .contact-section  { padding: 0 120px 90px; }
   .custom-banner    { margin: 0 120px 90px; padding: 80px 80px; }
@@ -2599,8 +2599,8 @@ body {
 /* Large desktop (1600px-2399px) */
 @media (min-width: 1600px) and (max-width: 2399px) {
   .navbar           { padding: 0 80px; }
-  .hero             { min-height: 88vh; }
-  .hero-content     { padding: 100px 60px 100px 100px; }
+  .hero             { min-height: 580px; }
+  .hero-content     { padding: 80px 60px 80px 100px; }
   .section          { padding: 80px 80px; max-width: none; }
   .contact-section  { padding: 0 80px 80px; max-width: none; }
   .custom-banner    { margin: 0 80px 80px; }
@@ -2678,8 +2678,8 @@ body {
   }
 
   /* Hero */
-  .hero             { min-height: 78vh; background-position: 72% center; }
-  .hero-content     { padding: 80px 36px 80px 52px; max-width: 460px; }
+  .hero             { min-height: 480px; background-position: 72% center; }
+  .hero-content     { padding: 60px 36px 60px 52px; max-width: 460px; }
   .hero h1          { font-size: 42px; }
 
   /* Sections */
@@ -3130,11 +3130,11 @@ body {
 /* Tablet */
 @media (max-width: 900px) {
   .hero {
-    min-height: 75vh;
+    min-height: 480px;
     background-position: 70% center;
   }
   .hero-content {
-    padding: 100px 48px 100px 52px;
+    padding: 80px 48px 80px 52px;
     max-width: 480px;
   }
   .hero h1 { font-size: 46px; }
@@ -3143,7 +3143,7 @@ body {
 /* Mobile */
 @media (max-width: 600px) {
   .hero {
-    min-height: 88vh;
+    min-height: 420px;
     background-position: 68% center;
     align-items: flex-end;
   }
