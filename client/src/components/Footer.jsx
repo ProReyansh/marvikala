@@ -79,7 +79,10 @@ export default function Footer() {
             <li><button onClick={() => goTo('/our-story')} className="footer-link-btn">Our Story</button></li>
             <li><button onClick={() => goSection('custom')} className="footer-link-btn">Custom Orders</button></li>
             <li><button onClick={() => goSection('contact')} className="footer-link-btn">Contact Us</button></li>
-            <li><button onClick={() => goSection('contact')} className="footer-link-btn">FAQs</button></li>
+            <li><button onClick={() => goTo('/faq')} className="footer-link-btn">FAQs</button></li>
+            <li><button onClick={() => goTo('/workshops')} className="footer-link-btn">Workshops</button></li>
+            <li><button onClick={() => goTo('/shipping')} className="footer-link-btn">Shipping & Returns</button></li>
+            <li><button onClick={() => goTo('/privacy')} className="footer-link-btn">Privacy Policy</button></li>
           </ul>
         </div>
 

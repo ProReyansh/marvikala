@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useCart } from '../context/CartContext';
 
 export default function Navbar({ searchQuery, onSearch }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -16,6 +17,14 @@ export default function Navbar({ searchQuery, onSearch }) {
   const navigate  = useNavigate();
   const location  = useLocation();
   const isHome    = location.pathname === '/';
+  const { cartCount } = useCart();
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    function onScroll() { setScrolled(window.scrollY > 8); }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   // ── Track navbar bottom so dropdown always sits right below it ──
   useEffect(() => {
@@ -186,7 +195,7 @@ export default function Navbar({ searchQuery, onSearch }) {
 
   return (
     <>
-      <nav className="navbar" ref={navRef}>
+      <nav className={`navbar${scrolled ? ' navbar-scrolled' : ''}`} ref={navRef}>
         {/* ── LEFT: Hamburger (mobile) ── */}
         <button
           className={`hamburger navbar-hamburger-btn${drawerOpen ? ' open' : ''}`}
@@ -229,7 +238,7 @@ export default function Navbar({ searchQuery, onSearch }) {
         <ul className="navbar-links navbar-links-desktop">
           <li><a href="/" onClick={handleHomeClick}>Home</a></li>
           <li><a href="#products" onClick={(e) => { e.preventDefault(); goToSection('products'); }}>Shop</a></li>
-          <li><a href="#collections" onClick={(e) => { e.preventDefault(); goToSection('collections'); }}>Collections</a></li>
+          <li><a href="/collections" onClick={(e) => { e.preventDefault(); animateOutThenGo('/collections'); }}>Collections</a></li>
           <li><a href="/our-story" onClick={(e) => { e.preventDefault(); navigate('/our-story'); }}>Our Story</a></li>
           <li><a href="/contact" onClick={(e) => { e.preventDefault(); navigate('/contact'); }} className="navbar-cta">Contact</a></li>
         </ul>
@@ -248,8 +257,16 @@ export default function Navbar({ searchQuery, onSearch }) {
             <button className="navbar-icon-btn" onClick={searchOpen ? closeSearch : openSearch} aria-label="Search">
               <SearchIcon />
             </button>
-            <button className="navbar-icon-btn navbar-cart-btn" aria-label="Cart">
+            <button
+              className="navbar-icon-btn navbar-cart-btn"
+              aria-label="Cart"
+              onClick={() => animateOutThenGo('/cart')}
+              style={{ position: 'relative' }}
+            >
               <CartIcon />
+              {cartCount > 0 && (
+                <span className="navbar-cart-badge">{cartCount > 9 ? '9+' : cartCount}</span>
+              )}
             </button>
           </div>
         </div>
@@ -315,11 +332,11 @@ export default function Navbar({ searchQuery, onSearch }) {
         <nav className="drawer-nav">
           {[
             { label: 'Shop All',    action: () => { setDrawerOpen(false); navigate('/shop'); } },
-            { label: 'Collections', action: () => goToSection('collections') },
+            { label: 'Collections', action: () => { setDrawerOpen(false); navigate('/collections'); } },
             { label: 'Our Story',   action: () => { setDrawerOpen(false); navigate('/our-story'); } },
-            { label: 'Workshops',   action: () => goToSection('contact') },
+            { label: 'Workshops',   action: () => { setDrawerOpen(false); navigate('/workshops'); } },
             { label: 'Contact Us',  action: () => { setDrawerOpen(false); navigate('/contact'); } },
-            { label: 'FAQs',        action: () => goToSection('contact') },
+            { label: 'FAQs',        action: () => { setDrawerOpen(false); navigate('/faq'); } },
           ].map(({ label, action }) => (
             <button key={label} className="drawer-nav-item" onClick={action}>
               <span className="drawer-nav-label">{label}</span>
@@ -344,9 +361,9 @@ export default function Navbar({ searchQuery, onSearch }) {
         <div className="drawer-footer">
           <p className="drawer-copyright">© 2025 Marvikala. All rights reserved.</p>
           <div className="drawer-footer-links">
-            <button className="drawer-footer-link">Privacy Policy</button>
+            <button className="drawer-footer-link" onClick={() => { setDrawerOpen(false); navigate('/privacy'); }}>Privacy Policy</button>
             <span className="drawer-footer-sep">·</span>
-            <button className="drawer-footer-link">Terms & Conditions</button>
+            <button className="drawer-footer-link" onClick={() => { setDrawerOpen(false); navigate('/shipping'); }}>Shipping & Returns</button>
           </div>
         </div>
 

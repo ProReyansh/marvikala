@@ -10,6 +10,14 @@ import AllBestsellersPage from './pages/AllBestsellersPage';
 import ShopAllPage from './pages/ShopAllPage';
 import ContactPage from './pages/ContactPage';
 import CollectionPage from './pages/CollectionPage';
+import CollectionsPage from './pages/CollectionsPage';
+import CartPage from './pages/CartPage';
+import FAQPage from './pages/FAQPage';
+import WorkshopsPage from './pages/WorkshopsPage';
+import PrivacyPage from './pages/PrivacyPage';
+import ShippingPage from './pages/ShippingPage';
+import { CartProvider } from './context/CartContext';
+import { ToastProvider } from './context/ToastContext';
 
 // Module-level flag — false on every fresh page load/reload (JS module re-executes),
 // true after the first SPA navigation happens. This reliably tells us whether a POP
@@ -61,27 +69,37 @@ function ProtectedRoute({ children }) {
 export default function App() {
   return (
     <BrowserRouter>
-      <ScrollToTop />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/product/:slug" element={<ProductPage />} />
-        <Route path="/our-story" element={<OurStoryPage />} />
-        <Route path="/bestsellers" element={<AllBestsellersPage />} />
-        <Route path="/shop" element={<ShopAllPage />} />
-        <Route path="/contact" element={<ContactPage />} />
-        <Route path="/collection/:category" element={<CollectionPage />} />
-        <Route path="/admin/login" element={<AdminLogin />} />
-        <Route
-          path="/admin"
-          element={
-            <ProtectedRoute>
-              <AdminDashboard />
-            </ProtectedRoute>
-          }
-        />
-        {/* Catch-all — any unknown URL gets the 404 page */}
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+      <CartProvider>
+        <ToastProvider>
+        <ScrollToTop />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/product/:slug" element={<ProductPage />} />
+          <Route path="/our-story" element={<OurStoryPage />} />
+          <Route path="/bestsellers" element={<AllBestsellersPage />} />
+          <Route path="/shop" element={<ShopAllPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/collections" element={<CollectionsPage />} />
+          <Route path="/collection/:category" element={<CollectionPage />} />
+          <Route path="/cart" element={<CartPage />} />
+          <Route path="/faq" element={<FAQPage />} />
+          <Route path="/workshops" element={<WorkshopsPage />} />
+          <Route path="/privacy" element={<PrivacyPage />} />
+          <Route path="/shipping" element={<ShippingPage />} />
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute>
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+          {/* Catch-all — any unknown URL gets the 404 page */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+        </ToastProvider>
+      </CartProvider>
     </BrowserRouter>
   );
 }

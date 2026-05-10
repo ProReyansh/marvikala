@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import { useToast } from '../context/ToastContext';
 
 function WaIcon() {
   return (
@@ -21,42 +22,84 @@ function IgIcon() {
   );
 }
 
+function validate(form) {
+  const errors = {};
+  if (!form.name.trim()) errors.name = 'Please enter your name';
+  if (!form.email.trim()) errors.email = 'Please enter your email';
+  else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) errors.email = 'Please enter a valid email';
+  if (!form.message.trim()) errors.message = 'Please enter a message';
+  else if (form.message.trim().length < 10) errors.message = 'Message is too short (min 10 characters)';
+  return errors;
+}
+
 export default function ContactPage() {
   const navigate = useNavigate();
+  const toast = useToast();
   const [exiting, setExiting] = useState(false);
-  const [form, setForm] = useState({ name: '', email: '', message: '' });
+  const [form, setForm]       = useState({ name: '', email: '', phone: '', message: '' });
+  const [errors, setErrors]   = useState({});
+  const [status, setStatus]   = useState('idle'); // idle | loading | success | error
+  const [touched, setTouched] = useState({});
 
-  function goHome() {
-    setExiting(true);
-    setTimeout(() => navigate('/'), 230);
-  }
+  function goHome() { setExiting(true); setTimeout(() => navigate('/'), 230); }
 
   function handleChange(e) {
-    setForm(f => ({ ...f, [e.target.name]: e.target.value }));
+    const { name, value } = e.target;
+    setForm(f => ({ ...f, [name]: value }));
+    // Clear error on change if touched
+    if (touched[name] && errors[name]) {
+      const newErrors = validate({ ...form, [name]: value });
+      setErrors(prev => ({ ...prev, [name]: newErrors[name] }));
+    }
   }
 
-  function handleSubmit(e) {
-    e.preventDefault();
-    // functionality left for later
+  function handleBlur(e) {
+    const { name } = e.target;
+    setTouched(prev => ({ ...prev, [name]: true }));
+    const newErrors = validate(form);
+    setErrors(prev => ({ ...prev, [name]: newErrors[name] }));
   }
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setTouched({ name: true, email: true, message: true });
+    const errs = validate(form);
+    if (Object.keys(errs).length > 0) {
+      setErrors(errs);
+      return;
+    }
+
+    setStatus('loading');
+    setErrors({});
+
+    // Simulate async submit (replace with real API call / EmailJS)
+    await new Promise(res => setTimeout(res, 1400));
+
+    // Simulate 90% success rate
+    if (Math.random() > 0.1) {
+      setStatus('success');
+      toast({ message: "Message sent! We'll get back to you soon 💛", type: 'success', duration: 4000 });
+      setForm({ name: '', email: '', phone: '', message: '' });
+      setTouched({});
+    } else {
+      setStatus('error');
+      toast({ message: 'Something went wrong. Please try WhatsApp instead.', type: 'error' });
+    }
+  }
+
+  function resetForm() { setStatus('idle'); setErrors({}); setForm({ name: '', email: '', phone: '', message: '' }); setTouched({}); }
 
   return (
     <>
       {/* TOP RIBBON */}
       <div className="top-ribbon">
         <div className="top-ribbon-track">
-          <span>📍 Based in Mumbai</span>
-          <span className="ribbon-sep">|</span>
-          <span>🚛 Free delivery over ₹999</span>
-          <span className="ribbon-sep">|</span>
-          <span>🌍 Shipping Pan India</span>
-          <span className="ribbon-gap">✦</span>
-          <span>📍 Based in Mumbai</span>
-          <span className="ribbon-sep">|</span>
-          <span>🚛 Free delivery over ₹999</span>
-          <span className="ribbon-sep">|</span>
-          <span>🌍 Shipping Pan India</span>
-          <span className="ribbon-gap">✦</span>
+          <span>📍 Based in Mumbai</span><span className="ribbon-sep">|</span>
+          <span>🚛 Free delivery over ₹999</span><span className="ribbon-sep">|</span>
+          <span>🌍 Shipping Pan India</span><span className="ribbon-gap">✦</span>
+          <span>📍 Based in Mumbai</span><span className="ribbon-sep">|</span>
+          <span>🚛 Free delivery over ₹999</span><span className="ribbon-sep">|</span>
+          <span>🌍 Shipping Pan India</span><span className="ribbon-gap">✦</span>
         </div>
       </div>
 
@@ -64,83 +107,127 @@ export default function ContactPage() {
 
       <main className={`contact-page-wrapper${exiting ? ' page-exiting' : ''}`}>
 
-        {/* ── Header Row ── */}
         <div className="contact-page-header">
           <h1 className="contact-page-title">Contact Us</h1>
-          <button className="contact-page-back" onClick={goHome}>
-            ← Go to Home
-          </button>
+          <button className="contact-page-back" onClick={goHome}>← Go to Home</button>
         </div>
 
         <div className="contact-page-body">
 
-          {/* Subtitle */}
           <p className="contact-page-sub">
             We'd love to hear from you!<br />
             Reach out for orders, customisations, or any questions.
           </p>
 
-          {/* ── Contact Buttons ── */}
+          {/* Contact Buttons */}
           <div className="contact-reach-row">
-            <a
-              href="https://wa.me/919769238160"
-              target="_blank"
-              rel="noreferrer"
-              className="contact-reach-btn contact-wa"
-            >
+            <a href="https://wa.me/919769238160" target="_blank" rel="noreferrer" className="contact-reach-btn contact-wa">
               <WaIcon />
               <div className="contact-reach-info">
                 <span className="contact-reach-label">WhatsApp</span>
                 <span className="contact-reach-value">+91 97692 38160</span>
               </div>
+              <span className="contact-reach-arrow">→</span>
             </a>
-            <a
-              href="https://instagram.com/marvikala"
-              target="_blank"
-              rel="noreferrer"
-              className="contact-reach-btn contact-ig"
-            >
+            <a href="https://instagram.com/marvikala" target="_blank" rel="noreferrer" className="contact-reach-btn contact-ig">
               <IgIcon />
               <div className="contact-reach-info">
                 <span className="contact-reach-label">Instagram</span>
                 <span className="contact-reach-value">@marvikala</span>
               </div>
+              <span className="contact-reach-arrow">→</span>
             </a>
           </div>
 
-          {/* ── Form ── */}
-          <h2 className="contact-form-heading">Send us a message</h2>
-          <form className="contact-form" onSubmit={handleSubmit}>
-            <input
-              type="text"
-              name="name"
-              placeholder="Name"
-              value={form.name}
-              onChange={handleChange}
-              className="contact-input"
-              autoComplete="name"
-            />
-            <input
-              type="email"
-              name="email"
-              placeholder="Email"
-              value={form.email}
-              onChange={handleChange}
-              className="contact-input"
-              autoComplete="email"
-            />
-            <textarea
-              name="message"
-              placeholder="Message"
-              value={form.message}
-              onChange={handleChange}
-              className="contact-input contact-textarea"
-              rows={5}
-            />
-            <button type="submit" className="contact-submit-btn">
-              Send Message
-            </button>
-          </form>
+          {/* Form */}
+          <div className="contact-form-wrap">
+            <h2 className="contact-form-heading">Send us a message</h2>
+
+            {status === 'success' ? (
+              <div className="contact-success">
+                <div className="contact-success-icon">🌸</div>
+                <h3>Message sent!</h3>
+                <p>Thank you for reaching out, {form.name || 'friend'}! We'll get back to you within 24 hours.</p>
+                <button className="contact-submit-btn" onClick={resetForm} style={{ marginTop: 16 }}>Send another message</button>
+              </div>
+            ) : (
+              <form className="contact-form" onSubmit={handleSubmit} noValidate>
+
+                <div className="contact-field-wrap">
+                  <input
+                    type="text"
+                    name="name"
+                    placeholder="Your name *"
+                    value={form.name}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    className={`contact-input${errors.name ? ' input-error' : touched.name && !errors.name ? ' input-valid' : ''}`}
+                    autoComplete="name"
+                    aria-describedby={errors.name ? 'name-err' : undefined}
+                  />
+                  {errors.name && <span className="contact-field-error" id="name-err">{errors.name}</span>}
+                </div>
+
+                <div className="contact-field-wrap">
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="Email address *"
+                    value={form.email}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    className={`contact-input${errors.email ? ' input-error' : touched.email && !errors.email ? ' input-valid' : ''}`}
+                    autoComplete="email"
+                    aria-describedby={errors.email ? 'email-err' : undefined}
+                  />
+                  {errors.email && <span className="contact-field-error" id="email-err">{errors.email}</span>}
+                </div>
+
+                <div className="contact-field-wrap">
+                  <input
+                    type="tel"
+                    name="phone"
+                    placeholder="Phone number (optional)"
+                    value={form.phone}
+                    onChange={handleChange}
+                    className="contact-input"
+                    autoComplete="tel"
+                  />
+                </div>
+
+                <div className="contact-field-wrap">
+                  <textarea
+                    name="message"
+                    placeholder="Your message *"
+                    value={form.message}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    className={`contact-input contact-textarea${errors.message ? ' input-error' : touched.message && !errors.message ? ' input-valid' : ''}`}
+                    rows={5}
+                    aria-describedby={errors.message ? 'msg-err' : undefined}
+                  />
+                  <div className="contact-char-count">{form.message.length} chars</div>
+                  {errors.message && <span className="contact-field-error" id="msg-err">{errors.message}</span>}
+                </div>
+
+                {status === 'error' && (
+                  <div className="contact-error-banner">
+                    Something went wrong. Please try again or reach us on WhatsApp.
+                  </div>
+                )}
+
+                <button
+                  type="submit"
+                  className={`contact-submit-btn${status === 'loading' ? ' loading' : ''}`}
+                  disabled={status === 'loading'}
+                >
+                  {status === 'loading' ? (
+                    <><span className="btn-spinner" />&nbsp;Sending...</>
+                  ) : 'Send Message'}
+                </button>
+              </form>
+            )}
+          </div>
 
         </div>
       </main>
