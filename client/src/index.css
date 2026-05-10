@@ -3130,7 +3130,7 @@ body {
 /* Tablet */
 @media (max-width: 900px) {
   .hero {
-    min-height: 480px;
+    min-height: 320px;
     background-position: 70% center;
   }
   .hero-content {
@@ -3143,7 +3143,7 @@ body {
 /* Mobile */
 @media (max-width: 600px) {
   .hero {
-    min-height: 420px;
+    min-height: 260px;
     background-position: 68% center;
     align-items: flex-end;
   }
@@ -3158,7 +3158,7 @@ body {
     );
   }
   .hero-content {
-    padding: 0 24px 52px;
+    padding: 0 20px 24px;
     max-width: 100%;
   }
   .hero-eyebrow { font-size: 10px; padding: 5px 12px; margin-bottom: 14px; }
