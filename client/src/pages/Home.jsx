@@ -141,6 +141,22 @@ export default function Home() {
     document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' });
   }
 
+  // Scroll-triggered fade-up for sections
+  useEffect(() => {
+    const els = document.querySelectorAll('.fade-section');
+    if (!els.length) return;
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('fade-section-visible');
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.06 });
+    els.forEach(el => obs.observe(el));
+    return () => obs.disconnect();
+  }, [products]);
+
   const q = searchQuery.trim().toLowerCase();
 
   const searchResults = q
@@ -304,9 +320,24 @@ export default function Home() {
             </div>
           </section>
 
+          {/* FEATURE STRIP */}
+          <div className="feature-strip">
+            {[
+              { icon: '🧶', text: 'Handmade\nwith love' },
+              { icon: '🌿', text: 'Eco-friendly\nmaterials' },
+              { icon: '🎁', text: 'Perfect\nfor gifting' },
+              { icon: '📍', text: 'Made in\nMumbai' },
+            ].map(({ icon, text }) => (
+              <div key={text} className="feature-strip-item">
+                <span className="feature-strip-icon">{icon}</span>
+                <span className="feature-strip-label">{text}</span>
+              </div>
+            ))}
+          </div>
+
           {/* SHOP BY COLLECTION (horizontal scroll) */}
           <div style={{ background: 'var(--cream)' }}>
-            <section className="section" id="collections">
+            <section className="section fade-section" id="collections">
               <div className="section-head">
                 <h2>Shop by Collection 🍃</h2>
                 <p>Browse our handmade categories</p>
@@ -317,7 +348,7 @@ export default function Home() {
                   <div
                     key={c.key}
                     className={`cat-card ${activeCategory === c.key ? 'active' : ''} ${bouncingCat === c.key ? 'cat-bounce' : ''}`}
-                    onClick={() => handleCatClick(c.key)}
+                    onClick={() => c.key === 'all' ? navigate('/shop') : navigate('/collection/' + c.key)}
                   >
                     <div
                       className={`cat-card-img ${c.cls}`}
@@ -339,7 +370,7 @@ export default function Home() {
                       marginLeft: i === 0 ? 16 : 0,
                       marginRight: i === arr.length - 1 ? 16 : 0,
                     }}
-                    onClick={() => handleCatClick(c.key)}
+                    onClick={() => navigate('/collection/' + c.key)}
                   >
                     <div
                       className={`collection-card-h-img ${c.cls}`}
@@ -352,9 +383,49 @@ export default function Home() {
             </section>
           </div>
 
+          {/* FEATURED PRODUCT */}
+          {!loading && (() => {
+            const fp = products.find(p => p.featured || p.bestseller);
+            if (!fp) return null;
+            const imgs = fp.images?.length > 0 ? fp.images : (fp.image ? [fp.image] : []);
+            const imgSrc = imgs[0] ? (imgs[0].startsWith('http') ? imgs[0] : `/uploads/${imgs[0]}`) : null;
+            return (
+              <section className="featured-section fade-section">
+                <div className="section-head">
+                  <div className="section-eyebrow">✦ Signature Piece</div>
+                  <h2>Made to be cherished</h2>
+                  <p>Our most-loved handcrafted creation</p>
+                </div>
+                <div
+                  className="featured-card"
+                  onClick={() => {
+                    try { sessionStorage.setItem('mk_scroll_/', String(window.scrollY)); } catch {}
+                    navigate(productUrl(fp), { state: { product: fp } });
+                  }}
+                >
+                  <div className="featured-card-img">
+                    {imgSrc ? <img src={imgSrc} alt={fp.name} /> : <span>🧶</span>}
+                    {(fp.bestseller || fp.featured) && <span className="featured-card-badge">Bestseller</span>}
+                  </div>
+                  <div className="featured-card-body">
+                    <div className="featured-card-cat">{CAT_LABEL[fp.category] || fp.category}</div>
+                    <div className="featured-card-name">{fp.name}</div>
+                    {fp.price && <div className="featured-card-price">₹{fp.price}</div>}
+                    <button
+                      className="btn-primary featured-card-btn"
+                      onClick={(e) => { e.stopPropagation(); setEnquireProduct(fp); }}
+                    >
+                      Enquire Now
+                    </button>
+                  </div>
+                </div>
+              </section>
+            );
+          })()}
+
           {/* BESTSELLERS (horizontal scroll) */}
           {!loading && bestsellers.length > 0 && (
-            <section className="section" id="bestsellers">
+            <section className="section fade-section" id="bestsellers">
               <div className="section-head">
                 <h2>Our Bestsellers ♡</h2>
                 <p>Most loved picks</p>
@@ -413,7 +484,7 @@ export default function Home() {
           )}
 
           {/* STORY TEASER */}
-          <section className="story-teaser">
+          <section className="story-teaser fade-section">
             <div className="story-teaser-img">🪡</div>
             <div className="story-teaser-text">
               <div className="story-teaser-eyebrow">Our Story</div>
@@ -426,7 +497,7 @@ export default function Home() {
           </section>
 
           {/* REVIEWS */}
-          <div className="reviews-section">
+          <div className="reviews-section fade-section">
             <section className="section" id="reviews">
               <div className="section-head">
                 <h2>Loved by Customers ♡</h2>
@@ -450,7 +521,7 @@ export default function Home() {
           </div>
 
           {/* INSTAGRAM SECTION */}
-          <section className="insta-section" id="instagram">
+          <section className="insta-section fade-section" id="instagram">
             <h2>Let's be friends! <span>@marvikala_</span></h2>
             <p>Follow us for daily crochet inspiration</p>
             <div className="insta-grid">

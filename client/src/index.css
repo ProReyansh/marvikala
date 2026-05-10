@@ -3281,11 +3281,11 @@ body {
   .review-card { flex-shrink: 0 !important; width: 260px !important; scroll-snap-align: start; }
 }
 
-/* ═══ SECTION PADDING MOBILE ═══ */
+/* ═══ SECTION PADDING MOBILE (base — overridden by refinements block below) ═══ */
 @media (max-width: 768px) {
-  .section { padding: 36px 0 !important; }
-  .section-head { padding: 0 20px; margin-bottom: 20px !important; }
-  .section-head h2 { font-size: 22px !important; }
+  .section { padding: 40px 0 !important; }
+  .section-head { padding: 0 20px; margin-bottom: 24px !important; }
+  .section-head h2 { font-size: 24px !important; }
   .custom-banner { padding: 32px 20px !important; flex-direction: column !important; text-align: center !important; gap: 20px !important; display: flex !important; grid-template-columns: none !important; margin: 0 0 40px !important; border-radius: 0 !important; }
   .about-section { padding: 36px 20px !important; }
   .about-content { grid-template-columns: 1fr !important; }
@@ -3956,3 +3956,251 @@ body {
   font-weight: 700;
 }
 .sa-sheet-option.selected svg { stroke: var(--olive); }
+
+/* ═══════════════════════════════════════════
+   FEATURE STRIP (below hero)
+   ═══════════════════════════════════════════ */
+
+.feature-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  background: var(--white);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.feature-strip-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 18px 8px;
+  text-align: center;
+  border-right: 1px solid var(--border);
+}
+.feature-strip-item:last-child { border-right: none; }
+
+.feature-strip-icon { font-size: 20px; line-height: 1; }
+
+.feature-strip-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-mid);
+  line-height: 1.4;
+  font-family: var(--sans);
+  white-space: pre-line;
+  letter-spacing: 0.2px;
+}
+
+@media (max-width: 768px) {
+  .feature-strip { grid-template-columns: repeat(2, 1fr); }
+  .feature-strip-item:nth-child(1),
+  .feature-strip-item:nth-child(2) { border-bottom: 1px solid var(--border); }
+  .feature-strip-item:nth-child(2) { border-right: none; }
+  .feature-strip-item { padding: 16px 8px; }
+}
+
+/* ═══════════════════════════════════════════
+   SECTION EYEBROW (above section heading)
+   ═══════════════════════════════════════════ */
+
+.section-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--rose);
+  margin-bottom: 10px;
+  font-family: var(--sans);
+}
+
+/* ═══════════════════════════════════════════
+   FEATURED PRODUCT SECTION
+   ═══════════════════════════════════════════ */
+
+.featured-section {
+  padding: 52px 20px 56px;
+  background: var(--cream);
+}
+
+@media (min-width: 769px) {
+  .featured-section { padding: 72px 48px; max-width: 1200px; margin: 0 auto; background: transparent; }
+}
+
+.featured-card {
+  border-radius: 20px;
+  overflow: hidden;
+  background: var(--white);
+  box-shadow: 0 4px 24px rgba(42,32,22,0.08);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: transform 0.22s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.22s ease;
+  display: flex;
+  flex-direction: column;
+  max-width: 480px;
+  margin: 0 auto;
+}
+.featured-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 16px 44px rgba(42,32,22,0.13);
+}
+.featured-card:active { transform: scale(0.98); transition-duration: 0.08s; }
+
+.featured-card-img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background: var(--cream-mid);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 60px;
+  overflow: hidden;
+  position: relative;
+  flex-shrink: 0;
+}
+.featured-card-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.featured-card-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: var(--olive);
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  font-family: var(--sans);
+  letter-spacing: 0.5px;
+  padding: 4px 10px;
+  border-radius: 50px;
+}
+
+.featured-card-body { padding: 22px 22px 26px; }
+.featured-card-cat {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--rose);
+  margin-bottom: 6px;
+  font-family: var(--sans);
+}
+.featured-card-name {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.3;
+  margin-bottom: 8px;
+}
+.featured-card-price {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--olive);
+  font-family: var(--sans);
+  margin-bottom: 18px;
+}
+.featured-card-btn { width: 100%; justify-content: center; }
+
+/* ═══════════════════════════════════════════
+   SCROLL-TRIGGERED FADE-UP
+   ═══════════════════════════════════════════ */
+
+.fade-section {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.58s ease, transform 0.58s ease;
+}
+.fade-section-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ═══════════════════════════════════════════
+   MOBILE SPACING & TYPOGRAPHY REFINEMENTS
+   ═══════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  /* Breathe between sections */
+  .section { padding: 40px 0 !important; }
+  .section-head { padding: 0 20px; margin-bottom: 24px !important; }
+  .section-head h2 { font-size: 24px !important; line-height: 1.25; }
+  .section-head p { font-size: 13px !important; margin-top: 6px; }
+
+  /* View all button */
+  .view-all-btn { margin: 20px 20px 0 !important; display: block; width: calc(100% - 40px); }
+
+  /* Story teaser */
+  .story-teaser { padding: 44px 20px; gap: 18px; }
+  .story-teaser-text h2 { font-size: 21px; }
+
+  /* Review card */
+  .review-card { padding: 20px 18px; }
+  .review-text { font-size: 13px; line-height: 1.7; }
+
+  /* Featured section */
+  .featured-section { padding: 44px 20px 48px; }
+  .featured-card-name { font-size: 19px; }
+  .featured-card-body { padding: 18px 18px 22px; }
+
+  /* Instagram */
+  .insta-section { padding: 44px 20px; }
+
+  /* Bestsellers label */
+  .product-card-h { width: 145px; }
+  .product-card-h-img { height: 130px; }
+}
+
+/* ═══════════════════════════════════════════
+   MICROANIMATIONS — button & card polish
+   ═══════════════════════════════════════════ */
+
+/* Smooth card lift on all interactive cards */
+.product-card-h,
+.collection-card-h,
+.featured-card,
+.review-card {
+  will-change: transform;
+}
+
+/* Consistent button press feel */
+.btn-primary:active,
+.btn-outline:active,
+.view-all-btn:active,
+.sa-card-btn:active,
+.product-card-h-btn:active {
+  transform: scale(0.96) !important;
+  transition-duration: 0.08s !important;
+}
+
+/* Product horizontal card hover */
+.product-card-h {
+  transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s ease;
+}
+.product-card-h:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(42,32,22,0.12);
+}
+
+/* Review card hover */
+.review-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.review-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(42,32,22,0.09);
+}
+
+/* View all button transition */
+.view-all-btn {
+  transition: background 0.18s ease, color 0.18s ease, transform 0.15s ease, box-shadow 0.15s ease;
+}
+.view-all-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(61,74,34,0.18);
+}
+
+/* Section head heading entrance */
+.section-head h2 {
+  transition: color 0.2s ease;
+}
