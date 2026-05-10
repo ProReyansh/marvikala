@@ -4,6 +4,7 @@ import axios from 'axios';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import EnquireModal from '../components/EnquireModal';
+import WelcomePopup from '../components/WelcomePopup';
 
 const CATEGORIES = [
   { key: 'all',              label: 'All',              icon: '✨', sub: 'Everything',           cls: 'cc1',  img: 'https://picsum.photos/seed/craft/400/400' },
@@ -99,6 +100,7 @@ export default function Home() {
   const [enquireProduct, setEnquireProduct] = useState(null);
   const [searchQuery, setSearchQuery]       = useState(getSavedSearch);
   const [bouncingCat, setBouncingCat]       = useState(null);
+  const [showPopup, setShowPopup]           = useState(false);
 
   function handleSearch(q) {
     setSearchQuery(q);
@@ -550,11 +552,20 @@ export default function Home() {
         </>
       )}
 
+      {/* Popup trigger button */}
+      <div className="popup-trigger-wrap">
+        <button className="popup-trigger-btn" onClick={() => setShowPopup(true)}>
+          🎁 Get 10% Off
+        </button>
+      </div>
+
       <Footer />
 
       {enquireProduct && (
         <EnquireModal product={enquireProduct} onClose={() => setEnquireProduct(null)} />
       )}
+
+      <WelcomePopup forceShow={showPopup} onClose={() => setShowPopup(false)} />
     </>
   );
 }
