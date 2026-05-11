@@ -16,8 +16,10 @@ import FAQPage from './pages/FAQPage';
 import WorkshopsPage from './pages/WorkshopsPage';
 import PrivacyPage from './pages/PrivacyPage';
 import ShippingPage from './pages/ShippingPage';
+import HowToOrderPage from './pages/HowToOrderPage';
 import { CartProvider } from './context/CartContext';
 import { ToastProvider } from './context/ToastContext';
+import FloatingWhatsApp from './components/FloatingWhatsApp';
 
 // Module-level flag — false on every fresh page load/reload (JS module re-executes),
 // true after the first SPA navigation happens. This reliably tells us whether a POP
@@ -72,6 +74,7 @@ export default function App() {
       <CartProvider>
         <ToastProvider>
         <ScrollToTop />
+        <FloatingWhatsApp />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/product/:slug" element={<ProductPage />} />
@@ -86,6 +89,7 @@ export default function App() {
           <Route path="/workshops" element={<WorkshopsPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
           <Route path="/shipping" element={<ShippingPage />} />
+          <Route path="/how-to-order" element={<HowToOrderPage />} />
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route
             path="/admin"

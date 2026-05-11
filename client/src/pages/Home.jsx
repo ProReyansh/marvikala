@@ -216,9 +216,9 @@ export default function Home() {
           <button
             className="enquire-btn"
             disabled={!product.inStock}
-            onClick={(e) => { e.stopPropagation(); product.inStock && setEnquireProduct(product); }}
+            onClick={(e) => { e.stopPropagation(); product.inStock && navigate(productUrl(product), { state: { product } }); }}
           >
-            {product.inStock ? 'Enquire Now' : 'Out of Stock'}
+            {product.inStock ? 'View Product' : 'Out of Stock'}
           </button>
         </div>
       </div>
@@ -295,7 +295,6 @@ export default function Home() {
             <div className="hero-overlay" />
             {/* Text content — positioned over the image */}
             <div className="hero-content">
-              <p className="hero-eyebrow">✦ Handmade in Mumbai ✦</p>
               <h1>
                 Handmade with love,<br />
                 crafted for your<br />
@@ -326,9 +325,9 @@ export default function Home() {
           <div className="feature-strip">
             {[
               { icon: '🧶', text: 'Handmade\nwith love' },
-              { icon: '🌿', text: 'Eco-friendly\nmaterials' },
+              { icon: '📦', text: 'Made to\norder' },
               { icon: '🎁', text: 'Perfect\nfor gifting' },
-              { icon: '📍', text: 'Made in\nMumbai' },
+              { icon: '🇮🇳', text: 'Made in\nIndia' },
             ].map(({ icon, text }) => (
               <div key={text} className="feature-strip-item">
                 <span className="feature-strip-icon">{icon}</span>
@@ -341,8 +340,7 @@ export default function Home() {
           <div style={{ background: 'var(--cream)' }}>
             <section className="section fade-section" id="collections">
               <div className="section-head">
-                <h2>Shop by Collection 🍃</h2>
-                <p>Browse our handmade categories</p>
+                <h2>Shop by Collection</h2>
               </div>
               {/* Desktop grid */}
               <div className="categories-grid categories-grid-desktop">
@@ -383,6 +381,11 @@ export default function Home() {
                 ))}
               </div>
             </section>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'center', marginTop: -8, paddingBottom: 32, background: 'var(--cream)' }}>
+            <button className="view-all-btn" onClick={() => navigate('/collections')}>
+              Shop All Collections →
+            </button>
           </div>
 
           {/* FEATURED PRODUCT */}
@@ -429,8 +432,7 @@ export default function Home() {
           {!loading && bestsellers.length > 0 && (
             <section className="section fade-section" id="bestsellers">
               <div className="section-head">
-                <h2>Our Bestsellers ♡</h2>
-                <p>Most loved picks</p>
+                <h2>Our Bestsellers</h2>
               </div>
               <div className="h-scroll-row">
                 {bestsellers.slice(0, 10).map((product) => {
@@ -487,10 +489,12 @@ export default function Home() {
 
           {/* STORY TEASER */}
           <section className="story-teaser fade-section">
-            <div className="story-teaser-img">🪡</div>
+            <div className="story-teaser-img">
+              <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80" alt="Our Story" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 'inherit' }} />
+            </div>
             <div className="story-teaser-text">
               <div className="story-teaser-eyebrow">Our Story</div>
-              <h2>A mother's creativity. A daughter's dream.</h2>
+              <h2 className="story-teaser-heading">A mother's creativity. A daughter's dream.</h2>
               <p>From a small studio in Mumbai, every piece is handcrafted with patience, love, and intention.</p>
               <button className="btn-primary" onClick={() => navigate('/our-story')}>
                 Read Our Story →
@@ -502,7 +506,7 @@ export default function Home() {
           <div className="reviews-section fade-section">
             <section className="section" id="reviews">
               <div className="section-head">
-                <h2>Loved by Customers ♡</h2>
+                <h2>Loved by Customers</h2>
                 <p>Kind words from 100+ happy customers across Mumbai</p>
               </div>
               <div className="reviews-grid">
