@@ -730,10 +730,10 @@ body {
   border-color: var(--olive);
 }
 
-/* Image area — rectangular landscape, fills full width */
+/* Image area — rectangular portrait, fills full width */
 .cat-card-img {
   width: 100%;
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 3 / 4;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -3228,7 +3228,7 @@ body {
 /* ═══ COLLECTION CARDS (mobile) ═══ */
 .collection-card-h {
   flex-shrink: 0;
-  width: 150px;
+  width: 120px;
   scroll-snap-align: start;
   display: flex;
   flex-direction: column;
@@ -3247,7 +3247,7 @@ body {
 /* Image fills the top of the card */
 .collection-card-h-img {
   width: 100%;
-  height: 85px;
+  height: 140px;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
