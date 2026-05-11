@@ -483,13 +483,10 @@ export default function Home() {
           )}
 
           {/* STORY TEASER */}
-          <section className="story-teaser fade-section">
-            <div className="story-teaser-img">
-              <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80" alt="Our Story" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 'inherit' }} />
-            </div>
+          <section className="story-teaser story-teaser--text-only fade-section">
             <div className="story-teaser-text">
               <div className="story-teaser-label">Our Story</div>
-              <h2 className="story-teaser-heading">A mother's creativity.<br />A daughter's dream.</h2>
+              <h2 className="story-teaser-heading">A mother's creativity. A daughter's dream.</h2>
               <p>From a small studio in Mumbai, every piece is handcrafted with patience, love, and intention.</p>
               <button className="btn-primary" onClick={() => navigate('/our-story')}>
                 Read Our Story →

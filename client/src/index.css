@@ -7413,11 +7413,17 @@ body {
 }
 
 /* ══════════════════════════════════════════════════════════════════════════════
-   OUR STORY SECTION — redesign: big bold label top-left, smaller heading
+   OUR STORY SECTION — text-only, full width, left-aligned label
 ══════════════════════════════════════════════════════════════════════════════ */
+.story-teaser--text-only {
+  display: block !important;   /* override the flex row layout */
+}
+.story-teaser--text-only .story-teaser-text {
+  max-width: 680px;
+}
 .story-teaser-label {
   font-family: var(--serif);
-  font-size: 36px;
+  font-size: 40px;
   font-weight: 800;
   color: var(--navy);
   line-height: 1.1;
@@ -7429,11 +7435,11 @@ body {
   font-size: 18px;
   font-weight: 600;
   color: var(--text-mid);
-  line-height: 1.5;
+  line-height: 1.55;
   margin-bottom: 14px;
 }
 @media (max-width: 600px) {
-  .story-teaser-label { font-size: 28px; }
+  .story-teaser-label { font-size: 30px; }
   .story-teaser-heading { font-size: 15px; }
 }
 

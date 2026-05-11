@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react'; // useMemo still used for countMap
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
@@ -89,10 +89,6 @@ const DEFAULT_COLLECTIONS = [
   },
 ];
 
-const SORTS = [
-  { key: 'za',    label: 'Z – A' },
-  { key: 'count', label: 'Most Products' },
-];
 
 // ── localStorage helpers ──────────────────────────────────────────────────────
 function getMostLovedKey() {
@@ -204,8 +200,6 @@ export default function CollectionsPage() {
   const [products, setProducts] = useState(getCachedProducts);
   const [loading, setLoading]   = useState(() => getCachedProducts().length === 0);
   const [exiting, setExiting]   = useState(false);
-  const [sort, setSort]         = useState('za');
-  const [sortOpen, setSortOpen] = useState(false);
 
   // Read admin settings from localStorage
   const [mostLovedKey]        = useState(getMostLovedKey);
@@ -235,19 +229,8 @@ export default function CollectionsPage() {
 
   const totalProducts = products.length;
 
-  // Sorted list
-  const displayed = useMemo(() => {
-    let list = [...COLLECTIONS];
-    switch (sort) {
-      case 'az':    list = [...list].sort((a, b) => a.label.localeCompare(b.label)); break;
-      case 'za':    list = [...list].sort((a, b) => b.label.localeCompare(a.label)); break;
-      case 'count': list = [...list].sort((a, b) => (countMap[b.key] || 0) - (countMap[a.key] || 0)); break;
-      default:      break;
-    }
-    return list;
-  }, [sort, countMap, COLLECTIONS]);
-
-  const activeSortLabel = SORTS.find(s => s.key === sort)?.label || 'Sort';
+  // Display in default catalogue order
+  const displayed = COLLECTIONS;
 
   return (
     <>
@@ -336,53 +319,6 @@ export default function CollectionsPage() {
           <h2 className="coll-all-heading">All Collections</h2>
         </div>
 
-        {/* ══ SORT CONTROLS ══════════════════════════════════════════════════ */}
-        <div className="coll-controls">
-          <div style={{ flex: 1 }} />
-
-          {/* Sort dropdown */}
-          <div className="coll-sort-wrap">
-            <button
-              className="coll-sort-btn"
-              onClick={() => setSortOpen(o => !o)}
-              aria-expanded={sortOpen}
-              aria-haspopup="listbox"
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <path d="M3 6h18M7 12h10M11 18h2"/>
-              </svg>
-              {activeSortLabel}
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className={`coll-sort-chevron${sortOpen ? ' open' : ''}`} aria-hidden="true">
-                <polyline points="6 9 12 15 18 9"/>
-              </svg>
-            </button>
-
-            {sortOpen && (
-              <>
-                <div className="coll-sort-backdrop" onClick={() => setSortOpen(false)} aria-hidden="true" />
-                <div className="coll-sort-menu" role="listbox" aria-label="Sort options">
-                  {SORTS.map(s => (
-                    <button
-                      key={s.key}
-                      className={`coll-sort-option${sort === s.key ? ' active' : ''}`}
-                      onClick={() => { setSort(s.key); setSortOpen(false); }}
-                      role="option"
-                      aria-selected={sort === s.key}
-                    >
-                      {s.label}
-                      {sort === s.key && <span className="coll-sort-tick" aria-hidden="true">✓</span>}
-                    </button>
-                  ))}
-                </div>
-              </>
-            )}
-          </div>
-
-          {/* Count */}
-          <span className="coll-count-label">
-            {displayed.length} collection{displayed.length !== 1 ? 's' : ''}
-          </span>
-        </div>
 
         {/* ══ GRID ══════════════════════════════════════════════════════════ */}
         <div className="coll-grid">
