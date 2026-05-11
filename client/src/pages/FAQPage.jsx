@@ -94,8 +94,6 @@ export default function FAQPage() {
   const [search, setSearch] = useState('');
   const [activeCategory, setActiveCategory] = useState('all');
 
-  function goHome() { setExiting(true); setTimeout(() => navigate('/'), 230); }
-
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
     return FAQ_DATA
@@ -129,7 +127,7 @@ export default function FAQPage() {
       <div className={`sa-page${exiting ? ' page-exiting' : ''}`}>
         <div className="sa-header-row">
           <h1 className="sa-title">FAQs</h1>
-          <button className="sa-back-btn" onClick={goHome}>← Go to Home</button>
+          <button className="sa-back-btn" onClick={() => navigate(-1)}>← Back</button>
         </div>
 
         <p className="faq-subtitle">Everything you need to know about Marvikala</p>

@@ -245,8 +245,6 @@ export default function WorkshopsPage() {
   const [selectedWs, setSelectedWs] = useState(null);
   const [tab, setTab] = useState('upcoming');
 
-  function goHome() { setExiting(true); setTimeout(() => navigate('/'), 230); }
-
   const upcomingList = WORKSHOPS.filter(w => w.upcoming);
   const pastList = WORKSHOPS.filter(w => !w.upcoming);
 
@@ -269,7 +267,7 @@ export default function WorkshopsPage() {
 
         <div className="sa-header-row">
           <h1 className="sa-title">Workshops</h1>
-          <button className="sa-back-btn" onClick={goHome}>← Go to Home</button>
+          <button className="sa-back-btn" onClick={() => navigate(-1)}>← Back</button>
         </div>
 
         {/* Hero blurb */}

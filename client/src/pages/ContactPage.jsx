@@ -41,8 +41,6 @@ export default function ContactPage() {
   const [status, setStatus]   = useState('idle'); // idle | loading | success | error
   const [touched, setTouched] = useState({});
 
-  function goHome() { setExiting(true); setTimeout(() => navigate('/'), 230); }
-
   function handleChange(e) {
     const { name, value } = e.target;
     setForm(f => ({ ...f, [name]: value }));
@@ -109,7 +107,7 @@ export default function ContactPage() {
 
         <div className="contact-page-header">
           <h1 className="contact-page-title">Contact Us</h1>
-          <button className="contact-page-back" onClick={goHome}>← Go to Home</button>
+          <button className="contact-page-back" onClick={() => navigate(-1)}>← Back</button>
         </div>
 
         <div className="contact-page-body">

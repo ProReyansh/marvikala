@@ -7,11 +7,6 @@ export default function ShippingPage() {
   const navigate = useNavigate();
   const [exiting, setExiting] = useState(false);
 
-  function goHome() {
-    setExiting(true);
-    setTimeout(() => navigate('/'), 230);
-  }
-
   return (
     <>
       <div className="top-ribbon">
@@ -37,7 +32,7 @@ export default function ShippingPage() {
 
         <div className="sa-header-row">
           <h1 className="sa-title">Shipping &amp; Returns</h1>
-          <button className="sa-back-btn" onClick={goHome}>← Go to Home</button>
+          <button className="sa-back-btn" onClick={() => navigate(-1)}>← Back</button>
         </div>
 
         <div className="policy-doc">

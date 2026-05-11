@@ -121,8 +121,6 @@ export default function CartPage() {
   const [appliedCoupon, setAppliedCoupon] = useState(null);
   const [couponError, setCouponError] = useState('');
 
-  function goHome() { setExiting(true); setTimeout(() => navigate('/'), 230); }
-
   function applyCoupon() {
     const code = couponInput.trim().toUpperCase();
     if (!code) { setCouponError('Enter a coupon code'); return; }
@@ -188,7 +186,7 @@ export default function CartPage() {
       <div className={`sa-page${exiting ? ' page-exiting' : ''}`}>
         <div className="sa-header-row">
           <h1 className="sa-title">Your Cart {!isEmpty && <span className="cart-title-count">({itemCount})</span>}</h1>
-          <button className="sa-back-btn" onClick={goHome}>← Continue Shopping</button>
+          <button className="sa-back-btn" onClick={() => navigate(-1)}>← Continue Shopping</button>
         </div>
 
         {isEmpty ? (

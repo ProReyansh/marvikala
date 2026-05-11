@@ -7,11 +7,6 @@ export default function OurStoryPage() {
   const navigate = useNavigate();
   const [exiting, setExiting] = useState(false);
 
-  function goHome() {
-    setExiting(true);
-    setTimeout(() => navigate('/'), 230);
-  }
-
   useEffect(() => {
     document.title = 'Our Story — Marvikala';
   }, []);
@@ -43,8 +38,8 @@ export default function OurStoryPage() {
         {/* ── Header Row ── */}
         <div className="story-page-header">
           <h1 className="story-page-title">Our Story</h1>
-          <button className="story-page-back" onClick={goHome}>
-            ← Go to Home
+          <button className="story-page-back" onClick={() => navigate(-1)}>
+            ← Back
           </button>
         </div>
 
