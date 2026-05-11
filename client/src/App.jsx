@@ -52,7 +52,7 @@ function ScrollToTop() {
     };
   }, [pathname]);
 
-  // On route change: restore saved position (POP) or jump to top (PUSH/REPLACE).
+  // On route change: fade out → scroll → fade in, so the position jump is never visible.
   useEffect(() => {
     if (!_appNavigated) {
       _appNavigated = true;
@@ -60,20 +60,25 @@ function ScrollToTop() {
       return;
     }
 
-    if (navType === 'POP') {
-      const saved = sessionStorage.getItem(`mk_scroll_${pathname}`);
-      if (saved) {
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            window.scrollTo({ top: parseInt(saved, 10), behavior: 'instant' });
-          });
-        });
+    // Kick off fade-out
+    document.body.style.opacity = '0';
+    document.body.style.transition = 'opacity 0.15s ease';
+
+    const restore = () => {
+      if (navType === 'POP') {
+        const saved = sessionStorage.getItem(`mk_scroll_${pathname}`);
+        window.scrollTo({ top: saved ? parseInt(saved, 10) : 0, left: 0, behavior: 'instant' });
       } else {
         window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
       }
-    } else {
-      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-    }
+      // Fade back in
+      requestAnimationFrame(() => {
+        document.body.style.opacity = '1';
+      });
+    };
+
+    // Give the fade-out one frame to apply, then scroll and fade in
+    requestAnimationFrame(() => requestAnimationFrame(restore));
   }, [pathname, navType]);
 
   return null;
