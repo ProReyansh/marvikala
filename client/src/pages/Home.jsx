@@ -494,6 +494,36 @@ export default function Home() {
             </div>
           </section>
 
+          {/* WORKSHOPS */}
+          <section className="workshop-teaser fade-section" id="workshops">
+            <div className="workshop-teaser-inner">
+              <p className="workshop-teaser-overline">✦ Learn the Craft</p>
+              <h2 className="workshop-teaser-title">Join Our Workshops</h2>
+              <p className="workshop-teaser-desc">
+                Learn the art of crochet from the hands that made it — beginner-friendly sessions held right here in our Mumbai studio.
+              </p>
+              <button className="btn-primary" onClick={() => navigate('/workshops')}>
+                Explore Workshops →
+              </button>
+            </div>
+          </section>
+
+          {/* CONTACT + FAQ */}
+          <section className="home-links-section fade-section">
+            <div className="home-links-card" onClick={() => navigate('/contact')}>
+              <div className="home-links-icon">💬</div>
+              <h3 className="home-links-title">Get in Touch</h3>
+              <p className="home-links-desc">Have a custom idea or need help? We'd love to hear from you.</p>
+              <span className="home-links-cta">Contact Us →</span>
+            </div>
+            <div className="home-links-card" onClick={() => navigate('/faq')}>
+              <div className="home-links-icon">❓</div>
+              <h3 className="home-links-title">Got Questions?</h3>
+              <p className="home-links-desc">Everything about orders, shipping, custom pieces & more — answered.</p>
+              <span className="home-links-cta">Read FAQ →</span>
+            </div>
+          </section>
+
           {/* REVIEWS */}
           <div className="reviews-section fade-section">
             <section className="section" id="reviews">
