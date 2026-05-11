@@ -41,7 +41,14 @@ function ScrollToTop() {
     }
 
     if (navType === 'POP') {
-      // Genuine SPA back/forward — restore saved scroll position
+      // Home page always scrolls to top on back-navigation — the stored scroll
+      // position there comes from product-card clicks and would wrongly land the
+      // user in the middle of the page (e.g. the bestsellers section).
+      if (pathname === '/') {
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+        return;
+      }
+      // Other pages: restore saved scroll position so back-nav feels natural
       const saved = sessionStorage.getItem(`mk_scroll_${pathname}`);
       if (saved) {
         // Double rAF: first ensures React has committed, second ensures browser has painted
