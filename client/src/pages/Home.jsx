@@ -192,11 +192,7 @@ export default function Home() {
     return (
       <div
         className="product-card"
-        onClick={() => {
-          // Save scroll position so back button returns here
-          try { sessionStorage.setItem('mk_scroll_/', String(window.scrollY)); } catch {}
-          navigate(productUrl(product), { state: { product } });
-        }}
+        onClick={() => navigate(productUrl(product), { state: { product } })}
       >
         <div className="product-img">
           {imgSrc ? <img src={imgSrc} alt={product.name} /> : <span>🧶</span>}
@@ -402,10 +398,7 @@ export default function Home() {
                 <div className="featured-card">
                   <div
                     className="featured-card-img"
-                    onClick={() => {
-                      try { sessionStorage.setItem('mk_scroll_/', String(window.scrollY)); } catch {}
-                      navigate(productUrl(fp), { state: { product: fp } });
-                    }}
+                    onClick={() => navigate(productUrl(fp), { state: { product: fp } })}
                     style={{ cursor: 'pointer' }}
                   >
                     {imgSrc ? <img src={imgSrc} alt={fp.name} /> : <span>🧶</span>}
@@ -448,10 +441,7 @@ export default function Home() {
                     <div
                       key={product._id}
                       className="product-card-h"
-                      onClick={() => {
-                        try { sessionStorage.setItem('mk_scroll_/', String(window.scrollY)); } catch {}
-                        navigate(productUrl(product), { state: { product } });
-                      }}
+                      onClick={() => navigate(productUrl(product), { state: { product } })}
                     >
                       <div className="product-card-h-img">
                         {imgSrc

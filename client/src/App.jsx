@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, useLocation, useNavigationType } from 'react-router-dom';
 import Home from './pages/Home';
 import ProductPage from './pages/ProductPage';
@@ -32,23 +32,37 @@ let _appNavigated = false;
 function ScrollToTop() {
   const { pathname } = useLocation();
   const navType = useNavigationType();
-  // Track the pathname we're leaving so we can save its scroll position
-  const prevPath = useRef(null);
 
+  // Continuously save scroll position for the current page while the user scrolls.
+  // This is the only reliable way to capture it — reading window.scrollY inside a
+  // navigation effect is too late (the browser may have already reset the position).
+  useEffect(() => {
+    let rafId = null;
+    function onScroll() {
+      if (rafId) return;
+      rafId = requestAnimationFrame(() => {
+        try { sessionStorage.setItem(`mk_scroll_${pathname}`, String(window.scrollY)); } catch {}
+        rafId = null;
+      });
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      if (rafId) cancelAnimationFrame(rafId);
+    };
+  }, [pathname]);
+
+  // On route change: restore saved position (POP) or jump to top (PUSH/REPLACE).
   useEffect(() => {
     if (!_appNavigated) {
-      // Very first render after any page load or reload — always go to top
       _appNavigated = true;
       window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-      prevPath.current = pathname;
       return;
     }
 
     if (navType === 'POP') {
-      // Back/forward: restore the scroll position saved when we left this page
       const saved = sessionStorage.getItem(`mk_scroll_${pathname}`);
       if (saved) {
-        // Double rAF: first ensures React has committed, second ensures browser has painted
         requestAnimationFrame(() => {
           requestAnimationFrame(() => {
             window.scrollTo({ top: parseInt(saved, 10), behavior: 'instant' });
@@ -58,17 +72,10 @@ function ScrollToTop() {
         window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
       }
     } else {
-      // PUSH or REPLACE — save where we were on the page we're leaving,
-      // then jump to the top of the incoming page.
-      // At this point window.scrollY is still the OLD page's position (before reset).
-      if (prevPath.current) {
-        try { sessionStorage.setItem(`mk_scroll_${prevPath.current}`, String(window.scrollY)); } catch {}
-      }
       window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
     }
+  }, [pathname, navType]);
 
-    prevPath.current = pathname;
-  }, [pathname]);
   return null;
 }
 
