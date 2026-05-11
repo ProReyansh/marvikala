@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import EnquireModal from '../components/EnquireModal';
+import { useCart } from '../context/CartContext';
 
 function slugify(name) {
   return name.toLowerCase()
@@ -30,9 +30,9 @@ const CAT_LABEL = {
 
 export default function AllBestsellersPage() {
   const navigate = useNavigate();
+  const { addToCart } = useCart();
   const [products, setProducts] = useState(getCachedProducts);
   const [loading, setLoading] = useState(() => getCachedProducts().length === 0);
-  const [enquireProduct, setEnquireProduct] = useState(null);
 
   useEffect(() => {
     document.title = 'Bestsellers — Marvikala';
@@ -128,10 +128,10 @@ export default function AllBestsellersPage() {
                         disabled={!product.inStock}
                         onClick={(e) => {
                           e.stopPropagation();
-                          product.inStock && setEnquireProduct(product);
+                          if (product.inStock) addToCart(product);
                         }}
                       >
-                        {product.inStock ? 'Enquire Now' : 'Out of Stock'}
+                        {product.inStock ? 'Add to Cart' : 'Out of Stock'}
                       </button>
                     </div>
                   </div>
@@ -144,9 +144,6 @@ export default function AllBestsellersPage() {
 
       <Footer />
 
-      {enquireProduct && (
-        <EnquireModal product={enquireProduct} onClose={() => setEnquireProduct(null)} />
-      )}
     </>
   );
 }

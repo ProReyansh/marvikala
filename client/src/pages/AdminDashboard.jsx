@@ -14,6 +14,30 @@ const CATEGORIES = [
   { key: 'custom',           label: 'Custom' },
 ];
 
+const DEFAULT_COLLECTIONS = [
+  { key: 'flowers',          label: 'Flowers',          emoji: '🌸', desc: 'Handcrafted crochet bouquets, blooms & arrangements crafted for every occasion and loved one', imgSeed: 'flowers' },
+  { key: 'homedecor',        label: 'Home Decor',        emoji: '🏠', desc: 'Cozy crochet accents — from wall hangings to table runners — to warm up every corner', imgSeed: 'interior' },
+  { key: 'jewellery',        label: 'Jewellery',         emoji: '💍', desc: 'Delicate crochet earrings, rings & bracelets — wearable art for everyday elegance', imgSeed: 'jewelry' },
+  { key: 'custom',           label: 'Custom Orders',     emoji: '🎨', desc: "Your imagination, our craft. Share your idea and we'll create something truly one-of-a-kind", imgSeed: 'craft' },
+  { key: 'laddugopaldress',  label: 'Laddu Gopal',       emoji: '🕉️', desc: 'Beautiful handcrafted outfits, accessories & sets for your beloved Laddu Gopal', imgSeed: 'fabric' },
+  { key: 'keychains',        label: 'Keychains',         emoji: '🔑', desc: 'Adorable crochet keychains — perfect everyday carry or a thoughtful little gift', imgSeed: 'keychain' },
+  { key: 'bookmarks',        label: 'Bookmarks',         emoji: '🔖', desc: 'Charming crochet bookmarks for every book lover — mark your page in style', imgSeed: 'books' },
+  { key: 'hairaccessories',  label: 'Hair Accessories',  emoji: '🎀', desc: 'Handmade bows, scrunchies & clips to express your personality every single day', imgSeed: 'ribbon' },
+  { key: 'rakhi',            label: 'Rakhi',             emoji: '🪢', desc: 'Beautiful handmade Rakhis crafted with love for a cherished, heartfelt celebration', imgSeed: 'thread' },
+];
+
+function getStoredCollections() {
+  try {
+    const c = localStorage.getItem('mk_custom_collections');
+    if (c) { const arr = JSON.parse(c); if (Array.isArray(arr) && arr.length > 0) return arr; }
+  } catch {}
+  return DEFAULT_COLLECTIONS;
+}
+
+function getMostLovedKey() {
+  try { return localStorage.getItem('mk_most_loved_collection') || 'flowers'; } catch { return 'flowers'; }
+}
+
 const EMPTY_FORM = {
   name: '', description: '', category: 'flowers',
   inStock: true, bestseller: false,
@@ -30,6 +54,7 @@ export default function AdminDashboard() {
   const navigate    = useNavigate();
   const fileRef     = useRef();
 
+  // Products tab state
   const [products, setProducts]     = useState([]);
   const [loading, setLoading]       = useState(true);
   const [filterCat, setFilterCat]   = useState('all');
@@ -39,6 +64,55 @@ export default function AdminDashboard() {
   const [form, setForm]             = useState(EMPTY_FORM);
   const [saving, setSaving]         = useState(false);
   const [error, setError]           = useState('');
+
+  // Tab state
+  const [activeTab, setActiveTab]   = useState('products');
+
+  // Collections tab state
+  const [collections, setCollections]     = useState(getStoredCollections);
+  const [mostLovedKey, setMostLovedKey]   = useState(getMostLovedKey);
+  const [collSaved, setCollSaved]         = useState(false);
+  const [newColl, setNewColl]             = useState({ key: '', label: '', emoji: '🧶', desc: '', imgSeed: 'crochet' });
+  const [collError, setCollError]         = useState('');
+  const [editingColl, setEditingColl]     = useState(null);
+
+  function saveMostLoved(key) {
+    setMostLovedKey(key);
+    try { localStorage.setItem('mk_most_loved_collection', key); } catch {}
+    setCollSaved(true);
+    setTimeout(() => setCollSaved(false), 2000);
+  }
+
+  function saveCollections(list) {
+    setCollections(list);
+    try { localStorage.setItem('mk_custom_collections', JSON.stringify(list)); } catch {}
+    setCollSaved(true);
+    setTimeout(() => setCollSaved(false), 2000);
+  }
+
+  function handleAddCollection(e) {
+    e.preventDefault();
+    setCollError('');
+    const key = newColl.key.trim().toLowerCase().replace(/\s+/g, '');
+    if (!key || !newColl.label.trim()) { setCollError('Key and name are required.'); return; }
+    if (collections.find(c => c.key === key)) { setCollError('A collection with this key already exists.'); return; }
+    const added = [...collections, { ...newColl, key, label: newColl.label.trim(), desc: newColl.desc.trim() }];
+    saveCollections(added);
+    setNewColl({ key: '', label: '', emoji: '🧶', desc: '', imgSeed: 'crochet' });
+  }
+
+  function handleDeleteColl(key) {
+    if (!window.confirm('Remove this collection from the page?')) return;
+    const next = collections.filter(c => c.key !== key);
+    saveCollections(next);
+    if (mostLovedKey === key) saveMostLoved(next[0]?.key || 'flowers');
+  }
+
+  function handleResetCollections() {
+    if (!window.confirm('Reset to default collections? This cannot be undone.')) return;
+    saveCollections(DEFAULT_COLLECTIONS);
+    saveMostLoved('flowers');
+  }
 
   function closeModal() {
     setModalClosing(true);
@@ -178,101 +252,248 @@ export default function AdminDashboard() {
           <a href="/" target="_blank" rel="noreferrer" className="admin-view-site">
             View Site →
           </a>
-          <button className="btn-add" onClick={openAdd}>+ Add Product</button>
+          {activeTab === 'products' && (
+            <button className="btn-add" onClick={openAdd}>+ Add Product</button>
+          )}
           <button className="btn-logout" onClick={logout}>Logout</button>
         </div>
       </div>
 
+      {/* Tabs */}
+      <div className="admin-tabs">
+        <button
+          className={`admin-tab-btn${activeTab === 'products' ? ' active' : ''}`}
+          onClick={() => setActiveTab('products')}
+        >
+          📦 Products
+        </button>
+        <button
+          className={`admin-tab-btn${activeTab === 'collections' ? ' active' : ''}`}
+          onClick={() => setActiveTab('collections')}
+        >
+          🗂 Collections
+        </button>
+      </div>
+
       <div className="admin-content">
-        {/* Stats */}
-        <div className="admin-stats">
-          <div className="stat-card">
-            <div className="stat-label">Total Products</div>
-            <div className="stat-value">{products.length}</div>
-            <div className="stat-icon">📦</div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-label">In Stock</div>
-            <div className="stat-value">{inStockCount}</div>
-            <div className="stat-icon">✅</div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-label">Out of Stock</div>
-            <div className="stat-value">{products.length - inStockCount}</div>
-            <div className="stat-icon">⚠️</div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-label">Bestsellers</div>
-            <div className="stat-value">{bestsellerCount}</div>
-            <div className="stat-icon">🏆</div>
-          </div>
-        </div>
 
-        {/* Products header + filter */}
-        <div className="admin-products-header">
-          <h2>Products</h2>
-          <select
-            className="filter-select"
-            value={filterCat}
-            onChange={(e) => setFilterCat(e.target.value)}
-          >
-            <option value="all">All Categories</option>
-            {CATEGORIES.map((c) => (
-              <option key={c.key} value={c.key}>{c.label}</option>
-            ))}
-          </select>
-        </div>
-
-        {/* Products grid */}
-        {loading ? (
-          <div className="spinner-wrap"><div className="spinner" /></div>
-        ) : (
-          <div className="admin-grid">
-            {filtered.length === 0 ? (
-              <div className="no-products" style={{ gridColumn: '1/-1' }}>
-                <div className="icon">🧶</div>
-                <p>No products yet. Click "+ Add Product" to get started.</p>
+        {/* ── PRODUCTS TAB ── */}
+        {activeTab === 'products' && (
+          <>
+            {/* Stats */}
+            <div className="admin-stats">
+              <div className="stat-card">
+                <div className="stat-label">Total Products</div>
+                <div className="stat-value">{products.length}</div>
+                <div className="stat-icon">📦</div>
               </div>
+              <div className="stat-card">
+                <div className="stat-label">In Stock</div>
+                <div className="stat-value">{inStockCount}</div>
+                <div className="stat-icon">✅</div>
+              </div>
+              <div className="stat-card">
+                <div className="stat-label">Out of Stock</div>
+                <div className="stat-value">{products.length - inStockCount}</div>
+                <div className="stat-icon">⚠️</div>
+              </div>
+              <div className="stat-card">
+                <div className="stat-label">Bestsellers</div>
+                <div className="stat-value">{bestsellerCount}</div>
+                <div className="stat-icon">🏆</div>
+              </div>
+            </div>
+
+            {/* Products header + filter */}
+            <div className="admin-products-header">
+              <h2>Products</h2>
+              <select
+                className="filter-select"
+                value={filterCat}
+                onChange={(e) => setFilterCat(e.target.value)}
+              >
+                <option value="all">All Categories</option>
+                {CATEGORIES.map((c) => (
+                  <option key={c.key} value={c.key}>{c.label}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Products grid */}
+            {loading ? (
+              <div className="spinner-wrap"><div className="spinner" /></div>
             ) : (
-              filtered.map((product) => {
-                const imgSrc = (() => {
-                  const imgs = product.images?.length > 0 ? product.images : (product.image ? [product.image] : []);
-                  if (!imgs[0]) return null;
-                  return imgs[0].startsWith('http') ? imgs[0] : `/uploads/${imgs[0]}`;
-                })();
-                return (
-                  <div key={product._id} className="admin-product-card">
-                    <div className="admin-product-img">
-                      {imgSrc
-                        ? <img src={imgSrc} alt={product.name} />
-                        : <span>🧶</span>
-                      }
-                      {(product.bestseller || product.featured) && (
-                        <span className="bestseller-badge admin-badge">🏆 Bestseller</span>
-                      )}
-                      <span className={`stock-badge ${product.inStock ? 'in' : 'out'}`}>
-                        {product.inStock ? 'In Stock' : 'Out of Stock'}
-                      </span>
+              <div className="admin-grid">
+                {filtered.length === 0 ? (
+                  <div className="no-products" style={{ gridColumn: '1/-1' }}>
+                    <div className="icon">🧶</div>
+                    <p>No products yet. Click "+ Add Product" to get started.</p>
+                  </div>
+                ) : (
+                  filtered.map((product) => {
+                    const imgSrc = (() => {
+                      const imgs = product.images?.length > 0 ? product.images : (product.image ? [product.image] : []);
+                      if (!imgs[0]) return null;
+                      return imgs[0].startsWith('http') ? imgs[0] : `/uploads/${imgs[0]}`;
+                    })();
+                    return (
+                      <div key={product._id} className="admin-product-card">
+                        <div className="admin-product-img">
+                          {imgSrc
+                            ? <img src={imgSrc} alt={product.name} />
+                            : <span>🧶</span>
+                          }
+                          {(product.bestseller || product.featured) && (
+                            <span className="bestseller-badge admin-badge">🏆 Bestseller</span>
+                          )}
+                          <span className={`stock-badge ${product.inStock ? 'in' : 'out'}`}>
+                            {product.inStock ? 'In Stock' : 'Out of Stock'}
+                          </span>
+                        </div>
+                        <div className="admin-product-info">
+                          <div className="admin-product-name">{product.name}</div>
+                          <div className="admin-product-cat">
+                            {CATEGORIES.find((c) => c.key === product.category)?.label || product.category}
+                          </div>
+                          {product.description && (
+                            <div className="admin-product-desc">{product.description}</div>
+                          )}
+                          <div className="admin-product-actions">
+                            <button className="btn-edit"   onClick={() => openEdit(product)}>Edit</button>
+                            <button className="btn-delete" onClick={() => handleDelete(product)}>Delete</button>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+            )}
+          </>
+        )}
+
+        {/* ── COLLECTIONS TAB ── */}
+        {activeTab === 'collections' && (
+          <div className="admin-collections-panel">
+
+            {collSaved && (
+              <div className="admin-coll-saved-toast">✓ Saved! Changes will appear on the Collections page.</div>
+            )}
+
+            {/* Most Loved Collection */}
+            <div className="admin-coll-section">
+              <h2>✦ Most Loved Collection</h2>
+              <p className="admin-coll-desc">
+                This collection appears as the featured banner at the top of the Collections page.
+              </p>
+              <div className="admin-coll-most-loved-row">
+                <select
+                  className="filter-select"
+                  value={mostLovedKey}
+                  onChange={(e) => saveMostLoved(e.target.value)}
+                >
+                  {collections.map(c => (
+                    <option key={c.key} value={c.key}>{c.emoji} {c.label}</option>
+                  ))}
+                </select>
+                <span className="admin-coll-preview-label">
+                  Preview: <strong>{collections.find(c => c.key === mostLovedKey)?.label || '—'}</strong>
+                </span>
+              </div>
+            </div>
+
+            {/* Manage Collections */}
+            <div className="admin-coll-section">
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+                <h2>🗂 Manage Collections</h2>
+                <button className="admin-coll-reset-btn" onClick={handleResetCollections}>
+                  Reset to Defaults
+                </button>
+              </div>
+              <p className="admin-coll-desc">
+                Add, reorder or remove collections shown on the Collections page.
+              </p>
+
+              {/* Existing collections list */}
+              <div className="admin-coll-list">
+                {collections.map((c, i) => (
+                  <div key={c.key} className="admin-coll-item">
+                    <span className="admin-coll-item-emoji">{c.emoji}</span>
+                    <div className="admin-coll-item-info">
+                      <div className="admin-coll-item-name">{c.label}</div>
+                      <div className="admin-coll-item-key">key: {c.key}</div>
                     </div>
-                    <div className="admin-product-info">
-                      <div className="admin-product-name">{product.name}</div>
-                      <div className="admin-product-cat">
-                        {CATEGORIES.find((c) => c.key === product.category)?.label || product.category}
-                      </div>
-                      {product.description && (
-                        <div className="admin-product-desc">{product.description}</div>
-                      )}
-                      <div className="admin-product-actions">
-                        <button className="btn-edit"   onClick={() => openEdit(product)}>Edit</button>
-                        <button className="btn-delete" onClick={() => handleDelete(product)}>Delete</button>
-                      </div>
+                    {c.key === mostLovedKey && (
+                      <span className="admin-coll-item-badge">★ Most Loved</span>
+                    )}
+                    <button
+                      className="btn-delete"
+                      style={{ marginLeft: 'auto', flexShrink: 0 }}
+                      onClick={() => handleDeleteColl(c.key)}
+                      title="Remove this collection"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                ))}
+              </div>
+
+              {/* Add collection form */}
+              <div className="admin-coll-add-form">
+                <h3>+ Add New Collection</h3>
+                {collError && <div className="error-msg">{collError}</div>}
+                <form onSubmit={handleAddCollection}>
+                  <div className="admin-coll-form-row">
+                    <div className="form-group" style={{ flex: '0 0 80px' }}>
+                      <label>Emoji</label>
+                      <input
+                        type="text"
+                        value={newColl.emoji}
+                        onChange={e => setNewColl(f => ({ ...f, emoji: e.target.value }))}
+                        maxLength={4}
+                        style={{ textAlign: 'center', fontSize: 22 }}
+                      />
+                    </div>
+                    <div className="form-group" style={{ flex: 1 }}>
+                      <label>Name *</label>
+                      <input
+                        type="text"
+                        value={newColl.label}
+                        onChange={e => setNewColl(f => ({ ...f, label: e.target.value }))}
+                        placeholder="e.g. Bags & Totes"
+                        required
+                      />
+                    </div>
+                    <div className="form-group" style={{ flex: '0 0 160px' }}>
+                      <label>Key * <small style={{ color: '#999' }}>(no spaces)</small></label>
+                      <input
+                        type="text"
+                        value={newColl.key}
+                        onChange={e => setNewColl(f => ({ ...f, key: e.target.value.replace(/\s/g, '') }))}
+                        placeholder="e.g. bags"
+                        required
+                      />
                     </div>
                   </div>
-                );
-              })
-            )}
+                  <div className="form-group">
+                    <label>Description</label>
+                    <input
+                      type="text"
+                      value={newColl.desc}
+                      onChange={e => setNewColl(f => ({ ...f, desc: e.target.value }))}
+                      placeholder="Short description shown on the card"
+                    />
+                  </div>
+                  <button type="submit" className="btn-save" style={{ marginTop: 4 }}>
+                    Add Collection
+                  </button>
+                </form>
+              </div>
+            </div>
+
           </div>
         )}
+
       </div>
 
       {/* Add / Edit Modal */}

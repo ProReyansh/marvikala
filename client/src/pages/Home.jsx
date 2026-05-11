@@ -3,8 +3,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import EnquireModal from '../components/EnquireModal';
 import WelcomePopup from '../components/WelcomePopup';
+import { useCart } from '../context/CartContext';
 
 const CATEGORIES = [
   { key: 'all',              label: 'All',              icon: '✨', sub: 'Everything',           cls: 'cc1',  img: 'https://picsum.photos/seed/craft/400/400' },
@@ -94,10 +94,10 @@ export default function Home() {
   const location = useLocation();
 
   // Load from cache immediately — no spinner on back-navigation
+  const { addToCart } = useCart();
   const [products, setProducts]             = useState(getCachedProducts);
   const [loading, setLoading]               = useState(() => getCachedProducts().length === 0);
   const [activeCategory, setActiveCategory] = useState('all');
-  const [enquireProduct, setEnquireProduct] = useState(null);
   const [searchQuery, setSearchQuery]       = useState(getSavedSearch);
   const [bouncingCat, setBouncingCat]       = useState(null);
   const [showPopup, setShowPopup]           = useState(false);
@@ -216,9 +216,9 @@ export default function Home() {
           <button
             className="enquire-btn"
             disabled={!product.inStock}
-            onClick={(e) => { e.stopPropagation(); product.inStock && navigate(productUrl(product), { state: { product } }); }}
+            onClick={(e) => { e.stopPropagation(); if (product.inStock) addToCart(product); }}
           >
-            {product.inStock ? 'View Product' : 'Out of Stock'}
+            {product.inStock ? 'Add to Cart' : 'Out of Stock'}
           </button>
         </div>
       </div>
@@ -397,9 +397,7 @@ export default function Home() {
             return (
               <section className="featured-section fade-section">
                 <div className="section-head">
-                  <div className="section-eyebrow">✦ Signature Piece</div>
-                  <h2>Made to be cherished</h2>
-                  <p>Our most-loved handcrafted creation</p>
+                  <h2>Signature Piece</h2>
                 </div>
                 <div
                   className="featured-card"
@@ -417,10 +415,11 @@ export default function Home() {
                     <div className="featured-card-name">{fp.name}</div>
                     {fp.price && <div className="featured-card-price">₹{fp.price}</div>}
                     <button
-                      className="btn-primary featured-card-btn"
-                      onClick={(e) => { e.stopPropagation(); setEnquireProduct(fp); }}
+                      className="featured-card-btn featured-card-btn--teal"
+                      disabled={!fp.inStock}
+                      onClick={(e) => { e.stopPropagation(); if (fp.inStock) addToCart(fp); }}
                     >
-                      Enquire Now
+                      {fp.inStock ? 'Add to Cart' : 'Out of Stock'}
                     </button>
                   </div>
                 </div>
@@ -469,12 +468,13 @@ export default function Home() {
                         </div>
                         <button
                           className="product-card-h-btn"
+                          disabled={!product.inStock}
                           onClick={(e) => {
                             e.stopPropagation();
-                            product.inStock && setEnquireProduct(product);
+                            if (product.inStock) addToCart(product);
                           }}
                         >
-                          {product.inStock ? 'Enquire' : 'Out of Stock'}
+                          {product.inStock ? 'Add to Cart' : 'Out of Stock'}
                         </button>
                       </div>
                     </div>
@@ -564,10 +564,6 @@ export default function Home() {
       </div>
 
       <Footer />
-
-      {enquireProduct && (
-        <EnquireModal product={enquireProduct} onClose={() => setEnquireProduct(null)} />
-      )}
 
       <WelcomePopup forceShow={showPopup} onClose={() => setShowPopup(false)} />
     </>

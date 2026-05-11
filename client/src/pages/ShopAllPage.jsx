@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import EnquireModal from '../components/EnquireModal';
+import { useCart } from '../context/CartContext';
 
 const CAT_LABEL = {
   flowers: 'Flowers', keychains: 'Keychains', bookmarks: 'Bookmarks',
@@ -26,11 +26,10 @@ const CATEGORIES = [
 ];
 
 const SORT_OPTIONS = [
-  { key: 'default',   label: 'Default' },
-  { key: 'price-asc', label: 'Price: Low to High' },
-  { key: 'price-desc',label: 'Price: High to Low' },
-  { key: 'name-asc',  label: 'Name: A – Z' },
-  { key: 'name-desc', label: 'Name: Z – A' },
+  { key: 'default',    label: 'Default' },
+  { key: 'popularity', label: 'Popularity' },
+  { key: 'price-asc',  label: 'Price: Low to High' },
+  { key: 'price-desc', label: 'Price: High to Low' },
 ];
 
 function slugify(name) {
@@ -109,8 +108,9 @@ function BottomSheet({ open, onClose, title, children }) {
 }
 
 // ── Product Card ───────────────────────────────────────
-function ShopCard({ product, onEnquire }) {
+function ShopCard({ product }) {
   const navigate = useNavigate();
+  const { addToCart } = useCart();
   const imgSrc = (() => {
     const imgs = product.images?.length > 0 ? product.images : (product.image ? [product.image] : []);
     if (!imgs[0]) return null;
@@ -143,10 +143,10 @@ function ShopCard({ product, onEnquire }) {
           disabled={!product.inStock}
           onClick={(e) => {
             e.stopPropagation();
-            if (product.inStock) onEnquire(product);
+            if (product.inStock) addToCart(product);
           }}
         >
-          {product.inStock ? 'Enquire Now' : 'Out of Stock'}
+          {product.inStock ? 'Add to Cart' : 'Out of Stock'}
         </button>
       </div>
     </div>
@@ -157,21 +157,15 @@ function ShopCard({ product, onEnquire }) {
 export default function ShopAllPage() {
   const navigate = useNavigate();
 
-  const [products, setProducts]             = useState(getCachedProducts);
-  const [loading, setLoading]               = useState(() => getCachedProducts().length === 0);
-  const [searchQuery, setSearchQuery]       = useState('');
-  const [enquireProduct, setEnquireProduct] = useState(null);
-  const [exiting, setExiting]               = useState(false);
+  const [products, setProducts]   = useState(getCachedProducts);
+  const [loading, setLoading]     = useState(() => getCachedProducts().length === 0);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [exiting, setExiting]     = useState(false);
 
-  const [activeFilter, setActiveFilter]   = useState('all');
-  const [activeSort, setActiveSort]       = useState('default');
-  const [filterOpen, setFilterOpen]       = useState(false);
-  const [sortOpen, setSortOpen]           = useState(false);
-
-  function goHome() {
-    setExiting(true);
-    setTimeout(() => navigate('/'), 230);
-  }
+  const [activeFilter, setActiveFilter] = useState('all');
+  const [activeSort, setActiveSort]     = useState('default');
+  const [filterOpen, setFilterOpen]     = useState(false);
+  const [sortOpen, setSortOpen]         = useState(false);
 
   useEffect(() => {
     document.title = 'Shop All — Marvikala';
@@ -198,10 +192,13 @@ export default function ShopAllPage() {
   // Sort
   const sorted = [...filtered].sort((a, b) => {
     switch (activeSort) {
+      case 'popularity': {
+        const aScore = (a.bestseller || a.featured) ? 1 : 0;
+        const bScore = (b.bestseller || b.featured) ? 1 : 0;
+        return bScore - aScore;
+      }
       case 'price-asc':  return (a.price || 0) - (b.price || 0);
       case 'price-desc': return (b.price || 0) - (a.price || 0);
-      case 'name-asc':   return a.name.localeCompare(b.name);
-      case 'name-desc':  return b.name.localeCompare(a.name);
       default:           return 0;
     }
   });
@@ -238,8 +235,8 @@ export default function ShopAllPage() {
         {/* ── Header Row ── */}
         <div className="sa-header-row">
           <h1 className="sa-title">Shop All</h1>
-          <button className="sa-back-btn" onClick={goHome}>
-            ← Go to Home
+          <button className="sa-back-btn" onClick={() => navigate(-1)}>
+            ← Back
           </button>
         </div>
 
@@ -262,8 +259,7 @@ export default function ShopAllPage() {
             <ChevronDown />
           </button>
 
-          {/* Result count */}
-          <span className="sa-count">{sorted.length} item{sorted.length !== 1 ? 's' : ''}</span>
+          {/* Result count hidden per design */}
         </div>
 
         {/* ── Active chips ── */}
@@ -295,7 +291,7 @@ export default function ShopAllPage() {
         ) : (
           <div className="sa-grid" key={`${activeFilter}-${activeSort}`}>
             {sorted.map(p => (
-              <ShopCard key={p._id} product={p} onEnquire={setEnquireProduct} />
+              <ShopCard key={p._id} product={p} />
             ))}
           </div>
         )}
@@ -331,10 +327,6 @@ export default function ShopAllPage() {
         ))}
       </BottomSheet>
 
-      {/* ── ENQUIRE MODAL ── */}
-      {enquireProduct && (
-        <EnquireModal product={enquireProduct} onClose={() => setEnquireProduct(null)} />
-      )}
     </>
   );
 }
