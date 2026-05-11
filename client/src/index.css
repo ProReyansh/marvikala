@@ -7432,15 +7432,15 @@ body {
 }
 .story-teaser-heading {
   font-family: var(--sans);
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--text-mid);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-light);
   line-height: 1.55;
   margin-bottom: 14px;
 }
 @media (max-width: 600px) {
   .story-teaser-label { font-size: 30px; }
-  .story-teaser-heading { font-size: 15px; }
+  .story-teaser-heading { font-size: 12px; }
 }
 
 /* ══════════════════════════════════════════════════════════════════════════════
