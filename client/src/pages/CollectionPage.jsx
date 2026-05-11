@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import EnquireModal from '../components/EnquireModal';
+import CartQtyBtn from '../components/CartQtyBtn';
 
 const CAT_LABEL = {
   flowers: 'Flowers', keychains: 'Keychains', bookmarks: 'Bookmarks',
@@ -32,7 +32,7 @@ function getCachedProducts() {
   } catch { return []; }
 }
 
-function ShopCard({ product, onEnquire }) {
+function ShopCard({ product }) {
   const navigate = useNavigate();
   const imgSrc = (() => {
     const imgs = product.images?.length > 0 ? product.images : (product.image ? [product.image] : []);
@@ -63,16 +63,7 @@ function ShopCard({ product, onEnquire }) {
             {product.price && <span className="sa-card-price-sale">₹{product.price}</span>}
           </div>
         )}
-        <button
-          className="sa-card-btn"
-          disabled={!product.inStock}
-          onClick={(e) => {
-            e.stopPropagation();
-            if (product.inStock) onEnquire(product);
-          }}
-        >
-          {product.inStock ? 'Enquire Now' : 'Out of Stock'}
-        </button>
+        <CartQtyBtn product={product} addClassName="sa-card-btn" />
       </div>
     </div>
   );
@@ -82,18 +73,12 @@ export default function CollectionPage() {
   const navigate = useNavigate();
   const { category } = useParams();
 
-  const [products, setProducts]         = useState(getCachedProducts);
-  const [loading, setLoading]           = useState(() => getCachedProducts().length === 0);
-  const [enquireProduct, setEnquireProduct] = useState(null);
-  const [exiting, setExiting]           = useState(false);
+  const [products, setProducts] = useState(getCachedProducts);
+  const [loading, setLoading]   = useState(() => getCachedProducts().length === 0);
+  const [exiting, setExiting]   = useState(false);
 
   const catLabel = CAT_LABEL[category] || category;
   const catEmoji = CAT_EMOJI[category] || '✨';
-
-  function goHome() {
-    setExiting(true);
-    setTimeout(() => navigate('/'), 230);
-  }
 
   useEffect(() => {
     document.title = `${catLabel} — Marvikala`;
@@ -135,8 +120,8 @@ export default function CollectionPage() {
         {/* ── Header Row ── */}
         <div className="sa-header-row">
           <h1 className="sa-title">{catEmoji} {catLabel}</h1>
-          <button className="sa-back-btn" onClick={goHome}>
-            ← Go to Home
+          <button className="sa-back-btn" onClick={() => navigate(-1)}>
+            ← Back
           </button>
         </div>
 
@@ -158,17 +143,13 @@ export default function CollectionPage() {
         ) : (
           <div className="sa-grid">
             {filtered.map(p => (
-              <ShopCard key={p._id} product={p} onEnquire={setEnquireProduct} />
+              <ShopCard key={p._id} product={p} />
             ))}
           </div>
         )}
       </div>
 
       <Footer />
-
-      {enquireProduct && (
-        <EnquireModal product={enquireProduct} onClose={() => setEnquireProduct(null)} />
-      )}
     </>
   );
 }

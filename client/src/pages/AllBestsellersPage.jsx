@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { useCart } from '../context/CartContext';
+import CartQtyBtn from '../components/CartQtyBtn';
 
 function slugify(name) {
   return name.toLowerCase()
@@ -30,7 +30,6 @@ const CAT_LABEL = {
 
 export default function AllBestsellersPage() {
   const navigate = useNavigate();
-  const { addToCart } = useCart();
   const [products, setProducts] = useState(getCachedProducts);
   const [loading, setLoading] = useState(() => getCachedProducts().length === 0);
 
@@ -59,9 +58,9 @@ export default function AllBestsellersPage() {
 
           <button
             className="bestsellers-back"
-            onClick={() => navigate('/')}
+            onClick={() => navigate(-1)}
           >
-            ← Back to Home
+            ← Back
           </button>
 
           <div className="bestsellers-page-header">
@@ -109,9 +108,6 @@ export default function AllBestsellersPage() {
                     </div>
                     <div className="product-info">
                       <div className="product-name">{product.name}</div>
-                      {product.description && (
-                        <div className="product-desc">{product.description}</div>
-                      )}
                       <div className="product-cat">{CAT_LABEL[product.category] || product.category}</div>
                       {(product.price || product.originalPrice) && (
                         <div className="product-price-row">
@@ -123,16 +119,7 @@ export default function AllBestsellersPage() {
                           )}
                         </div>
                       )}
-                      <button
-                        className="enquire-btn"
-                        disabled={!product.inStock}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          if (product.inStock) addToCart(product);
-                        }}
-                      >
-                        {product.inStock ? 'Add to Cart' : 'Out of Stock'}
-                      </button>
+                      <CartQtyBtn product={product} addClassName="enquire-btn" />
                     </div>
                   </div>
                 );

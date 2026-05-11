@@ -4,7 +4,7 @@ import axios from 'axios';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import WelcomePopup from '../components/WelcomePopup';
-import { useCart } from '../context/CartContext';
+import CartQtyBtn from '../components/CartQtyBtn';
 
 const CATEGORIES = [
   { key: 'all',              label: 'All',              icon: '✨', sub: 'Everything',           cls: 'cc1',  img: 'https://picsum.photos/seed/craft/400/400' },
@@ -94,7 +94,6 @@ export default function Home() {
   const location = useLocation();
 
   // Load from cache immediately — no spinner on back-navigation
-  const { addToCart } = useCart();
   const [products, setProducts]             = useState(getCachedProducts);
   const [loading, setLoading]               = useState(() => getCachedProducts().length === 0);
   const [activeCategory, setActiveCategory] = useState('all');
@@ -143,10 +142,16 @@ export default function Home() {
     document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' });
   }
 
-  // Scroll-triggered fade-up for sections
+  // Scroll-triggered fade-up — only animates on first-ever website visit
   useEffect(() => {
     const els = document.querySelectorAll('.fade-section');
     if (!els.length) return;
+    // After first visit, make all sections immediately visible (no animation)
+    const alreadyAnimated = localStorage.getItem('mk_home_anim_v1');
+    if (alreadyAnimated) {
+      els.forEach(el => el.classList.add('fade-section-visible'));
+      return;
+    }
     const obs = new IntersectionObserver((entries) => {
       entries.forEach(e => {
         if (e.isIntersecting) {
@@ -156,6 +161,7 @@ export default function Home() {
       });
     }, { threshold: 0.06 });
     els.forEach(el => obs.observe(el));
+    try { localStorage.setItem('mk_home_anim_v1', '1'); } catch {}
     return () => obs.disconnect();
   }, [products]);
 
@@ -213,13 +219,7 @@ export default function Home() {
               )}
             </div>
           )}
-          <button
-            className="enquire-btn"
-            disabled={!product.inStock}
-            onClick={(e) => { e.stopPropagation(); if (product.inStock) addToCart(product); }}
-          >
-            {product.inStock ? 'Add to Cart' : 'Out of Stock'}
-          </button>
+          <CartQtyBtn product={product} addClassName="enquire-btn" />
         </div>
       </div>
     );
@@ -399,28 +399,32 @@ export default function Home() {
                 <div className="section-head">
                   <h2>Signature Piece</h2>
                 </div>
-                <div
-                  className="featured-card"
-                  onClick={() => {
-                    try { sessionStorage.setItem('mk_scroll_/', String(window.scrollY)); } catch {}
-                    navigate(productUrl(fp), { state: { product: fp } });
-                  }}
-                >
-                  <div className="featured-card-img">
+                <div className="featured-card">
+                  <div
+                    className="featured-card-img"
+                    onClick={() => {
+                      try { sessionStorage.setItem('mk_scroll_/', String(window.scrollY)); } catch {}
+                      navigate(productUrl(fp), { state: { product: fp } });
+                    }}
+                    style={{ cursor: 'pointer' }}
+                  >
                     {imgSrc ? <img src={imgSrc} alt={fp.name} /> : <span>🧶</span>}
                     {(fp.bestseller || fp.featured) && <span className="featured-card-badge">Bestseller</span>}
                   </div>
                   <div className="featured-card-body">
                     <div className="featured-card-cat">{CAT_LABEL[fp.category] || fp.category}</div>
-                    <div className="featured-card-name">{fp.name}</div>
-                    {fp.price && <div className="featured-card-price">₹{fp.price}</div>}
-                    <button
-                      className="featured-card-btn featured-card-btn--teal"
-                      disabled={!fp.inStock}
-                      onClick={(e) => { e.stopPropagation(); if (fp.inStock) addToCart(fp); }}
+                    <div
+                      className="featured-card-name"
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => navigate(productUrl(fp), { state: { product: fp } })}
                     >
-                      {fp.inStock ? 'Add to Cart' : 'Out of Stock'}
-                    </button>
+                      {fp.name}
+                    </div>
+                    {fp.price && <div className="featured-card-price">₹{fp.price}</div>}
+                    <CartQtyBtn
+                      product={fp}
+                      addClassName="featured-card-btn featured-card-btn--teal"
+                    />
                   </div>
                 </div>
               </section>
@@ -466,16 +470,7 @@ export default function Home() {
                             : <span className="price-enquire">Enquire for price</span>
                           }
                         </div>
-                        <button
-                          className="product-card-h-btn"
-                          disabled={!product.inStock}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            if (product.inStock) addToCart(product);
-                          }}
-                        >
-                          {product.inStock ? 'Add to Cart' : 'Out of Stock'}
-                        </button>
+                        <CartQtyBtn product={product} addClassName="product-card-h-btn" />
                       </div>
                     </div>
                   );
@@ -493,8 +488,8 @@ export default function Home() {
               <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80" alt="Our Story" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 'inherit' }} />
             </div>
             <div className="story-teaser-text">
-              <div className="story-teaser-eyebrow">Our Story</div>
-              <h2 className="story-teaser-heading">A mother's creativity. A daughter's dream.</h2>
+              <div className="story-teaser-label">Our Story</div>
+              <h2 className="story-teaser-heading">A mother's creativity.<br />A daughter's dream.</h2>
               <p>From a small studio in Mumbai, every piece is handcrafted with patience, love, and intention.</p>
               <button className="btn-primary" onClick={() => navigate('/our-story')}>
                 Read Our Story →

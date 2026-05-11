@@ -90,7 +90,6 @@ const DEFAULT_COLLECTIONS = [
 ];
 
 const SORTS = [
-  { key: 'az',    label: 'A – Z' },
   { key: 'za',    label: 'Z – A' },
   { key: 'count', label: 'Most Products' },
 ];
@@ -205,7 +204,7 @@ export default function CollectionsPage() {
   const [products, setProducts] = useState(getCachedProducts);
   const [loading, setLoading]   = useState(() => getCachedProducts().length === 0);
   const [exiting, setExiting]   = useState(false);
-  const [sort, setSort]         = useState('az');
+  const [sort, setSort]         = useState('za');
   const [sortOpen, setSortOpen] = useState(false);
 
   // Read admin settings from localStorage

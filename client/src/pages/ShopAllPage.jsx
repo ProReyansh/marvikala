@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { useCart } from '../context/CartContext';
+import CartQtyBtn from '../components/CartQtyBtn';
 
 const CAT_LABEL = {
   flowers: 'Flowers', keychains: 'Keychains', bookmarks: 'Bookmarks',
@@ -110,7 +110,6 @@ function BottomSheet({ open, onClose, title, children }) {
 // ── Product Card ───────────────────────────────────────
 function ShopCard({ product }) {
   const navigate = useNavigate();
-  const { addToCart } = useCart();
   const imgSrc = (() => {
     const imgs = product.images?.length > 0 ? product.images : (product.image ? [product.image] : []);
     if (!imgs[0]) return null;
@@ -138,16 +137,7 @@ function ShopCard({ product }) {
             {product.price && <span className="sa-card-price-sale">₹{product.price}</span>}
           </div>
         )}
-        <button
-          className="sa-card-btn"
-          disabled={!product.inStock}
-          onClick={(e) => {
-            e.stopPropagation();
-            if (product.inStock) addToCart(product);
-          }}
-        >
-          {product.inStock ? 'Add to Cart' : 'Out of Stock'}
-        </button>
+        <CartQtyBtn product={product} addClassName="sa-card-btn" />
       </div>
     </div>
   );
