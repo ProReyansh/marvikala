@@ -7906,3 +7906,23 @@ body {
   .how-to-order-step { min-width: 100%; max-width: 100%; }
   .how-to-order-steps { gap: 24px; }
 }
+
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   ADMIN — SIGNATURE PIECE PICKER
+══════════════════════════════════════════════════════════════════════════════ */
+.admin-sig-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  background: var(--white);
+  font-size: 13px;
+  color: var(--text);
+}
+.admin-sig-option:hover { border-color: var(--olive); background: #f8f6f2; }
+.admin-sig-option.selected { border-color: var(--olive); background: #f0f4e8; }

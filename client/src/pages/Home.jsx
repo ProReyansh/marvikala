@@ -386,12 +386,13 @@ export default function Home() {
 
           {/* FEATURED PRODUCT */}
           {!loading && (() => {
-            const fp = products.find(p => p.featured || p.bestseller);
+            const sigId = (() => { try { return localStorage.getItem('mk_signature_piece_id'); } catch { return null; } })();
+            const fp = (sigId && products.find(p => p._id === sigId)) || products.find(p => p.featured || p.bestseller);
             if (!fp) return null;
             const imgs = fp.images?.length > 0 ? fp.images : (fp.image ? [fp.image] : []);
             const imgSrc = imgs[0] ? (imgs[0].startsWith('http') ? imgs[0] : `/uploads/${imgs[0]}`) : null;
             return (
-              <section className="featured-section fade-section">
+              <section className="featured-section fade-section" id="signature">
                 <div className="section-head">
                   <h2>Signature Piece</h2>
                 </div>

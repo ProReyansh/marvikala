@@ -39,6 +39,7 @@ export default function Footer() {
             <li><button onClick={() => goTo('/collections')} className="footer-link-btn">Our Collections</button></li>
             <li><button onClick={() => goTo('/workshops')} className="footer-link-btn">Our Workshops</button></li>
             <li><button onClick={() => goTo('/bestsellers')} className="footer-link-btn">All Bestsellers</button></li>
+            <li><button onClick={() => goSection('signature')} className="footer-link-btn">Signature Piece</button></li>
           </ul>
         </div>
 
@@ -47,7 +48,6 @@ export default function Footer() {
           <h4>Info</h4>
           <ul>
             <li><button onClick={() => goTo('/our-story')} className="footer-link-btn">Our Story</button></li>
-            <li><button onClick={() => goTo('/contact')} className="footer-link-btn">Contact Us</button></li>
             <li><button onClick={() => goTo('/faq')} className="footer-link-btn">FAQs</button></li>
             <li><button onClick={() => goTo('/shipping')} className="footer-link-btn">Shipping</button></li>
             <li><button onClick={() => goTo('/privacy')} className="footer-link-btn">Privacy Policy</button></li>

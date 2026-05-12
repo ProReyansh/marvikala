@@ -68,6 +68,17 @@ export default function AdminDashboard() {
   // Tab state
   const [activeTab, setActiveTab]   = useState('products');
 
+  // Signature Piece tab state
+  const [sigPieceId, setSigPieceId] = useState(() => { try { return localStorage.getItem('mk_signature_piece_id') || ''; } catch { return ''; } });
+  const [sigSaved, setSigSaved]     = useState(false);
+
+  function saveSigPiece(id) {
+    setSigPieceId(id);
+    try { if (id) localStorage.setItem('mk_signature_piece_id', id); else localStorage.removeItem('mk_signature_piece_id'); } catch {}
+    setSigSaved(true);
+    setTimeout(() => setSigSaved(false), 2000);
+  }
+
   // Collections tab state
   const [collections, setCollections]     = useState(getStoredCollections);
   const [mostLovedKey, setMostLovedKey]   = useState(getMostLovedKey);
@@ -272,6 +283,12 @@ export default function AdminDashboard() {
           onClick={() => setActiveTab('collections')}
         >
           🗂 Collections
+        </button>
+        <button
+          className={`admin-tab-btn${activeTab === 'signature' ? ' active' : ''}`}
+          onClick={() => setActiveTab('signature')}
+        >
+          ✨ Signature Piece
         </button>
       </div>
 
@@ -491,6 +508,48 @@ export default function AdminDashboard() {
               </div>
             </div>
 
+          </div>
+        )}
+
+        {/* ── SIGNATURE PIECE TAB ── */}
+        {activeTab === 'signature' && (
+          <div className="admin-collections-panel">
+            <h3 className="admin-coll-section-title">✨ Signature Piece</h3>
+            <p style={{ color: 'var(--text-mid)', fontSize: 13, marginBottom: 20 }}>
+              Select the product to feature as the Signature Piece on the home page.
+            </p>
+            {sigSaved && <div className="admin-coll-saved">✓ Signature Piece saved!</div>}
+            {loading ? (
+              <div className="spinner" />
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                <div
+                  className={`admin-sig-option${sigPieceId === '' ? ' selected' : ''}`}
+                  onClick={() => saveSigPiece('')}
+                >
+                  <span>Auto (first featured / bestseller)</span>
+                  {sigPieceId === '' && <span className="admin-coll-saved" style={{ margin: 0, padding: '2px 10px' }}>✓ Active</span>}
+                </div>
+                {products.map(p => {
+                  const imgs = p.images?.length > 0 ? p.images : (p.image ? [p.image] : []);
+                  const imgSrc = imgs[0] ? (imgs[0].startsWith('http') ? imgs[0] : `/uploads/${imgs[0]}`) : null;
+                  return (
+                    <div
+                      key={p._id}
+                      className={`admin-sig-option${sigPieceId === p._id ? ' selected' : ''}`}
+                      onClick={() => saveSigPiece(p._id)}
+                    >
+                      {imgSrc && <img src={imgSrc} alt={p.name} style={{ width: 40, height: 40, objectFit: 'cover', borderRadius: 8, flexShrink: 0 }} />}
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontWeight: 600, fontSize: 13 }}>{p.name}</div>
+                        <div style={{ fontSize: 11, color: 'var(--text-light)' }}>{p.category}{p.price ? ` · ₹${p.price}` : ''}</div>
+                      </div>
+                      {sigPieceId === p._id && <span className="admin-coll-saved" style={{ margin: 0, padding: '2px 10px' }}>✓ Active</span>}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
         )}
 
