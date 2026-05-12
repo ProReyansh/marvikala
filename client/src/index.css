@@ -7328,9 +7328,9 @@ body {
 .footer-connect-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 14px 0;
+  justify-content: center;
+  gap: 14px;
+  padding: 16px 0;
   border-bottom: 1px solid rgba(255,255,255,0.08);
   text-decoration: none;
   transition: opacity 0.15s;
@@ -7340,7 +7340,8 @@ body {
 .footer-connect-text {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 3px;
+  align-items: center;
 }
 .footer-connect-label {
   font-size: 10px;
@@ -7356,7 +7357,7 @@ body {
   color: rgba(255,255,255,0.85);
 }
 .footer-connect-icon {
-  color: rgba(255,255,255,0.5);
+  color: rgba(255,255,255,0.55);
   display: flex;
   align-items: center;
   flex-shrink: 0;
