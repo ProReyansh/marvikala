@@ -207,11 +207,11 @@ export default function Home() {
           <div className="product-cat">{CAT_LABEL[product.category] || product.category}</div>
           {(product.price || product.originalPrice) && (
             <div className="product-price-row">
-              {product.originalPrice && (
-                <span className="price-original">₹{product.originalPrice}</span>
-              )}
               {product.price && (
                 <span className="price-sale">₹{product.price}</span>
+              )}
+              {product.originalPrice && (
+                <span className="price-original">₹{product.originalPrice}</span>
               )}
             </div>
           )}
@@ -415,8 +415,8 @@ export default function Home() {
                     </div>
                     {(fp.price || fp.originalPrice) && (
                       <div className="featured-card-price-row">
-                        {fp.originalPrice && <span className="price-original">₹{fp.originalPrice}</span>}
                         {fp.price && <span className="featured-card-price">₹{fp.price}</span>}
+                        {fp.originalPrice && <span className="price-original">₹{fp.originalPrice}</span>}
                       </div>
                     )}
                     <CartQtyBtn
@@ -457,13 +457,13 @@ export default function Home() {
                       <div className="product-card-h-body">
                         <div className="product-card-h-name">{product.name}</div>
                         <div className="product-card-h-price">
-                          {product.originalPrice && (
-                            <span className="price-original">₹{product.originalPrice}</span>
-                          )}
                           {product.price
                             ? <span className="price-sale">₹{product.price}</span>
                             : <span className="price-enquire">Enquire for price</span>
                           }
+                          {product.originalPrice && (
+                            <span className="price-original">₹{product.originalPrice}</span>
+                          )}
                         </div>
                         <CartQtyBtn product={product} addClassName="product-card-h-btn" />
                       </div>

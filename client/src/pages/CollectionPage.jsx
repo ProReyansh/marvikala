@@ -59,8 +59,8 @@ function ShopCard({ product }) {
         <div className="sa-card-name">{product.name}</div>
         {(product.price || product.originalPrice) && (
           <div className="sa-card-price-row">
-            {product.originalPrice && <span className="sa-card-price-orig">₹{product.originalPrice}</span>}
             {product.price && <span className="sa-card-price-sale">₹{product.price}</span>}
+            {product.originalPrice && <span className="sa-card-price-orig">₹{product.originalPrice}</span>}
           </div>
         )}
         <CartQtyBtn product={product} addClassName="sa-card-btn" />

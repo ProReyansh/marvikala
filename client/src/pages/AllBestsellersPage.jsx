@@ -111,11 +111,11 @@ export default function AllBestsellersPage() {
                       <div className="product-cat">{CAT_LABEL[product.category] || product.category}</div>
                       {(product.price || product.originalPrice) && (
                         <div className="product-price-row">
-                          {product.originalPrice && (
-                            <span className="price-original">₹{product.originalPrice}</span>
-                          )}
                           {product.price && (
                             <span className="price-sale">₹{product.price}</span>
+                          )}
+                          {product.originalPrice && (
+                            <span className="price-original">₹{product.originalPrice}</span>
                           )}
                         </div>
                       )}
