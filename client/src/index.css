@@ -7324,11 +7324,43 @@ body {
 }
 .floating-wa:hover { transform: scale(1.1); box-shadow: 0 8px 24px rgba(37,211,102,0.55); }
 
-/* ── FOOTER STAY CONNECTED INLINE ICONS ── */
-.footer-contact-item--row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.footer-contact-text { color: rgba(255,255,255,0.65); font-size: 13px; }
-.footer-social-link--inline { color: rgba(255,255,255,0.65); display: flex; align-items: center; flex-shrink: 0; background: none; width: auto; height: auto; border-radius: 0; border: none; }
-.footer-social-link--inline:hover { color: #fff; background: none; }
+/* ── FOOTER STAY CONNECTED ── */
+.footer-connect-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  text-decoration: none;
+  transition: opacity 0.15s;
+}
+.footer-connect-row:first-of-type { border-top: 1px solid rgba(255,255,255,0.08); }
+.footer-connect-row:hover { opacity: 0.8; }
+.footer-connect-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.footer-connect-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+  font-family: var(--sans);
+}
+.footer-connect-value {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.85);
+}
+.footer-connect-icon {
+  color: rgba(255,255,255,0.5);
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
 
 /* ── PRODUCT PAGE — MADE TO ORDER BUTTON ── */
 .pp-made-to-order-btn { display: inline-flex; align-items: center; gap: 8px; background: #25D366; color: #fff; border: none; border-radius: 50px; padding: 13px 24px; font-size: 14px; font-weight: 700; font-family: var(--sans); cursor: pointer; text-decoration: none; margin-top: 12px; }
