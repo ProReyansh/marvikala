@@ -7358,7 +7358,6 @@ body {
   text-decoration: none;
   transition: opacity 0.15s;
 }
-.footer-connect-row:first-of-type { border-top: 1px solid rgba(255,255,255,0.08); }
 .footer-connect-row:hover { opacity: 0.75; }
 .footer-connect-text {
   display: flex;
