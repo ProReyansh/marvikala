@@ -4080,6 +4080,9 @@ body {
   padding: 52px 20px 56px;
   background: var(--cream);
 }
+.featured-section .section-head h2 {
+  color: var(--rose);
+}
 
 @media (min-width: 769px) {
   .featured-section { padding: 72px 48px; max-width: 1200px; margin: 0 auto; background: transparent; }

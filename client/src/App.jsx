@@ -60,25 +60,24 @@ function ScrollToTop() {
       return;
     }
 
-    // Kick off fade-out
+    // Hide instantly (no transition) so no flash of wrong content
+    document.body.style.transition = 'none';
     document.body.style.opacity = '0';
-    document.body.style.transition = 'opacity 0.15s ease';
 
-    const restore = () => {
+    // Scroll while hidden, then fade in smoothly
+    requestAnimationFrame(() => {
       if (navType === 'POP') {
         const saved = sessionStorage.getItem(`mk_scroll_${pathname}`);
         window.scrollTo({ top: saved ? parseInt(saved, 10) : 0, left: 0, behavior: 'instant' });
       } else {
         window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
       }
-      // Fade back in
+      // Fade in after scroll is applied
       requestAnimationFrame(() => {
+        document.body.style.transition = 'opacity 0.18s ease';
         document.body.style.opacity = '1';
       });
-    };
-
-    // Give the fade-out one frame to apply, then scroll and fade in
-    requestAnimationFrame(() => requestAnimationFrame(restore));
+    });
   }, [pathname, navType]);
 
   return null;
