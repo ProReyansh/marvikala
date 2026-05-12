@@ -506,6 +506,7 @@ export default function Home() {
           {/* HOW TO ORDER */}
           <section className="how-to-order-teaser fade-section">
             <div className="how-to-order-inner">
+              <h2 className="how-to-order-heading">How to Order</h2>
               <div className="how-to-order-steps">
                 <div className="how-to-order-step">
                   <span className="how-to-order-step-num">01</span>

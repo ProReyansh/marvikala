@@ -7785,6 +7785,13 @@ body {
   align-items: center;
   gap: 36px;
 }
+.how-to-order-heading {
+  font-family: var(--serif);
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--text);
+  text-align: center;
+}
 .how-to-order-steps {
   display: flex;
   align-items: flex-start;
