@@ -177,8 +177,7 @@ export default function ProductPage() {
 
   function handleAddToCart() {
     addToCart(product, qty);
-    setAddedToCart(true);
-    setTimeout(() => setAddedToCart(false), 2200);
+    // button text stays as "Add to Cart" always
   }
 
   function handleShare() {
@@ -257,10 +256,10 @@ export default function ProductPage() {
             {product.price && <span className="pp-sticky-price">₹{product.price}</span>}
           </div>
           <button
-            className={`pp-sticky-btn${addedToCart ? ' added' : ''}`}
+            className="pp-sticky-btn"
             onClick={handleAddToCart}
           >
-            {addedToCart ? '✓ Added!' : '+ Add to Cart'}
+            + Add to Cart
           </button>
         </div>
       </div>
@@ -387,11 +386,10 @@ export default function ProductPage() {
                 {/* Add to Cart — observed for sticky bar */}
                 <button
                   ref={addBtnRef}
-                  className={`pp-add-cart-btn${addedToCart ? ' added' : ''}`}
+                  className="pp-add-cart-btn"
                   onClick={handleAddToCart}
-                  aria-live="polite"
                 >
-                  {addedToCart ? '✓ Added to Cart' : '🛒 Add to Cart'}
+                  🛒 Add to Cart
                 </button>
 
                 {/* Delivery estimate */}
