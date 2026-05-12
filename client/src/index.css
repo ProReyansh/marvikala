@@ -7324,6 +7324,10 @@ body {
 }
 .floating-wa:hover { transform: scale(1.1); box-shadow: 0 8px 24px rgba(37,211,102,0.55); }
 
+/* ── FOOTER COL CENTERED VARIANT ── */
+.footer-col--centered { text-align: center; align-items: center; }
+.footer-col--centered h4 { text-align: center; }
+
 /* ── FOOTER STAY CONNECTED ── */
 .footer-connect-row {
   display: flex;

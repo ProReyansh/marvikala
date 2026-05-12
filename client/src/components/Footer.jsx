@@ -56,7 +56,7 @@ export default function Footer() {
         </div>
 
         {/* Column 4 — Stay Connected */}
-        <div className="footer-col">
+        <div className="footer-col footer-col--centered">
           <h4>Stay Connected</h4>
           <a href="https://wa.me/919769238160" target="_blank" rel="noreferrer" className="footer-connect-row" aria-label="WhatsApp">
             <span className="footer-connect-icon">
