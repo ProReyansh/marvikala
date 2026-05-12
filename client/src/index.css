@@ -1255,7 +1255,7 @@ body {
   max-width: 1200px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 1.6fr 1fr 1fr 1.2fr;
+  grid-template-columns: 1.6fr 1fr 1fr;
   gap: 48px;
   padding-bottom: 40px;
   border-bottom: 1px solid rgba(255,255,255,0.12);
@@ -2646,7 +2646,7 @@ body {
   .product-page        { padding: 28px 32px 56px; }
   .product-page-layout { gap: 36px; }
   .product-page-name   { font-size: 26px; }
-  .footer-grid { grid-template-columns: 1.4fr 1fr 1fr 1.1fr; gap: 36px; }
+  .footer-grid { grid-template-columns: 1.4fr 1fr 1fr; gap: 36px; }
 }
 
 /* Tablet (600px-899px) */
@@ -7324,28 +7324,40 @@ body {
 }
 .floating-wa:hover { transform: scale(1.1); box-shadow: 0 8px 24px rgba(37,211,102,0.55); }
 
-/* ── FOOTER COL CENTERED VARIANT ── */
-.footer-col--centered { text-align: center; align-items: center; }
-.footer-col--centered h4 { text-align: center; }
-
-/* ── FOOTER STAY CONNECTED ── */
+/* ── FOOTER STAY CONNECTED — full-width centered strip ── */
+.footer-stay-connected {
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding: 32px 24px;
+  text-align: center;
+}
+.footer-stay-heading {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+  margin-bottom: 20px;
+  font-family: var(--sans);
+}
+.footer-connect-links {
+  display: flex;
+  justify-content: center;
+  gap: 48px;
+  flex-wrap: wrap;
+}
 .footer-connect-row {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 14px;
-  padding: 16px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
+  gap: 12px;
   text-decoration: none;
   transition: opacity 0.15s;
 }
-.footer-connect-row:first-of-type { border-top: 1px solid rgba(255,255,255,0.08); }
-.footer-connect-row:hover { opacity: 0.8; }
+.footer-connect-row:hover { opacity: 0.75; }
 .footer-connect-text {
   display: flex;
   flex-direction: column;
-  gap: 3px;
-  align-items: center;
+  gap: 2px;
+  text-align: left;
 }
 .footer-connect-label {
   font-size: 10px;
@@ -7356,7 +7368,7 @@ body {
   font-family: var(--sans);
 }
 .footer-connect-value {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
   color: rgba(255,255,255,0.85);
 }
@@ -7365,6 +7377,9 @@ body {
   display: flex;
   align-items: center;
   flex-shrink: 0;
+}
+@media (max-width: 480px) {
+  .footer-connect-links { gap: 28px; flex-direction: column; align-items: center; }
 }
 
 /* ── PRODUCT PAGE — MADE TO ORDER BUTTON ── */
