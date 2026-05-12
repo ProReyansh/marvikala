@@ -72,11 +72,61 @@ export default function AdminDashboard() {
   const [sigPieceId, setSigPieceId] = useState(() => { try { return localStorage.getItem('mk_signature_piece_id') || ''; } catch { return ''; } });
   const [sigSaved, setSigSaved]     = useState(false);
 
+  // Hero Image tab state
+  const heroFileRef                     = useRef();
+  const [heroCurrentUrl, setHeroCurrentUrl] = useState('');
+  const [heroFile, setHeroFile]         = useState(null);
+  const [heroPreview, setHeroPreview]   = useState('');
+  const [heroUploading, setHeroUploading] = useState(false);
+  const [heroSaved, setHeroSaved]       = useState(false);
+  const [heroError, setHeroError]       = useState('');
+
   function saveSigPiece(id) {
     setSigPieceId(id);
     try { if (id) localStorage.setItem('mk_signature_piece_id', id); else localStorage.removeItem('mk_signature_piece_id'); } catch {}
     setSigSaved(true);
     setTimeout(() => setSigSaved(false), 2000);
+  }
+
+  function handleHeroFileChange(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    setHeroFile(file);
+    setHeroPreview(URL.createObjectURL(file));
+    setHeroError('');
+    e.target.value = '';
+  }
+
+  async function handleHeroUpload() {
+    if (!heroFile) return;
+    setHeroUploading(true);
+    setHeroError('');
+    try {
+      const data = new FormData();
+      data.append('image', heroFile);
+      const res = await axios.post('/api/settings/hero-image', data, { headers: authHeader() });
+      setHeroCurrentUrl(res.data.url);
+      setHeroFile(null);
+      setHeroPreview('');
+      setHeroSaved(true);
+      setTimeout(() => setHeroSaved(false), 3000);
+    } catch (err) {
+      setHeroError(err.response?.data?.message || 'Upload failed');
+    } finally {
+      setHeroUploading(false);
+    }
+  }
+
+  async function handleHeroReset() {
+    if (!window.confirm('Revert to the default hero image?')) return;
+    try {
+      await axios.delete('/api/settings/hero-image', { headers: authHeader() });
+      setHeroCurrentUrl('');
+      setHeroFile(null);
+      setHeroPreview('');
+    } catch {
+      alert('Could not reset hero image.');
+    }
   }
 
   // Collections tab state
@@ -146,7 +196,14 @@ export default function AdminDashboard() {
     }
   }
 
-  useEffect(() => { fetchProducts(); document.title = 'Marvikala Admin'; }, []);
+  useEffect(() => {
+    fetchProducts();
+    document.title = 'Marvikala Admin';
+    // Fetch current hero image
+    axios.get('/api/settings/hero-image')
+      .then(res => { if (res.data.url) setHeroCurrentUrl(res.data.url); })
+      .catch(() => {});
+  }, []);
 
   function logout() {
     localStorage.removeItem('marvikala_admin_token');
@@ -289,6 +346,12 @@ export default function AdminDashboard() {
           onClick={() => setActiveTab('signature')}
         >
           ✨ Signature Piece
+        </button>
+        <button
+          className={`admin-tab-btn${activeTab === 'hero' ? ' active' : ''}`}
+          onClick={() => setActiveTab('hero')}
+        >
+          🖼 Hero Image
         </button>
       </div>
 
@@ -508,6 +571,81 @@ export default function AdminDashboard() {
               </div>
             </div>
 
+          </div>
+        )}
+
+        {/* ── HERO IMAGE TAB ── */}
+        {activeTab === 'hero' && (
+          <div className="admin-collections-panel">
+            <h3 className="admin-coll-section-title">🖼 Hero Image</h3>
+            <p style={{ color: 'var(--text-mid)', fontSize: 13, marginBottom: 20 }}>
+              Upload a new background image for the hero section on the home page. Recommended: landscape, at least 1600px wide.
+            </p>
+
+            {heroSaved && <div className="admin-coll-saved">✓ Hero image updated!</div>}
+            {heroError && <div className="error-msg" style={{ marginBottom: 16 }}>{heroError}</div>}
+
+            {/* Current image */}
+            <div style={{ marginBottom: 24 }}>
+              <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-mid)', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                Current Hero Image
+              </div>
+              <div style={{ width: '100%', maxWidth: 560, aspectRatio: '16/6', borderRadius: 12, overflow: 'hidden', border: '2px solid var(--border)', background: 'var(--cream-mid)' }}>
+                <img
+                  src={heroCurrentUrl || '/hero-bg.jpg'}
+                  alt="Current hero"
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                />
+              </div>
+              {heroCurrentUrl && (
+                <button
+                  onClick={handleHeroReset}
+                  style={{ marginTop: 10, fontSize: 12, color: '#c0392b', background: 'none', border: 'none', cursor: 'pointer', padding: 0, textDecoration: 'underline' }}
+                >
+                  Revert to default image
+                </button>
+              )}
+            </div>
+
+            {/* New image picker */}
+            <div style={{ marginBottom: 20 }}>
+              <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-mid)', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                Upload New Image
+              </div>
+              <input
+                ref={heroFileRef}
+                type="file"
+                accept="image/*"
+                style={{ display: 'none' }}
+                onChange={handleHeroFileChange}
+              />
+              <button
+                type="button"
+                className="btn-upload-img"
+                onClick={() => heroFileRef.current.click()}
+                style={{ marginBottom: heroPreview ? 16 : 0 }}
+              >
+                {heroPreview ? '↺ Change Selected Image' : '+ Choose Image'}
+              </button>
+
+              {heroPreview && (
+                <div>
+                  <div style={{ fontSize: 12, color: 'var(--text-mid)', marginBottom: 8 }}>Preview:</div>
+                  <div style={{ width: '100%', maxWidth: 560, aspectRatio: '16/6', borderRadius: 12, overflow: 'hidden', border: '2px dashed var(--rose)', background: 'var(--cream-mid)' }}>
+                    <img src={heroPreview} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  </div>
+                  <button
+                    type="button"
+                    className="btn-save"
+                    onClick={handleHeroUpload}
+                    disabled={heroUploading}
+                    style={{ marginTop: 16 }}
+                  >
+                    {heroUploading ? 'Uploading…' : '✓ Save Hero Image'}
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         )}
 

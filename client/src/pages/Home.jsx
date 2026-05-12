@@ -100,6 +100,7 @@ export default function Home() {
   const [searchQuery, setSearchQuery]       = useState(getSavedSearch);
   const [bouncingCat, setBouncingCat]       = useState(null);
   const [showPopup, setShowPopup]           = useState(false);
+  const [heroImageUrl, setHeroImageUrl]     = useState('');
 
   function handleSearch(q) {
     setSearchQuery(q);
@@ -119,6 +120,12 @@ export default function Home() {
       })
       .catch(() => {})
       .finally(() => setLoading(false));
+  }, []);
+
+  useEffect(() => {
+    axios.get('/api/settings/hero-image')
+      .then((res) => { if (res.data.url) setHeroImageUrl(res.data.url); })
+      .catch(() => {});
   }, []);
 
   // When arriving from another page via a navbar section link, scroll to that section.
@@ -286,7 +293,10 @@ export default function Home() {
         /* ── NORMAL MODE ── */
         <>
           {/* HERO */}
-          <section className="hero">
+          <section
+            className="hero"
+            style={heroImageUrl ? { backgroundImage: `url('${heroImageUrl}')` } : undefined}
+          >
             {/* Full-bleed background image overlay */}
             <div className="hero-overlay" />
             {/* Text content — positioned over the image */}
