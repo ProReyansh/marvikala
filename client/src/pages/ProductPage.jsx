@@ -372,14 +372,6 @@ export default function ProductPage() {
 
             <div className="product-page-divider" />
 
-            {/* Trust badges */}
-            <div className="product-page-trust">
-              <div className="trust-badge"><span className="trust-badge-icon">🧶</span><span>100% Handmade</span></div>
-              <div className="trust-badge"><span className="trust-badge-icon">📍</span><span>Made in Mumbai</span></div>
-              <div className="trust-badge"><span className="trust-badge-icon">🎨</span><span>Custom Colours</span></div>
-              <div className="trust-badge"><span className="trust-badge-icon">📦</span><span>Pan India Shipping</span></div>
-            </div>
-
             {product.inStock ? (
               <>
                 {/* Quantity */}

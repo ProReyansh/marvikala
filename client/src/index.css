@@ -5289,6 +5289,7 @@ body {
   flex-wrap: wrap;
   margin-top: 14px;
 }
+.ship-contact-btn { flex: 1; min-width: 140px; justify-content: center; }
 .ship-contact-btn {
   display: inline-flex;
   align-items: center;
@@ -7392,7 +7393,8 @@ body {
 
 /* ── SHIPPING PAGE OVERFLOW FIX ── */
 .ship-table { width: 100%; }
-.ship-row { flex-wrap: wrap; gap: 4px; }
+.ship-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; align-items: center; }
+.ship-time { white-space: normal !important; word-break: break-word; text-align: right; }
 
 /* ══════════════════════════════════════════════════════════════════════════════
    CART QTY BUTTON — shared Add to Cart / quantity control component
@@ -7714,7 +7716,6 @@ body {
   .admin-coll-section { padding: 20px 16px; }
   .admin-coll-form-row { flex-direction: column; }
 }
-.ship-time { word-break: break-word; }
 
 
 /* ══════════════════════════════════════════════════════════════════════════════

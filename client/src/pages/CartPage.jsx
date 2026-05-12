@@ -5,6 +5,10 @@ import Footer from '../components/Footer';
 import { useCart } from '../context/CartContext';
 import { useToast } from '../context/ToastContext';
 
+function slugify(name) {
+  return name.toLowerCase().replace(/[^\w\s-]/g, '').replace(/[\s_]+/g, '-').replace(/^-+|-+$/g, '');
+}
+
 const CAT_LABEL = {
   flowers: 'Flowers', keychains: 'Keychains', bookmarks: 'Bookmarks',
   laddugopaldress: 'Laddu Gopal', homedecor: 'Home Decor',
@@ -47,6 +51,7 @@ function BookmarkIcon() {
 function CartItem({ item, onSaveForLater }) {
   const { updateQty, removeFromCart } = useCart();
   const toast = useToast();
+  const navigate = useNavigate();
   const src = imgUrl(item.image);
 
   function handleRemove() {
@@ -54,14 +59,15 @@ function CartItem({ item, onSaveForLater }) {
     toast({ message: `${item.name} removed from cart`, type: 'info' });
   }
 
+  const goToProduct = () => navigate(`/product/${slugify(item.name)}`, { state: { product: item } });
   return (
     <div className="cart-item">
-      <div className="cart-item-img">
+      <div className="cart-item-img" onClick={goToProduct} style={{ cursor: 'pointer' }}>
         {src ? <img src={src} alt={item.name} loading="lazy" /> : <span className="cart-item-placeholder">🧶</span>}
       </div>
       <div className="cart-item-info">
         <div className="cart-item-cat">{CAT_LABEL[item.category] || item.category}</div>
-        <div className="cart-item-name">{item.name}</div>
+        <div className="cart-item-name" onClick={goToProduct} style={{ cursor: 'pointer' }}>{item.name}</div>
         {item.price && (
           <div className="cart-item-price-row">
             <span className="cart-item-price">₹{item.price}</span>
