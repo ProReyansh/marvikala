@@ -413,7 +413,12 @@ export default function Home() {
                     >
                       {fp.name}
                     </div>
-                    {fp.price && <div className="featured-card-price">₹{fp.price}</div>}
+                    {(fp.price || fp.originalPrice) && (
+                      <div className="featured-card-price-row">
+                        {fp.originalPrice && <span className="price-original">₹{fp.originalPrice}</span>}
+                        {fp.price && <span className="featured-card-price">₹{fp.price}</span>}
+                      </div>
+                    )}
                     <CartQtyBtn
                       product={fp}
                       addClassName="featured-card-btn featured-card-btn--teal"

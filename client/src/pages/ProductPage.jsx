@@ -359,7 +359,6 @@ export default function ProductPage() {
             {(product.price || product.originalPrice) && (
               <div className="pp-price-row">
                 {product.originalPrice && <span className="pp-price-orig">₹{product.originalPrice}</span>}
-                <div style={{ flex: 1 }} />
                 {product.price && <span className="pp-price-sale">₹{product.price}</span>}
                 {discount > 0 && <span className="pp-discount-badge">{discount}% off</span>}
               </div>
