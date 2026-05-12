@@ -503,6 +503,40 @@ export default function Home() {
             </div>
           </section>
 
+          {/* HOW TO ORDER */}
+          <section className="how-to-order-teaser fade-section">
+            <div className="how-to-order-inner">
+              <div className="how-to-order-steps">
+                <div className="how-to-order-step">
+                  <span className="how-to-order-step-num">01</span>
+                  <div>
+                    <div className="how-to-order-step-title">Browse & Choose</div>
+                    <div className="how-to-order-step-desc">Explore our collections and pick your favourite piece</div>
+                  </div>
+                </div>
+                <div className="how-to-order-step-divider" aria-hidden="true">→</div>
+                <div className="how-to-order-step">
+                  <span className="how-to-order-step-num">02</span>
+                  <div>
+                    <div className="how-to-order-step-title">Place Your Order</div>
+                    <div className="how-to-order-step-desc">Add to cart and reach out to us on WhatsApp to confirm</div>
+                  </div>
+                </div>
+                <div className="how-to-order-step-divider" aria-hidden="true">→</div>
+                <div className="how-to-order-step">
+                  <span className="how-to-order-step-num">03</span>
+                  <div>
+                    <div className="how-to-order-step-title">Handcrafted & Delivered</div>
+                    <div className="how-to-order-step-desc">We make it with love and ship it right to your door</div>
+                  </div>
+                </div>
+              </div>
+              <button className="btn-outline how-to-order-btn" onClick={() => navigate('/how-to-order')}>
+                See Full Ordering Guide →
+              </button>
+            </div>
+          </section>
+
           {/* REVIEWS */}
           <div className="reviews-section fade-section">
             <section className="section" id="reviews">
