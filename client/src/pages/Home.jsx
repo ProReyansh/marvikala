@@ -165,7 +165,9 @@ export default function Home() {
     return () => document.body.classList.remove('home-intro-active');
   }, [isFirstVisit]);
 
-  // Scroll-triggered fade-up — only animates on first-ever website visit
+  // Scroll-triggered fade-up — only animates on first-ever website visit.
+  // Also depends on searchQuery so sections are revealed when user clears
+  // a search (sections unmount in search mode and re-mount invisible on clear).
   useEffect(() => {
     const els = document.querySelectorAll('.fade-section');
     if (!els.length) return;
@@ -183,7 +185,7 @@ export default function Home() {
     }, { threshold: 0.06 });
     els.forEach(el => obs.observe(el));
     return () => obs.disconnect();
-  }, [products, isFirstVisit]);
+  }, [products, isFirstVisit, searchQuery]);
 
   const q = searchQuery.trim().toLowerCase();
 
