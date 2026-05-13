@@ -102,6 +102,16 @@ export default function Home() {
   const [showPopup, setShowPopup]           = useState(false);
   const [heroImageUrl, setHeroImageUrl]     = useState('');
 
+  // True only on the very first ever visit — mark visited immediately so
+  // navigating back to home (same session or later) never re-triggers intro animations.
+  const [isFirstVisit] = useState(() => {
+    try {
+      if (localStorage.getItem('mk_home_anim_v1')) return false;
+      localStorage.setItem('mk_home_anim_v1', '1');
+      return true;
+    } catch { return false; }
+  });
+
   function handleSearch(q) {
     setSearchQuery(q);
     saveSearch(q);
@@ -149,13 +159,17 @@ export default function Home() {
     document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' });
   }
 
+  // Add body class so CSS animations are gated to first visit only
+  useEffect(() => {
+    if (isFirstVisit) document.body.classList.add('home-intro-active');
+    return () => document.body.classList.remove('home-intro-active');
+  }, [isFirstVisit]);
+
   // Scroll-triggered fade-up — only animates on first-ever website visit
   useEffect(() => {
     const els = document.querySelectorAll('.fade-section');
     if (!els.length) return;
-    // After first visit, make all sections immediately visible (no animation)
-    const alreadyAnimated = localStorage.getItem('mk_home_anim_v1');
-    if (alreadyAnimated) {
+    if (!isFirstVisit) {
       els.forEach(el => el.classList.add('fade-section-visible'));
       return;
     }
@@ -168,9 +182,8 @@ export default function Home() {
       });
     }, { threshold: 0.06 });
     els.forEach(el => obs.observe(el));
-    try { localStorage.setItem('mk_home_anim_v1', '1'); } catch {}
     return () => obs.disconnect();
-  }, [products]);
+  }, [products, isFirstVisit]);
 
   const q = searchQuery.trim().toLowerCase();
 
