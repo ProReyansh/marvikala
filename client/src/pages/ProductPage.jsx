@@ -220,7 +220,11 @@ export default function ProductPage() {
   }
 
   function handleSearch(q) {
-    try { sessionStorage.setItem('mk_search', q); sessionStorage.setItem('mk_focus_search', '1'); } catch {}
+    try {
+      sessionStorage.setItem('mk_search', q);
+      if (q) sessionStorage.setItem('mk_focus_search', '1');
+      else sessionStorage.removeItem('mk_focus_search');
+    } catch {}
     navigate('/');
   }
 
