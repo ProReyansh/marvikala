@@ -13,6 +13,55 @@ const CAT_LABEL = {
   rakhi: 'Rakhi', custom: 'Custom',
 };
 
+const CAT_MATERIALS = {
+  flowers:          ['Premium cotton yarn', 'Floral wire (where applicable)', 'Artisanal dye-stable threads', 'Handcrafted in Mumbai studio'],
+  keychains:        ['Premium cotton or acrylic yarn', 'Hypoallergenic polyfill stuffing', 'Durable metal split-ring hardware', 'Handstitched detailing'],
+  bookmarks:        ['Fine crochet thread', 'Cotton or linen-blend yarn', 'Colour-fast dyes', 'Handfinished edges'],
+  laddugopaldress:  ['Soft cotton yarn', 'Polyester accent thread', 'Handwoven decorative embellishments', 'Non-toxic dyes'],
+  homedecor:        ['Premium cotton or macramé cord', 'Natural fibres', 'Rust-proof hardware (where applicable)', 'Earth-friendly materials'],
+  hairaccessories:  ['Soft cotton thread', 'Satin or grosgrain ribbon', 'Metal or resin accessories', 'Skin-friendly elastic'],
+  jewellery:        ['Fine crochet cotton thread', 'Glass or acrylic beads', 'Nickel-free metal findings', 'Colour-fast dyes'],
+  rakhi:            ['Soft cotton or silk thread', 'Decorative charms and beads', 'Comfortable adjustable band', 'Handknotted finish'],
+  custom:           ['Materials confirmed at time of order', 'Premium yarns selected for your design', 'All Marvikala quality standards apply'],
+};
+
+const CAT_CARE = {
+  flowers:          ['Keep away from direct sunlight and moisture', 'Gently reshape petals by hand if needed', 'Store in a cool, dry place', 'Dust with a soft dry cloth'],
+  keychains:        ['Spot clean with a slightly damp cloth', 'Avoid soaking or machine washing', 'Store loosely to retain shape', 'Keep away from sharp objects'],
+  bookmarks:        ['Keep dry and store flat inside your book', 'Avoid folding or bending', 'Spot clean only if needed'],
+  laddugopaldress:  ['Hand wash gently with mild detergent', 'Air dry flat in shade', 'Iron on lowest setting if needed', 'Do not bleach'],
+  homedecor:        ['Dust with a soft dry brush', 'Spot clean with a damp cloth only', 'Avoid prolonged moisture or humidity', 'Hang or store flat'],
+  hairaccessories:  ['Hand wash gently with mild shampoo', 'Air dry flat — do not tumble dry', 'Store flat or hang loosely'],
+  jewellery:        ['Wipe gently with a dry cloth after wear', 'Remove before bathing or swimming', 'Store in a dry jewellery box or pouch', 'Avoid perfume and chemicals'],
+  rakhi:            ['Keep dry and away from moisture', 'Handle delicately — avoid pulling threads', 'Store in a cool, dry place'],
+  custom:           ['Care instructions included with every custom order', 'Follow the specific care card provided', 'Contact us for any questions'],
+};
+
+function Accordion({ items }) {
+  const [open, setOpen] = useState(null);
+  return (
+    <div className="pp-accordion">
+      {items.map((item, i) => (
+        <div key={i} className="pp-accordion-item">
+          <button
+            className="pp-accordion-trigger"
+            onClick={() => setOpen(open === i ? null : i)}
+            aria-expanded={open === i}
+          >
+            <span>{item.label}</span>
+            <span className={`pp-accordion-icon${open === i ? ' open' : ''}`}>+</span>
+          </button>
+          <div className={`pp-accordion-body${open === i ? ' open' : ''}`}>
+            <div className="pp-accordion-content">
+              {item.content}
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 const REVIEWS = [
   { name: 'Priya M.',  rating: 5, date: 'March 2025',    text: 'Absolutely beautiful! The craftsmanship is incredible — each stitch is so neat and colours are exactly as shown. Packed so lovingly too. Will definitely order again! 🌸', avatar: 'P' },
   { name: 'Ananya S.', rating: 5, date: 'February 2025', text: 'Ordered a custom piece and Marvikala delivered beyond my expectations. Quick responses, beautiful packaging and quality is outstanding.', avatar: 'A' },
@@ -433,6 +482,42 @@ export default function ProductPage() {
               <div className="perk-item"><span className="perk-icon">📦</span><div className="perk-text"><strong>Pan India Delivery</strong><span>Shipping across India with careful packaging</span></div></div>
               <div className="perk-item"><span className="perk-icon">💛</span><div className="perk-text"><strong>Made with Love</strong><span>From a small studio in Mumbai, just for you</span></div></div>
             </div>
+
+            {/* Details accordion */}
+            <Accordion items={[
+              {
+                label: '✦ Materials Used',
+                content: (
+                  <ul className="pp-accordion-list">
+                    {(CAT_MATERIALS[product.category] || CAT_MATERIALS.custom).map((m, i) => (
+                      <li key={i}>{m}</li>
+                    ))}
+                  </ul>
+                ),
+              },
+              {
+                label: '✦ Care Instructions',
+                content: (
+                  <ul className="pp-accordion-list">
+                    {(CAT_CARE[product.category] || CAT_CARE.custom).map((c, i) => (
+                      <li key={i}>{c}</li>
+                    ))}
+                  </ul>
+                ),
+              },
+              {
+                label: '✦ Delivery & Returns',
+                content: (
+                  <ul className="pp-accordion-list">
+                    <li>Ships within 3–5 business days of order confirmation</li>
+                    <li>Delivered via trusted courier partners across India</li>
+                    <li>Each piece is carefully packed in branded packaging</li>
+                    <li>Custom / made-to-order items are non-returnable</li>
+                    <li>Damaged in transit? Message us within 48 hrs — we'll make it right</li>
+                  </ul>
+                ),
+              },
+            ]} />
           </div>
         </div>
 

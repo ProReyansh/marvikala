@@ -82,9 +82,21 @@ export default function Footer() {
         </div>
       </div>
 
+      {/* Payment methods */}
+      <div className="footer-payment-row">
+        <span className="footer-payment-label">Secure Payments</span>
+        <span className="footer-payment-badge">UPI</span>
+        <span className="footer-payment-badge">Visa</span>
+        <span className="footer-payment-badge">Mastercard</span>
+        <span className="footer-payment-badge">Net Banking</span>
+        <span className="footer-payment-badge">COD</span>
+      </div>
+
       {/* Bottom bar */}
       <div className="footer-bottom">
         <span>© {new Date().getFullYear()} Marvikala · All rights reserved</span>
+        <span style={{ opacity: 0.3 }}>·</span>
+        <span className="footer-handmade-sig">Made with ♡ in Mumbai</span>
       </div>
     </footer>
   );
