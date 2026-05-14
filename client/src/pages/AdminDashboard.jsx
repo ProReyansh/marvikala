@@ -88,6 +88,16 @@ export default function AdminDashboard() {
   const [heroTextSaved, setHeroTextSaved]   = useState(false);
   const [heroTextError, setHeroTextError]   = useState('');
 
+  // Workshops tab state
+  const EMPTY_WS = { title: '', description: '', duration: '', level: 'All Levels', date: '', time: '11:00', seatsLeft: 10, totalSeats: 10, price: '', emoji: '🧶', color: '#F5F0E8', badge: '', upcoming: true, includes: '' };
+  const [wsItems, setWsItems]               = useState([]);
+  const [wsLoading, setWsLoading]           = useState(false);
+  const [wsModalOpen, setWsModalOpen]       = useState(false);
+  const [wsEditing, setWsEditing]           = useState(null);
+  const [wsForm, setWsForm]                 = useState(EMPTY_WS);
+  const [wsSaving, setWsSaving]             = useState(false);
+  const [wsError, setWsError]               = useState('');
+
   function saveSigPiece(id) {
     setSigPieceId(id);
     try { if (id) localStorage.setItem('mk_signature_piece_id', id); else localStorage.removeItem('mk_signature_piece_id'); } catch {}
@@ -164,6 +174,85 @@ export default function AdminDashboard() {
     }
   }
 
+  // Workshop helpers
+  async function fetchWorkshops() {
+    setWsLoading(true);
+    try {
+      const res = await axios.get('/api/workshops');
+      setWsItems(res.data);
+    } catch { /* ignore */ }
+    finally { setWsLoading(false); }
+  }
+
+  function openAddWs() {
+    setWsEditing(null);
+    setWsForm(EMPTY_WS);
+    setWsError('');
+    setWsModalOpen(true);
+  }
+
+  function openEditWs(ws) {
+    const d = new Date(ws.date);
+    const dateStr = d.toISOString().slice(0, 10);
+    const timeStr = d.toTimeString().slice(0, 5);
+    setWsEditing(ws);
+    setWsForm({
+      title: ws.title,
+      description: ws.description || '',
+      duration: ws.duration || '',
+      level: ws.level || 'All Levels',
+      date: dateStr,
+      time: timeStr,
+      seatsLeft: ws.seatsLeft ?? 10,
+      totalSeats: ws.totalSeats ?? 10,
+      price: ws.price || '',
+      emoji: ws.emoji || '🧶',
+      color: ws.color || '#F5F0E8',
+      badge: ws.badge || '',
+      upcoming: ws.upcoming !== false,
+      includes: Array.isArray(ws.includes) ? ws.includes.join('\n') : '',
+    });
+    setWsError('');
+    setWsModalOpen(true);
+  }
+
+  async function handleWsSave() {
+    if (!wsForm.title.trim()) { setWsError('Title is required'); return; }
+    if (!wsForm.date)         { setWsError('Date is required'); return; }
+    setWsSaving(true);
+    setWsError('');
+    try {
+      const dateTime = new Date(`${wsForm.date}T${wsForm.time || '11:00'}`);
+      const payload = {
+        ...wsForm,
+        date: dateTime.toISOString(),
+        seatsLeft: Number(wsForm.seatsLeft),
+        totalSeats: Number(wsForm.totalSeats),
+        includes: wsForm.includes.split('\n').map(s => s.trim()).filter(Boolean),
+      };
+      delete payload.time;
+      if (wsEditing) {
+        await axios.put(`/api/workshops/${wsEditing._id}`, payload, { headers: authHeader() });
+      } else {
+        await axios.post('/api/workshops', payload, { headers: authHeader() });
+      }
+      setWsModalOpen(false);
+      fetchWorkshops();
+    } catch (err) {
+      setWsError(err.response?.data?.message || 'Save failed');
+    } finally {
+      setWsSaving(false);
+    }
+  }
+
+  async function handleWsDelete(ws) {
+    if (!window.confirm(`Delete "${ws.title}"? This cannot be undone.`)) return;
+    try {
+      await axios.delete(`/api/workshops/${ws._id}`, { headers: authHeader() });
+      fetchWorkshops();
+    } catch { alert('Could not delete workshop.'); }
+  }
+
   // Collections tab state
   const [collections, setCollections]     = useState(getStoredCollections);
   const [mostLovedKey, setMostLovedKey]   = useState(getMostLovedKey);
@@ -233,6 +322,7 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     fetchProducts();
+    fetchWorkshops();
     document.title = 'Marvikala Admin';
     // Fetch current hero image
     axios.get('/api/settings/hero-image')
@@ -365,6 +455,9 @@ export default function AdminDashboard() {
           {activeTab === 'products' && (
             <button className="btn-add" onClick={openAdd}>+ Add Product</button>
           )}
+          {activeTab === 'workshops' && (
+            <button className="btn-add" onClick={openAddWs}>+ Add Workshop</button>
+          )}
           <button className="btn-logout" onClick={logout}>Logout</button>
         </div>
       </div>
@@ -394,6 +487,12 @@ export default function AdminDashboard() {
           onClick={() => setActiveTab('hero')}
         >
           🖼 Hero Image
+        </button>
+        <button
+          className={`admin-tab-btn${activeTab === 'workshops' ? ' active' : ''}`}
+          onClick={() => setActiveTab('workshops')}
+        >
+          🧶 Workshops
         </button>
       </div>
 
@@ -798,7 +897,146 @@ export default function AdminDashboard() {
           </div>
         )}
 
+        {/* ── WORKSHOPS TAB ── */}
+        {activeTab === 'workshops' && (
+          <div className="admin-collections-panel">
+            <h3 className="admin-coll-section-title">🧶 Workshops</h3>
+            <p style={{ color: 'var(--text-mid)', fontSize: 13, marginBottom: 20 }}>
+              Add, edit or remove workshop sessions shown on the Workshops page.
+            </p>
+
+            {wsLoading ? (
+              <div className="spinner" />
+            ) : wsItems.length === 0 ? (
+              <div style={{ textAlign: 'center', padding: '40px 20px', color: 'var(--text-light)' }}>
+                <div style={{ fontSize: 36, marginBottom: 12 }}>🧶</div>
+                <p style={{ fontSize: 14 }}>No workshops yet. Click <strong>+ Add Workshop</strong> to create one.</p>
+              </div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                {wsItems.map(ws => {
+                  const d = new Date(ws.date);
+                  const dateStr = d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+                  const timeStr = d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+                  const isFull  = ws.seatsLeft === 0;
+                  return (
+                    <div key={ws._id} style={{ display: 'flex', alignItems: 'center', gap: 14, background: 'var(--cream)', border: '1px solid var(--border)', borderRadius: 12, padding: '14px 16px' }}>
+                      <span style={{ fontSize: 28, flexShrink: 0 }}>{ws.emoji}</span>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', marginBottom: 2 }}>
+                          <span style={{ fontWeight: 700, fontSize: 14, color: 'var(--text)' }}>{ws.title}</span>
+                          {ws.upcoming
+                            ? <span style={{ fontSize: 10, fontWeight: 700, background: 'rgba(45,191,167,0.12)', color: 'var(--olive)', borderRadius: 99, padding: '2px 8px' }}>Upcoming</span>
+                            : <span style={{ fontSize: 10, fontWeight: 700, background: 'var(--cream-mid)', color: 'var(--text-light)', borderRadius: 99, padding: '2px 8px' }}>Past</span>
+                          }
+                          {isFull && <span style={{ fontSize: 10, fontWeight: 700, background: '#fee2e2', color: '#dc2626', borderRadius: 99, padding: '2px 8px' }}>Full</span>}
+                        </div>
+                        <div style={{ fontSize: 12, color: 'var(--text-mid)' }}>
+                          📅 {dateStr} · {timeStr} &nbsp;·&nbsp; {ws.seatsLeft}/{ws.totalSeats} seats &nbsp;·&nbsp; {ws.price}
+                        </div>
+                      </div>
+                      <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
+                        <button onClick={() => openEditWs(ws)} style={{ background: 'none', border: '1px solid var(--border)', borderRadius: 8, padding: '6px 12px', fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: 'var(--sans)', color: 'var(--text)' }}>Edit</button>
+                        <button onClick={() => handleWsDelete(ws)} style={{ background: 'none', border: '1px solid #fca5a5', borderRadius: 8, padding: '6px 12px', fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: 'var(--sans)', color: '#dc2626' }}>Delete</button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        )}
+
       </div>
+
+      {/* Workshop Add / Edit Modal */}
+      {wsModalOpen && (
+        <div className="admin-modal-overlay" onClick={e => e.target === e.currentTarget && setWsModalOpen(false)}>
+          <div className="admin-modal">
+            <div className="admin-modal-scroll">
+              <h2>{wsEditing ? 'Edit Workshop' : 'Add Workshop'}</h2>
+              {wsError && <div className="error-msg">{wsError}</div>}
+
+              <div className="form-group">
+                <label>Title *</label>
+                <input className="form-input" value={wsForm.title} onChange={e => setWsForm(f => ({ ...f, title: e.target.value }))} placeholder="Beginner Crochet — Flowers & Keychain" />
+              </div>
+
+              <div className="form-group">
+                <label>Description</label>
+                <textarea className="form-input form-textarea" rows={3} value={wsForm.description} onChange={e => setWsForm(f => ({ ...f, description: e.target.value }))} placeholder="What participants will learn and do..." />
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                <div className="form-group">
+                  <label>Date *</label>
+                  <input className="form-input" type="date" value={wsForm.date} onChange={e => setWsForm(f => ({ ...f, date: e.target.value }))} />
+                </div>
+                <div className="form-group">
+                  <label>Time</label>
+                  <input className="form-input" type="time" value={wsForm.time} onChange={e => setWsForm(f => ({ ...f, time: e.target.value }))} />
+                </div>
+                <div className="form-group">
+                  <label>Duration</label>
+                  <input className="form-input" value={wsForm.duration} onChange={e => setWsForm(f => ({ ...f, duration: e.target.value }))} placeholder="3 hours" />
+                </div>
+                <div className="form-group">
+                  <label>Level</label>
+                  <select className="form-input" value={wsForm.level} onChange={e => setWsForm(f => ({ ...f, level: e.target.value }))}>
+                    {['Beginner', 'Beginner–Intermediate', 'Intermediate', 'Advanced', 'All Levels'].map(l => <option key={l}>{l}</option>)}
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label>Seats Left</label>
+                  <input className="form-input" type="number" min={0} value={wsForm.seatsLeft} onChange={e => setWsForm(f => ({ ...f, seatsLeft: e.target.value }))} />
+                </div>
+                <div className="form-group">
+                  <label>Total Seats</label>
+                  <input className="form-input" type="number" min={1} value={wsForm.totalSeats} onChange={e => setWsForm(f => ({ ...f, totalSeats: e.target.value }))} />
+                </div>
+                <div className="form-group">
+                  <label>Price (e.g. ₹799)</label>
+                  <input className="form-input" value={wsForm.price} onChange={e => setWsForm(f => ({ ...f, price: e.target.value }))} placeholder="₹799" />
+                </div>
+                <div className="form-group">
+                  <label>Emoji</label>
+                  <input className="form-input" value={wsForm.emoji} onChange={e => setWsForm(f => ({ ...f, emoji: e.target.value }))} placeholder="🌸" />
+                </div>
+                <div className="form-group">
+                  <label>Card Colour</label>
+                  <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                    <input type="color" value={wsForm.color} onChange={e => setWsForm(f => ({ ...f, color: e.target.value }))} style={{ width: 40, height: 36, border: 'none', cursor: 'pointer', borderRadius: 6 }} />
+                    <input className="form-input" value={wsForm.color} onChange={e => setWsForm(f => ({ ...f, color: e.target.value }))} style={{ flex: 1 }} />
+                  </div>
+                </div>
+                <div className="form-group">
+                  <label>Badge (optional)</label>
+                  <input className="form-input" value={wsForm.badge} onChange={e => setWsForm(f => ({ ...f, badge: e.target.value }))} placeholder="Most Popular" />
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label>What's Included (one item per line)</label>
+                <textarea className="form-input form-textarea" rows={4} value={wsForm.includes} onChange={e => setWsForm(f => ({ ...f, includes: e.target.value }))} placeholder={'All materials provided\nTake-home kit\nLight refreshments'} />
+              </div>
+
+              <div className="checkbox-row">
+                <label className="checkbox-label">
+                  <input type="checkbox" checked={wsForm.upcoming} onChange={e => setWsForm(f => ({ ...f, upcoming: e.target.checked }))} />
+                  Show as Upcoming (uncheck for Past)
+                </label>
+              </div>
+
+              <div className="modal-actions">
+                <button type="button" className="btn-cancel" onClick={() => setWsModalOpen(false)}>Cancel</button>
+                <button type="button" className="btn-save" onClick={handleWsSave} disabled={wsSaving}>
+                  {wsSaving ? 'Saving…' : wsEditing ? '✓ Save Changes' : '✓ Add Workshop'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Add / Edit Modal */}
       {modalOpen && (

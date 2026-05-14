@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
@@ -250,9 +251,24 @@ export default function WorkshopsPage() {
   const [exiting, setExiting] = useState(false);
   const [selectedWs, setSelectedWs] = useState(null);
   const [tab, setTab] = useState('upcoming');
+  const [workshops, setWorkshops] = useState(WORKSHOPS); // static fallback
+  const [wsLoading, setWsLoading] = useState(true);
 
-  const upcomingList = WORKSHOPS.filter(w => w.upcoming);
-  const pastList = WORKSHOPS.filter(w => !w.upcoming);
+  useEffect(() => {
+    axios.get('/api/workshops')
+      .then(res => {
+        if (res.data.length > 0) {
+          // Normalize: API returns date as ISO string, convert to Date object
+          setWorkshops(res.data.map(w => ({ ...w, date: new Date(w.date), id: w._id })));
+        }
+        // If empty, keep the static seed data
+      })
+      .catch(() => {}) // keep static data on error
+      .finally(() => setWsLoading(false));
+  }, []);
+
+  const upcomingList = workshops.filter(w => w.upcoming);
+  const pastList     = workshops.filter(w => !w.upcoming);
 
   return (
     <>
