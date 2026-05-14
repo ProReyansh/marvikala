@@ -2864,7 +2864,7 @@ body {
     padding-bottom: 10px;
   }
   .admin-navbar-brand { flex: 1; min-width: 0; gap: 8px; }
-  .admin-logo-icon    { height: 40px; width: auto; }
+  .admin-logo-icon    { height: 30px; width: auto; }
   .admin-navbar h1    { font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .admin-view-site    { display: none; }
   .admin-navbar-right { gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
