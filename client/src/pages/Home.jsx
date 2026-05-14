@@ -352,24 +352,28 @@ export default function Home() {
             {[
               {
                 icon: (
+                  /* Heart cradled in hands */
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                    <path d="M12 7.5C12 7.5 10 4.5 7.5 4.5C5.2 4.5 3.5 6.5 3.5 8.5C3.5 11.5 7.5 15 12 18C16.5 15 20.5 11.5 20.5 8.5C20.5 6.5 18.8 4.5 16.5 4.5C14 4.5 12 7.5 12 7.5Z"/>
+                    <path d="M3 15.5C2 17 2 19 4 20C6.5 21 9 21.5 12 21.5C15 21.5 17.5 21 20 20C22 19 22 17 21 15.5"/>
                   </svg>
                 ),
                 text: 'Handmade\nwith love',
               },
               {
                 icon: (
+                  /* 3-D box / package */
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-                    <polyline points="21 8 21 21 3 21 3 8"/>
-                    <rect x="1" y="3" width="22" height="5"/>
-                    <line x1="10" y1="12" x2="14" y2="12"/>
+                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                    <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                    <line x1="12" y1="22.08" x2="12" y2="12"/>
                   </svg>
                 ),
                 text: 'Made to\norder',
               },
               {
                 icon: (
+                  /* Gift box */
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
                     <polyline points="20 12 20 22 4 22 4 12"/>
                     <rect x="2" y="7" width="20" height="5"/>
@@ -382,9 +386,9 @@ export default function Home() {
               },
               {
                 icon: (
+                  /* Simplified India map outline */
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                    <circle cx="12" cy="10" r="3"/>
+                    <path d="M7 2 L13 2 L17 3 L19 5 L20 7.5 L19 9.5 L20.5 11.5 L18.5 13.5 L17 16.5 L14 20 L12 22 L10 20 L7 16.5 L5.5 13.5 L5 11.5 L4.5 9.5 L5 7 L6.5 4.5 Z"/>
                   </svg>
                 ),
                 text: 'Made in\nIndia',
@@ -397,19 +401,18 @@ export default function Home() {
             ))}
           </div>
 
-          {/* SHOP BY COLLECTION (horizontal scroll) */}
+          {/* SHOP BY COLLECTION — 3×3 grid */}
           <div style={{ background: 'var(--cream)' }}>
             <section className="section fade-section" id="collections">
               <div className="section-head">
                 <h2>Shop by Collection</h2>
               </div>
-              {/* Desktop grid */}
-              <div className="categories-grid categories-grid-desktop">
-                {CATEGORIES.map((c) => (
+              <div className="categories-3x3-grid">
+                {CATEGORIES.filter((c) => c.key !== 'all').map((c) => (
                   <div
                     key={c.key}
                     className={`cat-card ${activeCategory === c.key ? 'active' : ''} ${bouncingCat === c.key ? 'cat-bounce' : ''}`}
-                    onClick={() => c.key === 'all' ? navigate('/shop') : navigate('/collection/' + c.key)}
+                    onClick={() => navigate('/collection/' + c.key)}
                   >
                     <div
                       className={`cat-card-img ${c.cls}`}
@@ -418,26 +421,6 @@ export default function Home() {
                     <div className="cat-card-body">
                       <div className="cat-name">{c.label}</div>
                     </div>
-                  </div>
-                ))}
-              </div>
-              {/* Mobile horizontal scroll */}
-              <div className="h-scroll-row categories-row-mobile">
-                {CATEGORIES.filter((c) => c.key !== 'all').map((c, i, arr) => (
-                  <div
-                    key={c.key}
-                    className={`collection-card-h${activeCategory === c.key ? ' active' : ''}`}
-                    style={{
-                      marginLeft: i === 0 ? 16 : 0,
-                      marginRight: i === arr.length - 1 ? 16 : 0,
-                    }}
-                    onClick={() => navigate('/collection/' + c.key)}
-                  >
-                    <div
-                      className={`collection-card-h-img ${c.cls}`}
-                      style={{ backgroundImage: `url('${c.img}')` }}
-                    />
-                    <span className="collection-card-h-name">{c.label}</span>
                   </div>
                 ))}
               </div>

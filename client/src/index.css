@@ -711,6 +711,21 @@ body {
   gap: 16px;
 }
 
+/* ── 3×3 Collection grid (replaces desktop grid + mobile scroll) ── */
+.categories-3x3-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+.categories-3x3-grid .cat-card-img {
+  aspect-ratio: 1 / 1;
+}
+@media (max-width: 480px) {
+  .categories-3x3-grid { gap: 10px; }
+  .categories-3x3-grid .cat-card-body { padding: 7px 4px 9px; }
+  .categories-3x3-grid .cat-name { font-size: 10px; }
+}
+
 .cat-card {
   border-radius: 16px;
   overflow: hidden;
@@ -9643,9 +9658,9 @@ body {
   margin: 0 0 12px;
 }
 
-/* ── 3. Feature strip — warmer, more premium ── */
+/* ── 3. Feature strip — no background, clean white ── */
 .feature-strip {
-  background: var(--cream-mid);
+  background: var(--white);
   border-top: 1px solid rgba(42,32,22,0.07);
   border-bottom: 1px solid rgba(42,32,22,0.07);
 }
