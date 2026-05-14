@@ -481,10 +481,49 @@ export default function ProductPage() {
 
             {/* Perks */}
             <div className="product-page-perks">
-              <div className="perk-item"><span className="perk-icon">🧶</span><div className="perk-text"><strong>100% Handmade</strong><span>Every piece crafted stitch by stitch with care</span></div></div>
-              <div className="perk-item"><span className="perk-icon">🎨</span><div className="perk-text"><strong>Custom Colours & Sizes</strong><span>Tell us your preferences — we'll make it just for you!</span></div></div>
-              <div className="perk-item"><span className="perk-icon">📦</span><div className="perk-text"><strong>Pan India Delivery</strong><span>Shipping across India with careful packaging</span></div></div>
-              <div className="perk-item"><span className="perk-icon">💛</span><div className="perk-text"><strong>Made with Love</strong><span>From a small studio in Mumbai, just for you</span></div></div>
+              <div className="perk-item">
+                <span className="perk-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M18 11V6a2 2 0 0 0-2-2 2 2 0 0 0-2 2v0"/>
+                    <path d="M14 10V4a2 2 0 0 0-2-2 2 2 0 0 0-2 2v2"/>
+                    <path d="M10 10.5V6a2 2 0 0 0-2-2 2 2 0 0 0-2 2v8"/>
+                    <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/>
+                  </svg>
+                </span>
+                <div className="perk-text"><strong>100% Handmade</strong><span>Every piece crafted stitch by stitch with care</span></div>
+              </div>
+              <div className="perk-item">
+                <span className="perk-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/>
+                    <line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/>
+                    <line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/>
+                    <line x1="1" y1="14" x2="7" y2="14"/>
+                    <line x1="9" y1="8" x2="15" y2="8"/>
+                    <line x1="17" y1="16" x2="23" y2="16"/>
+                  </svg>
+                </span>
+                <div className="perk-text"><strong>Custom Colours & Sizes</strong><span>Tell us your preferences — we'll make it just for you!</span></div>
+              </div>
+              <div className="perk-item">
+                <span className="perk-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="1" y="3" width="15" height="13"/>
+                    <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+                    <circle cx="5.5" cy="18.5" r="2.5"/>
+                    <circle cx="18.5" cy="18.5" r="2.5"/>
+                  </svg>
+                </span>
+                <div className="perk-text"><strong>Pan India Delivery</strong><span>Shipping across India with careful packaging</span></div>
+              </div>
+              <div className="perk-item">
+                <span className="perk-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                  </svg>
+                </span>
+                <div className="perk-text"><strong>Made with Love</strong><span>From a small studio in Mumbai, just for you</span></div>
+              </div>
             </div>
 
             {/* Details accordion */}
