@@ -226,9 +226,11 @@ export default function Home() {
       >
         <div className="product-img">
           {imgSrc ? <img src={imgSrc} alt={product.name} /> : <span>🧶</span>}
-          {(product.bestseller || product.featured) && (
+          {product.newArrival ? (
+            <span className="product-badge new-arrival-badge">New</span>
+          ) : (product.bestseller || product.featured) ? (
             <span className="product-badge bestseller-badge">Bestseller</span>
-          )}
+          ) : null}
           {!product.inStock && <div className="out-of-stock-overlay">Out of Stock</div>}
         </div>
         <div className="product-info">
@@ -432,51 +434,42 @@ export default function Home() {
             </button>
           </div>
 
-          {/* FEATURED PRODUCT */}
-          {!loading && (() => {
-            const sigId = (() => { try { return localStorage.getItem('mk_signature_piece_id'); } catch { return null; } })();
-            const fp = (sigId && products.find(p => p._id === sigId)) || products.find(p => p.featured || p.bestseller);
-            if (!fp) return null;
-            const imgs = fp.images?.length > 0 ? fp.images : (fp.image ? [fp.image] : []);
-            const imgSrc = imgs[0] ? (imgs[0].startsWith('http') ? imgs[0] : `/uploads/${imgs[0]}`) : null;
-            return (
-              <section className="featured-section fade-section" id="signature">
-                <div className="section-head">
-                  <h2>Signature Piece</h2>
-                </div>
-                <div className="featured-card">
-                  <div
-                    className="featured-card-img"
-                    onClick={() => navigate(productUrl(fp), { state: { product: fp } })}
-                    style={{ cursor: 'pointer' }}
-                  >
-                    {imgSrc ? <img src={imgSrc} alt={fp.name} /> : <span>🧶</span>}
-                    {(fp.bestseller || fp.featured) && <span className="featured-card-badge">Bestseller</span>}
-                  </div>
-                  <div className="featured-card-body">
-                    <div className="featured-card-cat">{CAT_LABEL[fp.category] || fp.category}</div>
+          {/* NEW ARRIVALS */}
+          {!loading && products.filter(p => p.newArrival).length > 0 && (
+            <section className="section fade-section" id="new-arrivals">
+              <div className="section-head">
+                <h2>New Arrivals</h2>
+                <p>Fresh off the hook — just landed in the studio</p>
+              </div>
+              <div className="h-scroll-row">
+                {products.filter(p => p.newArrival).map((product) => {
+                  const imgs = product.images?.length > 0 ? product.images : (product.image ? [product.image] : []);
+                  const imgSrc = imgs[0] ? (imgs[0].startsWith('http') ? imgs[0] : `/uploads/${imgs[0]}`) : null;
+                  return (
                     <div
-                      className="featured-card-name"
-                      style={{ cursor: 'pointer' }}
-                      onClick={() => navigate(productUrl(fp), { state: { product: fp } })}
+                      key={product._id}
+                      className="product-card-h"
+                      onClick={() => navigate(productUrl(product), { state: { product } })}
                     >
-                      {fp.name}
-                    </div>
-                    {(fp.price || fp.originalPrice) && (
-                      <div className="featured-card-price-row">
-                        {fp.price && <span className="featured-card-price">₹{fp.price}</span>}
-                        {fp.originalPrice && <span className="price-original">₹{fp.originalPrice}</span>}
+                      <div className="product-card-h-img" style={{ position: 'relative' }}>
+                        {imgSrc ? <img src={imgSrc} alt={product.name} /> : <span>🧶</span>}
+                        <span className="new-arrival-badge-card">New</span>
                       </div>
-                    )}
-                    <CartQtyBtn
-                      product={fp}
-                      addClassName="featured-card-btn featured-card-btn--teal"
-                    />
-                  </div>
-                </div>
-              </section>
-            );
-          })()}
+                      <div className="product-card-h-body">
+                        <div className="product-card-h-name">{product.name}</div>
+                        <div className="product-card-h-price">
+                          {product.price
+                            ? <><span className="price-current">₹{product.price}</span>{product.originalPrice && <span className="price-original" style={{ marginLeft: 6 }}>₹{product.originalPrice}</span>}</>
+                            : <span className="price-enquire">Enquire</span>
+                          }
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
+          )}
 
           {/* BESTSELLERS (horizontal scroll) */}
           {!loading && bestsellers.length > 0 && (

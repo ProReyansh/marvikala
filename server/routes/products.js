@@ -70,6 +70,7 @@ router.post('/', authMiddleware, upload.array('images', 5), async (req, res) => 
       inStock:    inStock    === 'true' || inStock    === true,
       bestseller: bestseller === 'true' || bestseller === true,
       featured:   bestseller === 'true' || bestseller === true,
+      newArrival: req.body.newArrival === 'true' || req.body.newArrival === true,
       price:         req.body.price         ? Number(req.body.price)         : null,
       originalPrice: req.body.originalPrice ? Number(req.body.originalPrice) : null,
     });
@@ -107,6 +108,7 @@ router.put('/:id', authMiddleware, upload.array('images', 5), async (req, res) =
       inStock:    inStock    === 'true' || inStock    === true,
       bestseller: bestseller === 'true' || bestseller === true,
       featured:   bestseller === 'true' || bestseller === true,
+      newArrival: req.body.newArrival === 'true' || req.body.newArrival === true,
       price:         req.body.price         ? Number(req.body.price)         : null,
       originalPrice: req.body.originalPrice ? Number(req.body.originalPrice) : null,
     };
@@ -133,6 +135,21 @@ router.delete('/:id', authMiddleware, async (req, res) => {
     res.json({ message: 'Product deleted' });
   } catch (err) {
     res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Admin: toggle newArrival without re-uploading images
+router.patch('/:id', authMiddleware, async (req, res) => {
+  try {
+    const product = await Product.findByIdAndUpdate(
+      req.params.id,
+      { newArrival: req.body.newArrival === true || req.body.newArrival === 'true' },
+      { new: true }
+    );
+    if (!product) return res.status(404).json({ message: 'Product not found' });
+    res.json(product);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
   }
 });
 

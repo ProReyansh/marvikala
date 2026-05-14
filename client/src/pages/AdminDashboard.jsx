@@ -68,9 +68,8 @@ export default function AdminDashboard() {
   // Tab state
   const [activeTab, setActiveTab]   = useState('products');
 
-  // Signature Piece tab state
-  const [sigPieceId, setSigPieceId] = useState(() => { try { return localStorage.getItem('mk_signature_piece_id') || ''; } catch { return ''; } });
-  const [sigSaved, setSigSaved]     = useState(false);
+  // New Arrivals tab state
+  const [naToggling, setNaToggling] = useState(null); // product._id being toggled
 
   // Hero Image tab state
   const heroFileRef                     = useRef();
@@ -98,11 +97,13 @@ export default function AdminDashboard() {
   const [wsSaving, setWsSaving]             = useState(false);
   const [wsError, setWsError]               = useState('');
 
-  function saveSigPiece(id) {
-    setSigPieceId(id);
-    try { if (id) localStorage.setItem('mk_signature_piece_id', id); else localStorage.removeItem('mk_signature_piece_id'); } catch {}
-    setSigSaved(true);
-    setTimeout(() => setSigSaved(false), 2000);
+  async function handleToggleNewArrival(product) {
+    setNaToggling(product._id);
+    try {
+      await axios.patch(`/api/products/${product._id}`, { newArrival: !product.newArrival }, { headers: authHeader() });
+      fetchProducts();
+    } catch { alert('Could not update product.'); }
+    finally { setNaToggling(null); }
   }
 
   function handleHeroFileChange(e) {
@@ -477,10 +478,10 @@ export default function AdminDashboard() {
           🗂 Collections
         </button>
         <button
-          className={`admin-tab-btn${activeTab === 'signature' ? ' active' : ''}`}
-          onClick={() => setActiveTab('signature')}
+          className={`admin-tab-btn${activeTab === 'newArrivals' ? ' active' : ''}`}
+          onClick={() => setActiveTab('newArrivals')}
         >
-          ✨ Signature Piece
+          ✨ New Arrivals
         </button>
         <button
           className={`admin-tab-btn${activeTab === 'hero' ? ' active' : ''}`}
@@ -861,40 +862,50 @@ export default function AdminDashboard() {
           </div>
         )}
 
-        {/* ── SIGNATURE PIECE TAB ── */}
-        {activeTab === 'signature' && (
+        {/* ── NEW ARRIVALS TAB ── */}
+        {activeTab === 'newArrivals' && (
           <div className="admin-collections-panel">
-            <h3 className="admin-coll-section-title">✨ Signature Piece</h3>
+            <h3 className="admin-coll-section-title">✨ New Arrivals</h3>
             <p style={{ color: 'var(--text-mid)', fontSize: 13, marginBottom: 20 }}>
-              Select the product to feature as the Signature Piece on the home page.
+              Toggle which products appear in the New Arrivals section on the home page. Marked products show a <strong>New</strong> badge on their card.
             </p>
-            {sigSaved && <div className="admin-coll-saved">✓ Signature Piece saved!</div>}
             {loading ? (
               <div className="spinner" />
+            ) : products.length === 0 ? (
+              <p style={{ color: 'var(--text-light)', fontSize: 13 }}>No products yet — add some in the Products tab first.</p>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                <div
-                  className={`admin-sig-option${sigPieceId === '' ? ' selected' : ''}`}
-                  onClick={() => saveSigPiece('')}
-                >
-                  <span>Auto (first featured / bestseller)</span>
-                  {sigPieceId === '' && <span className="admin-coll-saved" style={{ margin: 0, padding: '2px 10px' }}>✓ Active</span>}
-                </div>
-                {products.map(p => {
+                {[...products].sort((a, b) => (b.newArrival ? 1 : 0) - (a.newArrival ? 1 : 0)).map(p => {
                   const imgs = p.images?.length > 0 ? p.images : (p.image ? [p.image] : []);
                   const imgSrc = imgs[0] ? (imgs[0].startsWith('http') ? imgs[0] : `/uploads/${imgs[0]}`) : null;
+                  const isToggling = naToggling === p._id;
                   return (
-                    <div
-                      key={p._id}
-                      className={`admin-sig-option${sigPieceId === p._id ? ' selected' : ''}`}
-                      onClick={() => saveSigPiece(p._id)}
-                    >
-                      {imgSrc && <img src={imgSrc} alt={p.name} style={{ width: 40, height: 40, objectFit: 'cover', borderRadius: 8, flexShrink: 0 }} />}
-                      <div style={{ flex: 1 }}>
-                        <div style={{ fontWeight: 600, fontSize: 13 }}>{p.name}</div>
-                        <div style={{ fontSize: 11, color: 'var(--text-light)' }}>{p.category}{p.price ? ` · ₹${p.price}` : ''}</div>
+                    <div key={p._id} className="admin-sig-option" style={{ opacity: isToggling ? 0.6 : 1 }}>
+                      {imgSrc
+                        ? <img src={imgSrc} alt={p.name} style={{ width: 44, height: 44, objectFit: 'cover', borderRadius: 8, flexShrink: 0 }} />
+                        : <span style={{ fontSize: 28, flexShrink: 0 }}>🧶</span>
+                      }
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontWeight: 600, fontSize: 13, color: 'var(--text)' }}>{p.name}</div>
+                        <div style={{ fontSize: 11, color: 'var(--text-light)' }}>{CATEGORIES.find(c => c.key === p.category)?.label || p.category}{p.price ? ` · ₹${p.price}` : ''}</div>
                       </div>
-                      {sigPieceId === p._id && <span className="admin-coll-saved" style={{ margin: 0, padding: '2px 10px' }}>✓ Active</span>}
+                      {p.newArrival && (
+                        <span style={{ fontSize: 10, fontWeight: 700, background: 'rgba(45,191,167,0.13)', color: 'var(--teal)', borderRadius: 99, padding: '2px 8px', flexShrink: 0 }}>✦ New</span>
+                      )}
+                      <button
+                        disabled={isToggling}
+                        onClick={() => handleToggleNewArrival(p)}
+                        style={{
+                          background: p.newArrival ? '#fee2e2' : 'var(--olive)',
+                          color: p.newArrival ? '#dc2626' : '#fff',
+                          border: 'none', borderRadius: 8, padding: '6px 12px',
+                          fontSize: 12, fontWeight: 600, cursor: 'pointer',
+                          fontFamily: 'var(--sans)', flexShrink: 0,
+                          transition: 'background 0.15s',
+                        }}
+                      >
+                        {isToggling ? '…' : p.newArrival ? 'Remove' : '+ Mark as New'}
+                      </button>
                     </div>
                   );
                 })}
