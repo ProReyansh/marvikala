@@ -2768,8 +2768,8 @@ body {
 
 /* Mobile (up to 599px) */
 @media (max-width: 599px) {
-  .navbar           { height: auto; min-height: 56px; flex-wrap: wrap; padding: 10px 16px; gap: 0; row-gap: 8px; align-items: center; }
-  .navbar-logo      { flex: 1; order: 1; }
+  .navbar           { height: 56px; min-height: 56px; flex-wrap: nowrap; padding: 0 10px; gap: 0; align-items: center; }
+  .navbar-logo      { position: absolute; left: 50%; transform: translateX(-50%); flex: none; order: 0; }
   .navbar-logo-text { font-size: 18px; }
   .navbar-logo-icon { width: 30px; height: 30px; }
   .navbar-mobile-icons { order: 2; }
@@ -2962,44 +2962,42 @@ body {
 .navbar-wa-btn:hover { background: rgba(37,211,102,0.1) !important; }
 .navbar-right-group { display: flex; align-items: center; gap: 2px; flex-shrink: 0; }
 
-/* ═══ MOBILE NAVBAR — 3-column grid (no overlap, no congestion) ═══ */
+/* ═══ MOBILE NAVBAR — flex with absolutely-centred logo ═══ */
 @media (max-width: 768px) {
   .navbar {
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
+    position: relative;       /* anchor for the absolute logo */
+    display: flex;
     align-items: center;
+    justify-content: space-between;
     padding: 0 10px;
     height: 56px;
-    gap: 0;
-    row-gap: 0;
     flex-wrap: nowrap;
   }
-  /* Col 1 — hamburger left-aligned, same size as other icons */
+  /* Hamburger — left side */
   .navbar-hamburger-btn {
     display: flex !important;
-    grid-column: 1; grid-row: 1;
-    justify-self: start; align-self: center;
-    order: 0;
+    flex-shrink: 0;
     width: 30px; height: 30px;
+    order: 0;
   }
   .navbar-hamburger-btn span { width: 17px; }
-  /* Col 2 — logo truly centered (must reset order:1 from the 599px block) */
+  /* Logo — absolute centre, never pushed by side elements */
   .navbar-logo {
-    position: static; transform: none;
-    grid-column: 2; grid-row: 1;   /* force row 1 */
-    order: 0;                       /* reset 599px's order:1 */
-    flex: none;                     /* reset 599px's flex:1 */
-    justify-self: center; align-self: center;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    flex: none;
+    order: 0;
     gap: 6px;
+    pointer-events: auto;   /* keep clickable */
   }
   .navbar-logo-icon { width: 26px; height: 26px; flex-shrink: 0; }
   .navbar-logo-text { font-size: 18px; white-space: nowrap; line-height: 1; }
-  /* Col 3 — icons right-aligned */
+  /* Right group — right side */
   .navbar-right-group {
-    grid-column: 3; grid-row: 1;
-    order: 0;
-    justify-self: end; align-self: center;
     display: flex; align-items: center;
+    flex-shrink: 0;
+    order: 0;
   }
   /* Hide desktop-only elements */
   .navbar-links-desktop       { display: none !important; }
