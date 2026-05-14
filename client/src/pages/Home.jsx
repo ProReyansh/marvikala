@@ -439,34 +439,11 @@ export default function Home() {
             <section className="section fade-section" id="new-arrivals">
               <div className="section-head">
                 <h2>New Arrivals</h2>
-                <p>Fresh off the hook — just landed in the studio</p>
               </div>
-              <div className="h-scroll-row">
-                {products.filter(p => p.newArrival).map((product) => {
-                  const imgs = product.images?.length > 0 ? product.images : (product.image ? [product.image] : []);
-                  const imgSrc = imgs[0] ? (imgs[0].startsWith('http') ? imgs[0] : `/uploads/${imgs[0]}`) : null;
-                  return (
-                    <div
-                      key={product._id}
-                      className="product-card-h"
-                      onClick={() => navigate(productUrl(product), { state: { product } })}
-                    >
-                      <div className="product-card-h-img" style={{ position: 'relative' }}>
-                        {imgSrc ? <img src={imgSrc} alt={product.name} /> : <span>🧶</span>}
-                        <span className="new-arrival-badge-card">New</span>
-                      </div>
-                      <div className="product-card-h-body">
-                        <div className="product-card-h-name">{product.name}</div>
-                        <div className="product-card-h-price">
-                          {product.price
-                            ? <><span className="price-current">₹{product.price}</span>{product.originalPrice && <span className="price-original" style={{ marginLeft: 6 }}>₹{product.originalPrice}</span>}</>
-                            : <span className="price-enquire">Enquire</span>
-                          }
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
+              <div className="new-arrivals-2x2">
+                {products.filter(p => p.newArrival).map((product) => (
+                  <ProductCard key={product._id} product={product} />
+                ))}
               </div>
             </section>
           )}
