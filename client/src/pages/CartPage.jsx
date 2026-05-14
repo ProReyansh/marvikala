@@ -72,6 +72,9 @@ function CartItem({ item, onSaveForLater }) {
           <div className="cart-item-price-row">
             <span className="cart-item-price">₹{item.price}</span>
             {item.originalPrice && <span className="cart-item-orig">₹{item.originalPrice}</span>}
+            {item.qty > 1 && (
+              <span className="cart-item-line-total">= ₹{item.price * item.qty}</span>
+            )}
           </div>
         )}
         <div className="cart-item-controls">

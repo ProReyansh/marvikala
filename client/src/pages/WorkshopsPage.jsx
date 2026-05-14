@@ -203,23 +203,26 @@ function WorkshopCard({ ws, onClick }) {
   const isFull = ws.seatsLeft === 0;
 
   return (
-    <div className="ws-card" style={{ background: ws.color }} onClick={onClick} role="button" tabIndex={0} onKeyDown={e => e.key === 'Enter' && onClick()}>
+    <div className="ws-card" style={{ '--ws-bg': ws.color, background: 'var(--white)' }} onClick={onClick} role="button" tabIndex={0} onKeyDown={e => e.key === 'Enter' && onClick()}>
       {ws.badge && <span className="ws-badge">{ws.badge}</span>}
       {isLow && !isFull && <span className="ws-badge ws-badge-low">⚡ {ws.seatsLeft} seats left</span>}
 
-      <div className="ws-card-top">
+      {/* Visual image area */}
+      <div className="ws-card-hero" style={{ background: ws.color }}>
         <span className="ws-card-emoji">{ws.emoji}</span>
-        <div className="ws-card-meta">
-          <span className="ws-level">{ws.level}</span>
-          <span className="ws-dot">·</span>
-          <span className="ws-duration">⏱ {ws.duration}</span>
-        </div>
+      </div>
+
+      {/* Meta row */}
+      <div className="ws-card-meta-row">
+        <span className="ws-level">{ws.level}</span>
+        <span className="ws-dot">·</span>
+        <span className="ws-duration">⏱ {ws.duration}</span>
       </div>
 
       <h3 className="ws-card-title">{ws.title}</h3>
 
       <div className="ws-card-date">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
         </svg>
         {formatDate(ws.date)} · {formatTime(ws.date)}
@@ -230,9 +233,12 @@ function WorkshopCard({ ws, onClick }) {
       {ws.upcoming && <SeatsIndicator left={ws.seatsLeft} total={ws.totalSeats} />}
 
       <div className="ws-card-footer">
-        <span className="ws-price">{ws.price} <span className="ws-price-per">/ person</span></span>
+        <div className="ws-footer-price">
+          <span className="ws-price">{ws.price}</span>
+          <span className="ws-price-per">/ person</span>
+        </div>
         <button className="ws-enquire-btn" onClick={e => { e.stopPropagation(); onClick(); }}>
-          {isFull ? 'Waitlist' : 'View Details'}
+          {isFull ? 'Join Waitlist' : 'View Details →'}
         </button>
       </div>
     </div>
