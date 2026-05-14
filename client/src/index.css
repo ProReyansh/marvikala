@@ -721,10 +721,10 @@ body {
   aspect-ratio: 1 / 1;
 }
 @media (max-width: 768px) {
-  .categories-3x3-grid { padding: 0 16px; }
+  .categories-3x3-grid { padding: 0 25px; }
 }
 @media (max-width: 480px) {
-  .categories-3x3-grid { gap: 10px; padding: 0 14px; }
+  .categories-3x3-grid { gap: 10px; padding: 0 25px; }
   .categories-3x3-grid .cat-card-body { padding: 7px 4px 9px; }
   .categories-3x3-grid .cat-name { font-size: 10px; }
 }
