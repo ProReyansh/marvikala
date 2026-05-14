@@ -920,24 +920,24 @@ export default function AdminDashboard() {
                   const timeStr = d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
                   const isFull  = ws.seatsLeft === 0;
                   return (
-                    <div key={ws._id} style={{ display: 'flex', alignItems: 'center', gap: 14, background: 'var(--cream)', border: '1px solid var(--border)', borderRadius: 12, padding: '14px 16px' }}>
-                      <span style={{ fontSize: 28, flexShrink: 0 }}>{ws.emoji}</span>
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', marginBottom: 2 }}>
-                          <span style={{ fontWeight: 700, fontSize: 14, color: 'var(--text)' }}>{ws.title}</span>
+                    <div key={ws._id} className="admin-ws-row">
+                      <span className="admin-ws-row-emoji">{ws.emoji}</span>
+                      <div className="admin-ws-row-info">
+                        <div className="admin-ws-row-title-row">
+                          <span className="admin-ws-row-title">{ws.title}</span>
                           {ws.upcoming
-                            ? <span style={{ fontSize: 10, fontWeight: 700, background: 'rgba(45,191,167,0.12)', color: 'var(--olive)', borderRadius: 99, padding: '2px 8px' }}>Upcoming</span>
-                            : <span style={{ fontSize: 10, fontWeight: 700, background: 'var(--cream-mid)', color: 'var(--text-light)', borderRadius: 99, padding: '2px 8px' }}>Past</span>
+                            ? <span className="admin-ws-badge admin-ws-badge-upcoming">Upcoming</span>
+                            : <span className="admin-ws-badge admin-ws-badge-past">Past</span>
                           }
-                          {isFull && <span style={{ fontSize: 10, fontWeight: 700, background: '#fee2e2', color: '#dc2626', borderRadius: 99, padding: '2px 8px' }}>Full</span>}
+                          {isFull && <span className="admin-ws-badge admin-ws-badge-full">Full</span>}
                         </div>
-                        <div style={{ fontSize: 12, color: 'var(--text-mid)' }}>
+                        <div className="admin-ws-row-meta">
                           📅 {dateStr} · {timeStr} &nbsp;·&nbsp; {ws.seatsLeft}/{ws.totalSeats} seats &nbsp;·&nbsp; {ws.price}
                         </div>
                       </div>
-                      <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
-                        <button onClick={() => openEditWs(ws)} style={{ background: 'none', border: '1px solid var(--border)', borderRadius: 8, padding: '6px 12px', fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: 'var(--sans)', color: 'var(--text)' }}>Edit</button>
-                        <button onClick={() => handleWsDelete(ws)} style={{ background: 'none', border: '1px solid #fca5a5', borderRadius: 8, padding: '6px 12px', fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: 'var(--sans)', color: '#dc2626' }}>Delete</button>
+                      <div className="admin-ws-row-actions">
+                        <button className="admin-ws-btn-edit" onClick={() => openEditWs(ws)}>Edit</button>
+                        <button className="admin-ws-btn-delete" onClick={() => handleWsDelete(ws)}>Delete</button>
                       </div>
                     </div>
                   );
@@ -967,7 +967,7 @@ export default function AdminDashboard() {
                 <textarea className="form-input form-textarea" rows={3} value={wsForm.description} onChange={e => setWsForm(f => ({ ...f, description: e.target.value }))} placeholder="What participants will learn and do..." />
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+              <div className="admin-ws-form-grid">
                 <div className="form-group">
                   <label>Date *</label>
                   <input className="form-input" type="date" value={wsForm.date} onChange={e => setWsForm(f => ({ ...f, date: e.target.value }))} />

@@ -2837,21 +2837,42 @@ body {
   .product-modal-body     { padding: 18px 20px 24px; }
   .product-modal-name     { font-size: 18px; }
 
-  /* Admin */
-  .admin-navbar       { padding: 0 12px; height: 56px; }
-  .admin-logo-icon    { width: 26px; height: 26px; }
-  .admin-navbar-brand { gap: 7px; flex-shrink: 0; }
-  .admin-navbar h1    { font-size: 13px; white-space: nowrap; }
+  /* Admin — full mobile overhaul */
+  .admin-navbar {
+    padding: 0 14px;
+    height: auto;
+    min-height: 54px;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+  .admin-navbar-brand { flex: 1; min-width: 0; gap: 8px; }
+  .admin-logo-icon    { width: 28px; height: 28px; flex-shrink: 0; }
+  .admin-navbar h1    { font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .admin-view-site    { display: none; }
-  .admin-navbar-right { gap: 6px; }
-  .btn-add            { padding: 5px 10px; font-size: 11px; }
-  .btn-logout         { padding: 5px 9px; font-size: 11px; }
-  .admin-content    { padding: 16px; }
-  .admin-stats      { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-  .stat-card        { padding: 16px; }
+  .admin-navbar-right { gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+  .btn-add    { font-size: 12px; padding: 7px 14px; border-radius: 50px; }
+  .btn-logout { font-size: 12px; padding: 7px 12px; }
+  .admin-content    { padding: 14px; }
+  .admin-stats      { grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 20px; }
+  .stat-card        { padding: 14px 16px; border-radius: 12px; }
+  .stat-card .stat-label { font-size: 10px; }
   .stat-card .stat-value { font-size: 22px; }
-  .admin-grid       { grid-template-columns: 1fr; }
-  .admin-modal-scroll { padding: 24px 20px; }
+  .stat-card .stat-icon  { font-size: 20px; }
+  .admin-grid         { grid-template-columns: 1fr; gap: 12px; }
+  .admin-products-header { margin-bottom: 14px; }
+  .admin-products-header h2 { font-size: 17px; }
+  .admin-modal-overlay { padding: 0; align-items: flex-end; }
+  .admin-modal {
+    border-radius: 20px 20px 0 0;
+    max-width: 100%;
+    max-height: 92vh;
+    width: 100%;
+  }
+  .admin-modal-scroll { padding: 22px 18px 32px; }
+  .admin-modal h2     { font-size: 18px; margin-bottom: 18px; }
+  .admin-ws-form-grid { grid-template-columns: 1fr; }
 
   /* Product page */
   .product-page            { padding: 16px 16px 48px; }
@@ -7711,10 +7732,37 @@ body {
   align-items: flex-end;
 }
 @media (max-width: 600px) {
-  .admin-tabs { padding: 0 16px; }
-  .admin-tab-btn { padding: 12px 14px; font-size: 13px; }
-  .admin-coll-section { padding: 20px 16px; }
+  /* Tabs — scrollable strip, no wrapping */
+  .admin-tabs {
+    padding: 0;
+    padding-left: 14px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .admin-tabs::-webkit-scrollbar { display: none; }
+  .admin-tab-btn {
+    white-space: nowrap;
+    flex-shrink: 0;
+    padding: 12px 14px;
+    font-size: 12px;
+  }
+  /* Collections panel */
+  .admin-collections-panel { max-width: 100%; }
+  .admin-coll-section { padding: 18px 14px; margin-bottom: 14px; }
+  .admin-coll-section h2 { font-size: 17px; }
   .admin-coll-form-row { flex-direction: column; }
+  .admin-coll-most-loved-row { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .admin-coll-list { gap: 8px; }
+  .admin-coll-item { padding: 10px 12px; gap: 10px; }
+
+  /* Workshop row items */
+  .admin-ws-row { flex-wrap: wrap; padding: 12px 14px; gap: 10px; }
+  .admin-ws-row-info { width: 100%; order: 2; }
+  .admin-ws-row-emoji { order: 1; }
+  .admin-ws-row-actions { order: 3; width: 100%; }
+  .admin-ws-btn-edit,
+  .admin-ws-btn-delete { flex: 1; justify-content: center; }
 }
 
 
@@ -9821,4 +9869,127 @@ body {
 .btn-outline {
   font-size: 14.5px;
   letter-spacing: -0.1px;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   ADMIN — WORKSHOP ROW + FORM CLASSES
+══════════════════════════════════════════════════════════════════════════════ */
+
+/* Workshop list row */
+.admin-ws-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--cream);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+.admin-ws-row-emoji {
+  font-size: 28px;
+  flex-shrink: 0;
+  line-height: 1;
+}
+.admin-ws-row-info {
+  flex: 1;
+  min-width: 0;
+}
+.admin-ws-row-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+}
+.admin-ws-row-title {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--text);
+}
+.admin-ws-row-meta {
+  font-size: 12px;
+  color: var(--text-mid);
+  line-height: 1.5;
+}
+
+/* Workshop row badges */
+.admin-ws-badge {
+  font-size: 10px;
+  font-weight: 700;
+  border-radius: 99px;
+  padding: 2px 8px;
+  flex-shrink: 0;
+}
+.admin-ws-badge-upcoming {
+  background: rgba(45,191,167,0.12);
+  color: var(--olive);
+}
+.admin-ws-badge-past {
+  background: var(--cream-mid);
+  color: var(--text-light);
+}
+.admin-ws-badge-full {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+/* Workshop row action buttons */
+.admin-ws-row-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.admin-ws-btn-edit,
+.admin-ws-btn-delete {
+  background: none;
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--sans);
+  transition: background 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+.admin-ws-btn-edit {
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+.admin-ws-btn-edit:hover {
+  border-color: var(--olive);
+  background: var(--cream);
+}
+.admin-ws-btn-delete {
+  border: 1px solid #fca5a5;
+  color: #dc2626;
+}
+.admin-ws-btn-delete:hover {
+  background: #fef2f2;
+}
+
+/* Workshop modal form 2-col grid */
+.admin-ws-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+/* Section title used in admin panels */
+.admin-coll-section-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--navy);
+  margin: 0 0 8px;
+  font-family: var(--sans);
+}
+.admin-coll-saved {
+  display: inline-block;
+  background: #d4f5ec;
+  color: #1a7a5e;
+  border: 1px solid #a8e6d4;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 16px;
 }
