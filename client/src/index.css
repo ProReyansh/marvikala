@@ -1680,7 +1680,7 @@ body {
 }
 
 .admin-navbar-brand { display: flex; align-items: center; gap: 10px; }
-.admin-logo-icon { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+.admin-logo-icon { height: 52px; width: auto; display: block; mix-blend-mode: multiply; flex-shrink: 0; }
 .admin-navbar h1 { font-size: 18px; font-weight: 700; }
 .admin-navbar h1 span { color: var(--olive); }
 
@@ -2864,7 +2864,7 @@ body {
     padding-bottom: 10px;
   }
   .admin-navbar-brand { flex: 1; min-width: 0; gap: 8px; }
-  .admin-logo-icon    { width: 28px; height: 28px; flex-shrink: 0; }
+  .admin-logo-icon    { height: 40px; width: auto; }
   .admin-navbar h1    { font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .admin-view-site    { display: none; }
   .admin-navbar-right { gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
