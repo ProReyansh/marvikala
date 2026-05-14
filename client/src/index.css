@@ -1823,7 +1823,23 @@ body {
 
 .admin-product-info { padding: 14px 16px; display: flex; flex-direction: column; flex: 1; }
 .admin-product-name { font-size: 14px; font-weight: 600; margin-bottom: 3px; color: var(--text); }
-.admin-product-cat  { font-size: 11px; color: var(--text-light); margin-bottom: 6px; text-transform: capitalize; }
+.admin-product-cat  { font-size: 11px; color: var(--text-light); margin-bottom: 5px; text-transform: capitalize; }
+.admin-product-price {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+.admin-price-current {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--olive);
+}
+.admin-price-original {
+  font-size: 11px;
+  color: var(--text-light);
+  text-decoration: line-through;
+}
 .admin-product-desc {
   font-size: 11px;
   color: #aaa;

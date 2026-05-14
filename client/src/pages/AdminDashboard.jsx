@@ -445,7 +445,7 @@ export default function AdminDashboard() {
       {/* Admin Navbar */}
       <div className="admin-navbar">
         <div className="admin-navbar-brand">
-          <img src="/logo.jpg" alt="Marvikala" className="admin-logo-icon" />
+          <img src="/logo-new.png" alt="Marvikala" className="admin-logo-icon" />
           <h1>Marvi<span>kala</span> Admin</h1>
         </div>
         <div className="admin-navbar-right">
@@ -576,6 +576,12 @@ export default function AdminDashboard() {
                           <div className="admin-product-cat">
                             {CATEGORIES.find((c) => c.key === product.category)?.label || product.category}
                           </div>
+                          {(product.price || product.originalPrice) && (
+                            <div className="admin-product-price">
+                              {product.price && <span className="admin-price-current">₹{product.price}</span>}
+                              {product.originalPrice && <span className="admin-price-original">₹{product.originalPrice}</span>}
+                            </div>
+                          )}
                           {product.description && (
                             <div className="admin-product-desc">{product.description}</div>
                           )}
