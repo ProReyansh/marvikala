@@ -101,6 +101,8 @@ export default function Home() {
   const [bouncingCat, setBouncingCat]       = useState(null);
   const [showPopup, setShowPopup]           = useState(false);
   const [heroImageUrl, setHeroImageUrl]     = useState('');
+  const [heroHeading, setHeroHeading]       = useState('');
+  const [heroSubtitle, setHeroSubtitle]     = useState('');
 
   // True only on the very first ever visit — mark visited immediately so
   // navigating back to home (same session or later) never re-triggers intro animations.
@@ -135,6 +137,12 @@ export default function Home() {
   useEffect(() => {
     axios.get('/api/settings/hero-image')
       .then((res) => { if (res.data.url) setHeroImageUrl(res.data.url); })
+      .catch(() => {});
+    axios.get('/api/settings/hero-text')
+      .then((res) => {
+        if (res.data.heading)  setHeroHeading(res.data.heading);
+        if (res.data.subtitle) setHeroSubtitle(res.data.subtitle);
+      })
       .catch(() => {});
   }, []);
 
@@ -317,13 +325,10 @@ export default function Home() {
             {/* Text content — positioned over the image */}
             <div className="hero-content">
               <h1>
-                Handmade with love,<br />
-                crafted for your<br />
-                everyday joy ♡
+                {heroHeading || <>Handmade with love,<br />crafted for your<br />everyday joy ♡</>}
               </h1>
               <p className="hero-desc">
-                Thoughtfully handmade creations that bring warmth,<br className="hero-br" />
-                charm and happiness into your life.
+                {heroSubtitle || <>Thoughtfully handmade creations that bring warmth,<br className="hero-br" />charm and happiness into your life.</>}
               </p>
               <div className="hero-btns">
                 <button

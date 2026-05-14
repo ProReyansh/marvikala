@@ -41,6 +41,54 @@ router.get('/hero-image', async (req, res) => {
   }
 });
 
+// GET /api/settings/hero-text — public
+router.get('/hero-text', async (req, res) => {
+  try {
+    const [headingSetting, subtitleSetting] = await Promise.all([
+      Settings.findOne({ key: 'heroHeading' }),
+      Settings.findOne({ key: 'heroSubtitle' }),
+    ]);
+    res.json({
+      heading:  headingSetting?.value  || '',
+      subtitle: subtitleSetting?.value || '',
+    });
+  } catch {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// POST /api/settings/hero-text — admin only
+router.post('/hero-text', authMiddleware, async (req, res) => {
+  try {
+    const { heading, subtitle } = req.body;
+    await Promise.all([
+      Settings.findOneAndUpdate(
+        { key: 'heroHeading' },
+        { value: (heading || '').trim() },
+        { upsert: true, new: true }
+      ),
+      Settings.findOneAndUpdate(
+        { key: 'heroSubtitle' },
+        { value: (subtitle || '').trim() },
+        { upsert: true, new: true }
+      ),
+    ]);
+    res.json({ heading: (heading || '').trim(), subtitle: (subtitle || '').trim() });
+  } catch {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// DELETE /api/settings/hero-text — revert to defaults
+router.delete('/hero-text', authMiddleware, async (req, res) => {
+  try {
+    await Settings.deleteMany({ key: { $in: ['heroHeading', 'heroSubtitle'] } });
+    res.json({ heading: '', subtitle: '' });
+  } catch {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 // POST /api/settings/hero-image — admin only
 router.post('/hero-image', authMiddleware, heroUpload.single('image'), async (req, res) => {
   try {
