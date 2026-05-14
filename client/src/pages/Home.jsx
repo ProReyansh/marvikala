@@ -448,47 +448,16 @@ export default function Home() {
             </section>
           )}
 
-          {/* BESTSELLERS (horizontal scroll) */}
+          {/* BESTSELLERS */}
           {!loading && bestsellers.length > 0 && (
             <section className="section fade-section" id="bestsellers">
               <div className="section-head">
                 <h2>Our Bestsellers</h2>
               </div>
-              <div className="h-scroll-row">
-                {bestsellers.slice(0, 10).map((product) => {
-                  const imgSrc = (() => {
-                    const imgs = product.images?.length > 0 ? product.images : (product.image ? [product.image] : []);
-                    if (!imgs[0]) return null;
-                    return imgs[0].startsWith('http') ? imgs[0] : `/uploads/${imgs[0]}`;
-                  })();
-                  return (
-                    <div
-                      key={product._id}
-                      className="product-card-h"
-                      onClick={() => navigate(productUrl(product), { state: { product } })}
-                    >
-                      <div className="product-card-h-img">
-                        {imgSrc
-                          ? <img src={imgSrc} alt={product.name} />
-                          : <span>🧶</span>
-                        }
-                      </div>
-                      <div className="product-card-h-body">
-                        <div className="product-card-h-name">{product.name}</div>
-                        <div className="product-card-h-price">
-                          {product.price
-                            ? <span className="price-sale">₹{product.price}</span>
-                            : <span className="price-enquire">Enquire for price</span>
-                          }
-                          {product.originalPrice && (
-                            <span className="price-original">₹{product.originalPrice}</span>
-                          )}
-                        </div>
-                        <CartQtyBtn product={product} addClassName="product-card-h-btn" />
-                      </div>
-                    </div>
-                  );
-                })}
+              <div className="new-arrivals-2x2">
+                {bestsellers.slice(0, 8).map((product) => (
+                  <ProductCard key={product._id} product={product} />
+                ))}
               </div>
               <button className="view-all-btn" onClick={() => navigate('/bestsellers')}>
                 View All Bestsellers →

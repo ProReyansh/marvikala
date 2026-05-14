@@ -721,10 +721,10 @@ body {
   aspect-ratio: 1 / 1;
 }
 @media (max-width: 768px) {
-  .categories-3x3-grid { padding: 0 25px; }
+  .categories-3x3-grid { padding: 0 20px; }
 }
 @media (max-width: 480px) {
-  .categories-3x3-grid { gap: 10px; padding: 0 25px; }
+  .categories-3x3-grid { gap: 10px; padding: 0 20px; }
   .categories-3x3-grid .cat-card-body { padding: 7px 4px 9px; }
   .categories-3x3-grid .cat-name { font-size: 10px; }
 }
@@ -10064,12 +10064,14 @@ body {
   letter-spacing: 0.3px;
 }
 
-/* ── New Arrivals 2×2 grid ── */
+/* ── New Arrivals / Bestsellers 2-column grid ── */
 .new-arrivals-2x2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
 }
+/* Hide description inside the compact 2-col grids */
+.new-arrivals-2x2 .product-desc { display: none; }
 @media (max-width: 480px) {
   .new-arrivals-2x2 { gap: 12px; }
 }
