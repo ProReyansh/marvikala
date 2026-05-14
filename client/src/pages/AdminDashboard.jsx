@@ -446,7 +446,7 @@ export default function AdminDashboard() {
       <div className="admin-navbar">
         <div className="admin-navbar-brand">
           <img src="/logo-new.png" alt="Marvikala" className="admin-logo-icon" />
-          <h1>Marvi<span>kala</span> Admin</h1>
+          <h1>Admin</h1>
         </div>
         <div className="admin-navbar-right">
           <a href="/" target="_blank" rel="noreferrer" className="admin-view-site">
