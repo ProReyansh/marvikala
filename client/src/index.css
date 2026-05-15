@@ -720,11 +720,8 @@ body {
 .categories-3x3-grid .cat-card-img {
   aspect-ratio: 1 / 1;
 }
-@media (max-width: 768px) {
-  .categories-3x3-grid { padding: 0 20px; }
-}
 @media (max-width: 480px) {
-  .categories-3x3-grid { gap: 10px; padding: 0 20px; }
+  .categories-3x3-grid { gap: 10px; }
   .categories-3x3-grid .cat-card-body { padding: 7px 4px 9px; }
   .categories-3x3-grid .cat-name { font-size: 10px; }
 }
@@ -3400,8 +3397,8 @@ body {
 
 /* ═══ SECTION PADDING MOBILE (base — overridden by refinements block below) ═══ */
 @media (max-width: 768px) {
-  .section { padding: 40px 0 !important; }
-  .section-head { padding: 0 20px; margin-bottom: 24px !important; }
+  .section { padding: 40px 20px !important; }
+  .section-head { margin-bottom: 24px !important; }
   .section-head h2 { font-size: 24px !important; }
   .custom-banner { padding: 32px 20px !important; flex-direction: column !important; text-align: center !important; gap: 20px !important; display: flex !important; grid-template-columns: none !important; margin: 0 0 40px !important; border-radius: 0 !important; }
   .about-section { padding: 36px 20px !important; }
@@ -4257,8 +4254,8 @@ body {
 
 @media (max-width: 768px) {
   /* Breathe between sections */
-  .section { padding: 40px 0 !important; }
-  .section-head { padding: 0 20px; margin-bottom: 24px !important; }
+  .section { padding: 40px 20px !important; }
+  .section-head { margin-bottom: 24px !important; }
   .section-head h2 { font-size: 24px !important; line-height: 1.25; }
   .section-head p { font-size: 13px !important; margin-top: 6px; }
 
@@ -7593,7 +7590,7 @@ body {
   .story-teaser--text-only { padding: 96px 80px; }
 }
 @media (max-width: 600px) {
-  .story-teaser--text-only { padding: 52px 24px; }
+  .story-teaser--text-only { padding: 52px 20px; }
   .story-teaser-label { font-size: 30px; }
   .story-teaser-heading { font-size: 12px; }
 }
@@ -7830,7 +7827,7 @@ body {
 ══════════════════════════════════════════════════════════════════════════════ */
 .workshop-teaser {
   background: linear-gradient(135deg, #eef4e0 0%, #e0edd4 100%);
-  padding: 60px 24px;
+  padding: 60px 20px;
   text-align: center;
 }
 .workshop-teaser-inner {
@@ -7928,7 +7925,7 @@ body {
 @media (max-width: 600px) {
   .home-links-section { grid-template-columns: 1fr; }
   .home-links-card:first-child { border-right: none; border-bottom: 1.5px solid var(--border); }
-  .home-links-card { padding: 36px 24px; }
+  .home-links-card { padding: 36px 20px; }
   .home-links-title { font-size: 19px; }
 }
 
@@ -7938,7 +7935,7 @@ body {
 ══════════════════════════════════════════════════════════════════════════════ */
 .how-to-order-teaser {
   background: var(--white);
-  padding: 60px 24px;
+  padding: 60px 20px;
   border-top: 1.5px solid var(--border);
   border-bottom: 1.5px solid var(--border);
 }
@@ -10070,7 +10067,6 @@ body {
   align-items: center;
   justify-content: center;
   gap: 14px;
-  padding: 0 20px;
 }
 .na-carousel-card {
   flex: 1;
@@ -10132,9 +10128,6 @@ body {
 }
 /* Hide description inside the compact 2-col grids */
 .new-arrivals-2x2 .product-desc { display: none; }
-@media (max-width: 768px) {
-  .new-arrivals-2x2 { padding: 0 20px; }
-}
 @media (max-width: 480px) {
-  .new-arrivals-2x2 { gap: 12px; padding: 0 20px; }
+  .new-arrivals-2x2 { gap: 12px; }
 }
