@@ -104,6 +104,7 @@ export default function Home() {
   const [heroHeading, setHeroHeading]       = useState('');
   const [heroSubtitle, setHeroSubtitle]     = useState('');
   const [naIndex, setNaIndex]               = useState(0);
+  const [reviewIndex, setReviewIndex]       = useState(0);
 
   // True only on the very first ever visit — mark visited immediately so
   // navigating back to home (same session or later) never re-triggers intro animations.
@@ -564,18 +565,47 @@ export default function Home() {
                 <h2>Loved by Customers</h2>
                 <p>Kind words from 100+ happy customers across Mumbai</p>
               </div>
-              <div className="reviews-grid">
-                {STATIC_REVIEWS.map((r) => (
-                  <div key={r.id} className="review-card">
-                    <div className="review-stars">
-                      {[1,2,3,4,5].map((s) => (
-                        <span key={s} className="review-star">★</span>
-                      ))}
-                    </div>
-                    <p className="review-text">"{r.text}"</p>
-                    <div className="review-author">{r.author}</div>
-                    <div className="review-location">{r.location}</div>
-                  </div>
+              <div className="na-carousel">
+                <button
+                  className="na-arrow"
+                  onClick={() => setReviewIndex(i => (i - 1 + STATIC_REVIEWS.length) % STATIC_REVIEWS.length)}
+                  aria-label="Previous review"
+                >
+                  ‹
+                </button>
+                <div className="na-carousel-card review-carousel-card" key={reviewIndex}>
+                  {(() => {
+                    const r = STATIC_REVIEWS[reviewIndex];
+                    return (
+                      <div className="review-card">
+                        <div className="review-stars">
+                          {[1,2,3,4,5].map((s) => (
+                            <span key={s} className="review-star">★</span>
+                          ))}
+                        </div>
+                        <p className="review-text">"{r.text}"</p>
+                        <div className="review-author">{r.author}</div>
+                        <div className="review-location">{r.location}</div>
+                      </div>
+                    );
+                  })()}
+                </div>
+                <button
+                  className="na-arrow"
+                  onClick={() => setReviewIndex(i => (i + 1) % STATIC_REVIEWS.length)}
+                  aria-label="Next review"
+                >
+                  ›
+                </button>
+              </div>
+              <div className="na-dots">
+                {STATIC_REVIEWS.map((_, i) => (
+                  <button
+                    key={i}
+                    className={`na-dot${i === reviewIndex ? ' na-dot-active' : ''}`}
+                    onClick={() => setReviewIndex(i)}
+                    aria-label={`Go to review ${i + 1}`}
+                  />
                 ))}
               </div>
             </section>

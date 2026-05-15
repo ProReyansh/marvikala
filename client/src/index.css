@@ -10078,6 +10078,8 @@ body {
 }
 .na-carousel-card .product-desc { display: none; }
 .na-carousel-card .product-img  { height: auto; aspect-ratio: 1 / 1; }
+/* Review card inside carousel fills full width */
+.review-carousel-card .review-card { width: 100%; box-sizing: border-box; }
 @keyframes naSlideIn {
   from { opacity: 0; transform: translateY(12px) scale(0.97); }
   to   { opacity: 1; transform: translateY(0)   scale(1);     }
