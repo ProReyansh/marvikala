@@ -257,24 +257,6 @@ export default function Home() {
 
   return (
     <>
-      {/* TOP RIBBON — marquee on mobile, static on desktop */}
-      <div className="top-ribbon">
-        <div className="top-ribbon-track">
-          <span>📍 Based in Mumbai</span>
-          <span className="ribbon-sep">|</span>
-          <span>🚛 Free delivery over ₹999</span>
-          <span className="ribbon-sep">|</span>
-          <span>🌍 Shipping Pan India</span>
-          <span className="ribbon-gap">✦</span>
-          <span>📍 Based in Mumbai</span>
-          <span className="ribbon-sep">|</span>
-          <span>🚛 Free delivery over ₹999</span>
-          <span className="ribbon-sep">|</span>
-          <span>🌍 Shipping Pan India</span>
-          <span className="ribbon-gap">✦</span>
-        </div>
-      </div>
-
       <Navbar searchQuery={searchQuery} onSearch={handleSearch} />
 
       {/* ── SEARCH MODE ── */}

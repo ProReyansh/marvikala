@@ -259,10 +259,25 @@ body {
    NAVBAR
    ═══════════════════════════════════════════ */
 
-.navbar {
-  position: sticky;
+/* Fixed header wrapper — ribbon + navbar always pinned to top */
+.fixed-header {
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 100;
+}
+
+/* Spacer pushes page content below the fixed header */
+.fixed-header-spacer         { height: 64px; }   /* no ribbon */
+.fixed-header-spacer.with-ribbon { height: 96px; } /* ribbon (32px) + navbar (64px) */
+@media (max-width: 599px) {
+  .fixed-header-spacer            { height: 56px; }
+  .fixed-header-spacer.with-ribbon { height: 88px; }
+}
+
+.navbar {
+  position: relative;
   background: var(--white);
   padding: 0 48px;
   height: 64px;
@@ -271,9 +286,6 @@ body {
   justify-content: space-between;
   gap: 16px;
   border-bottom: 1px solid var(--border);
-  position: sticky;
-  top: 0;
-  z-index: 100;
 }
 
 .navbar-logo {
@@ -2962,7 +2974,7 @@ body {
    ═══════════════════════════════════════════ */
 
 /* ═══ TOP RIBBON ═══ */
-.top-ribbon { background: var(--olive); color: #fff; font-size: 11px; font-family: var(--sans); overflow: hidden; }
+.top-ribbon { background: var(--olive); color: #fff; font-size: 11px; font-family: var(--sans); overflow: hidden; height: 32px; display: flex; align-items: center; }
 /* Mobile: scrolling marquee; Desktop: static centered */
 .top-ribbon-track { display: inline-flex; align-items: center; gap: 14px; padding: 7px 0; white-space: nowrap; animation: topRibbonScroll 22s linear infinite; }
 .ribbon-sep { opacity: 0.4; }
