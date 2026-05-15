@@ -3388,12 +3388,7 @@ body {
 .insta-item:nth-child(6) { background: linear-gradient(135deg,#fff0d8,#f8d48c); }
 .insta-item:hover { transform: scale(0.97); opacity: 0.9; }
 
-/* ═══ REVIEWS (horizontal scroll on mobile) ═══ */
-@media (max-width: 768px) {
-  .reviews-grid { display: flex !important; flex-direction: row !important; overflow-x: auto; gap: 14px !important; padding: 4px 20px 12px; scroll-snap-type: x mandatory; scrollbar-width: none; margin-top: 24px !important; }
-  .reviews-grid::-webkit-scrollbar { display: none; }
-  .review-card { flex-shrink: 0 !important; width: 260px !important; scroll-snap-align: start; }
-}
+/* ═══ REVIEWS ═══ */
 
 /* ═══ SECTION PADDING MOBILE (base — overridden by refinements block below) ═══ */
 @media (max-width: 768px) {
