@@ -222,6 +222,24 @@ export default function Navbar({ searchQuery, onSearch }) {
   return (
     <>
       <div className="fixed-header">
+        {isHome && (
+          <div className="top-ribbon">
+            <div className="top-ribbon-track">
+              <span>📍 Based in Mumbai</span>
+              <span className="ribbon-sep">|</span>
+              <span>🚛 Free delivery over ₹999</span>
+              <span className="ribbon-sep">|</span>
+              <span>🌍 Shipping Pan India</span>
+              <span className="ribbon-gap">✦</span>
+              <span>📍 Based in Mumbai</span>
+              <span className="ribbon-sep">|</span>
+              <span>🚛 Free delivery over ₹999</span>
+              <span className="ribbon-sep">|</span>
+              <span>🌍 Shipping Pan India</span>
+              <span className="ribbon-gap">✦</span>
+            </div>
+          </div>
+        )}
       <nav className={`navbar${scrolled ? ' navbar-scrolled' : ''}`} ref={navRef}>
         {/* LEFT: Hamburger (mobile) */}
         <button
@@ -300,7 +318,7 @@ export default function Navbar({ searchQuery, onSearch }) {
         </div>
       </nav>
       </div>{/* end .fixed-header */}
-      <div className="fixed-header-spacer" aria-hidden="true" />
+      <div className={`fixed-header-spacer${isHome ? ' with-ribbon' : ''}`} aria-hidden="true" />
 
       {/* MOBILE SEARCH PANEL */}
       <div
