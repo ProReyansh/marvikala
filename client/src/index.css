@@ -10072,6 +10072,9 @@ body {
 }
 /* Hide description inside the compact 2-col grids */
 .new-arrivals-2x2 .product-desc { display: none; }
+@media (max-width: 768px) {
+  .new-arrivals-2x2 { padding: 0 20px; }
+}
 @media (max-width: 480px) {
-  .new-arrivals-2x2 { gap: 12px; }
+  .new-arrivals-2x2 { gap: 12px; padding: 0 20px; }
 }
