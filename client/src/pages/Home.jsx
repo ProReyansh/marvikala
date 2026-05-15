@@ -259,6 +259,24 @@ export default function Home() {
     <>
       <Navbar searchQuery={searchQuery} onSearch={handleSearch} />
 
+      {/* TOP RIBBON — scrolls away naturally, navbar stays fixed */}
+      <div className="top-ribbon">
+        <div className="top-ribbon-track">
+          <span>📍 Based in Mumbai</span>
+          <span className="ribbon-sep">|</span>
+          <span>🚛 Free delivery over ₹999</span>
+          <span className="ribbon-sep">|</span>
+          <span>🌍 Shipping Pan India</span>
+          <span className="ribbon-gap">✦</span>
+          <span>📍 Based in Mumbai</span>
+          <span className="ribbon-sep">|</span>
+          <span>🚛 Free delivery over ₹999</span>
+          <span className="ribbon-sep">|</span>
+          <span>🌍 Shipping Pan India</span>
+          <span className="ribbon-gap">✦</span>
+        </div>
+      </div>
+
       {/* ── SEARCH MODE ── */}
       {q ? (
         <section className="search-results-page">
