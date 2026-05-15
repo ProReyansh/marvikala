@@ -10064,6 +10064,63 @@ body {
   letter-spacing: 0.3px;
 }
 
+/* ── New Arrivals Carousel ── */
+.na-carousel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 0 20px;
+}
+.na-carousel-card {
+  flex: 1;
+  max-width: 280px;
+  animation: naSlideIn 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+}
+@keyframes naSlideIn {
+  from { opacity: 0; transform: translateY(12px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0)   scale(1);     }
+}
+.na-arrow {
+  flex-shrink: 0;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 2px solid var(--olive);
+  background: var(--white);
+  color: var(--olive);
+  font-size: 22px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, transform 0.12s;
+  font-family: var(--sans);
+}
+.na-arrow:hover { background: var(--olive); color: #fff; }
+.na-arrow:active { transform: scale(0.92); }
+.na-dots {
+  display: flex;
+  justify-content: center;
+  gap: 7px;
+  margin-top: 18px;
+}
+.na-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  border: none;
+  background: var(--border);
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.2s, transform 0.2s;
+}
+.na-dot-active {
+  background: var(--olive);
+  transform: scale(1.3);
+}
+
 /* ── New Arrivals / Bestsellers 2-column grid ── */
 .new-arrivals-2x2 {
   display: grid;
