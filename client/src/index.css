@@ -2974,10 +2974,11 @@ body {
    ═══════════════════════════════════════════ */
 
 /* ═══ TOP RIBBON ═══ */
-.top-ribbon { background: var(--olive); color: #fff; font-size: 11px; font-family: var(--sans); height: 32px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-.top-ribbon-track { display: inline-flex; align-items: center; gap: 10px; padding: 0 16px; white-space: nowrap; }
+.top-ribbon { background: var(--olive); color: #fff; font-size: 11px; font-family: var(--sans); height: 32px; display: flex; align-items: center; overflow: hidden; }
+.top-ribbon-track { display: inline-flex; align-items: center; gap: 14px; padding: 7px 0; white-space: nowrap; animation: topRibbonScroll 22s linear infinite; }
 .ribbon-sep { opacity: 0.4; }
-.ribbon-gap { display: none; }
+.ribbon-gap { opacity: 0.22; font-size: 9px; margin: 0 4px; }
+@keyframes topRibbonScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
 /* ═══ NAVBAR ICON BUTTONS (shared) ═══ */
 .navbar-icon-btn {
