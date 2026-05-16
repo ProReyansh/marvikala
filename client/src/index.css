@@ -268,13 +268,9 @@ body {
   z-index: 100;
 }
 
-/* Spacer pushes page content below the fixed header */
-.fixed-header-spacer         { height: 64px; }   /* no ribbon */
-.fixed-header-spacer.with-ribbon { height: 96px; } /* ribbon (32px) + navbar (64px) */
-@media (max-width: 599px) {
-  .fixed-header-spacer            { height: 56px; }
-  .fixed-header-spacer.with-ribbon { height: 88px; }
-}
+/* Spacer pushes page content below the fixed ribbon */
+.fixed-header-spacer              { height: 0; }
+.fixed-header-spacer.with-ribbon  { height: 32px; }
 
 .navbar {
   position: relative;
