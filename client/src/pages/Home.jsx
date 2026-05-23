@@ -101,6 +101,7 @@ export default function Home() {
   const [heroImageUrl, setHeroImageUrl]     = useState('');
   const [heroHeading, setHeroHeading]       = useState('');
   const [heroSubtitle, setHeroSubtitle]     = useState('');
+  const [naIndex, setNaIndex]               = useState(0);
   const [reviewIndex, setReviewIndex]       = useState(0);
 
   // True only on the very first ever visit — mark visited immediately so
@@ -480,21 +481,33 @@ export default function Home() {
             </button>
           </div>
 
-          {/* NEW ARRIVALS — single-card carousel */}
-          {!loading && products.filter(p => p.newArrival).length > 0 && (
-            <section className="section fade-section" id="new-arrivals">
-              <div className="section-head">
-                <h2>New Arrivals</h2>
-              </div>
-              <div className="na-scroll-track">
-                {products.filter(p => p.newArrival).map(product => (
-                  <div className="na-scroll-item" key={product._id}>
-                    <ProductCard product={product} />
+          {/* NEW ARRIVALS — dot carousel, no arrows */}
+          {!loading && products.filter(p => p.newArrival).length > 0 && (() => {
+            const newArrivals = products.filter(p => p.newArrival);
+            const idx = Math.min(naIndex, newArrivals.length - 1);
+            return (
+              <section className="section fade-section" id="new-arrivals">
+                <div className="section-head">
+                  <h2>New Arrivals</h2>
+                </div>
+                <div className="na-carousel-card" key={idx}>
+                  <ProductCard product={newArrivals[idx]} />
+                </div>
+                {newArrivals.length > 1 && (
+                  <div className="na-dots">
+                    {newArrivals.map((_, i) => (
+                      <button
+                        key={i}
+                        className={`na-dot${i === idx ? ' na-dot-active' : ''}`}
+                        onClick={() => setNaIndex(i)}
+                        aria-label={`Go to item ${i + 1}`}
+                      />
+                    ))}
                   </div>
-                ))}
-              </div>
-            </section>
-          )}
+                )}
+              </section>
+            );
+          })()}
 
           {/* BESTSELLERS */}
           {!loading && bestsellers.length > 0 && (
