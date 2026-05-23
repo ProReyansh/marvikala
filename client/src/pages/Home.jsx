@@ -103,6 +103,7 @@ export default function Home() {
   const [heroSubtitle, setHeroSubtitle]     = useState('');
   const [naIndex, setNaIndex]               = useState(0);
   const [reviewIndex, setReviewIndex]       = useState(0);
+  const reviewTrackRef = useRef(null);
 
   // True only on the very first ever visit — mark visited immediately so
   // navigating back to home (same session or later) never re-triggers intro animations.
@@ -619,10 +620,17 @@ export default function Home() {
                 <h2>Loved by Customers</h2>
                 <p>Kind words from 100+ happy customers across Mumbai</p>
               </div>
-              <div className="na-carousel-card review-carousel-card" key={reviewIndex}>
-                {(() => {
-                  const r = STATIC_REVIEWS[reviewIndex];
-                  return (
+              <div
+                className="na-swipe-track"
+                ref={reviewTrackRef}
+                onScroll={() => {
+                  const el = reviewTrackRef.current;
+                  if (!el) return;
+                  setReviewIndex(Math.round(el.scrollLeft / el.offsetWidth));
+                }}
+              >
+                {STATIC_REVIEWS.map((r) => (
+                  <div className="na-swipe-item" key={r.id}>
                     <div className="review-card">
                       <div className="review-stars">
                         {[1,2,3,4,5].map((s) => (
@@ -633,15 +641,18 @@ export default function Home() {
                       <div className="review-author">{r.author}</div>
                       <div className="review-location">{r.location}</div>
                     </div>
-                  );
-                })()}
+                  </div>
+                ))}
               </div>
               <div className="na-dots">
                 {STATIC_REVIEWS.map((_, i) => (
                   <button
                     key={i}
                     className={`na-dot${i === reviewIndex ? ' na-dot-active' : ''}`}
-                    onClick={() => setReviewIndex(i)}
+                    onClick={() => {
+                      const el = reviewTrackRef.current;
+                      if (el) el.scrollTo({ left: i * el.offsetWidth, behavior: 'smooth' });
+                    }}
                     aria-label={`Go to review ${i + 1}`}
                   />
                 ))}
