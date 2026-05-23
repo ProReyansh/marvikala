@@ -454,6 +454,13 @@ export default function Navbar({ searchQuery, onSearch }) {
             aria-label="WhatsApp" className="drawer-social-link drawer-wa">
             <WaIcon size={24} />
           </a>
+          <a href="mailto:marvikala.shop@gmail.com"
+            aria-label="Email" className="drawer-social-link drawer-email">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="2" y="4" width="20" height="16" rx="2"/>
+              <polyline points="2,4 12,13 22,4"/>
+            </svg>
+          </a>
         </div>
 
         <div className="drawer-footer">
