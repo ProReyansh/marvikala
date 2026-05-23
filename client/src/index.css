@@ -7082,7 +7082,7 @@ body {
 }
 .story-teaser-label {
   font-family: var(--serif);
-  font-size: 40px;
+  font-size: 28px;
   font-weight: 800;
   color: var(--navy);
   line-height: 1.1;
@@ -7107,7 +7107,7 @@ body {
 }
 @media (max-width: 600px) {
   .story-teaser--text-only { padding: 52px 20px; }
-  .story-teaser-label { font-size: 30px; }
+  .story-teaser-label { font-size: 22px; }
   .story-teaser-heading { font-size: 12px; }
 }
 
