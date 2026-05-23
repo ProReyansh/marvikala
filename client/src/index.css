@@ -2890,8 +2890,8 @@ body {
   .cat-name         { font-size: 11px; }
 
   /* Products */
-  .products-grid    { grid-template-columns: 1fr; }
-  .product-img      { height: 190px; }
+  .products-grid    { grid-template-columns: repeat(2, 1fr); }
+  .product-img      { height: 170px; }
 
   /* Process */
   .process-grid { grid-template-columns: 1fr; gap: 14px; }
