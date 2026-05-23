@@ -918,8 +918,8 @@ body {
 }
 
 .bestseller-badge {
-  background: #d4a017 !important;
-  color: white !important;
+  background: var(--yellow) !important;
+  color: var(--navy) !important;
 }
 
 .out-of-stock-overlay {
