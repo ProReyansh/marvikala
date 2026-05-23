@@ -235,7 +235,6 @@ export default function Home() {
         </div>
         <div className="product-info">
           <div className="product-name">{product.name}</div>
-          {product.description && <div className="product-desc">{product.description}</div>}
           <div className="product-cat">{CAT_LABEL[product.category] || product.category}</div>
           {(product.price || product.originalPrice) && (
             <div className="product-price-row">
