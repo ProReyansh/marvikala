@@ -4070,8 +4070,8 @@ body {
   display: flex;
   flex-wrap: nowrap;
   justify-content: center;
-  gap: 0;
-  margin: 0 24px;
+  gap: 14px;
+  margin: 0 25px;
   background: var(--cream-mid);
   border: 1px solid var(--border);
   border-radius: 16px;
@@ -4110,7 +4110,7 @@ body {
 }
 
 @media (max-width: 768px) {
-  .feature-strip { flex-wrap: nowrap; margin: 0 16px; border-radius: 12px; }
+  .feature-strip { flex-wrap: nowrap; margin: 0 25px; border-radius: 12px; gap: 14px; }
   .feature-strip-item { padding: 14px 6px; }
   .feature-strip-icon { width: 22px; height: 22px; }
   .feature-strip-label { font-size: 9px; }
