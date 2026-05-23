@@ -9905,4 +9905,10 @@ body {
   .home-links-title               { font-size: 22px !important; }
   .story-teaser-label             { font-size: 22px !important; }
 }
+/* ── Reduce top space above Shop by Collection ── */
+#collections { padding-top: 28px !important; }
+@media (max-width: 768px) {
+  #collections { padding-top: 22px !important; }
+}
+
 /* cache bust */
