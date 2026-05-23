@@ -9366,7 +9366,7 @@ body {
 /* ── 1. Product card images: aspect-ratio (fix fixed 210px height) ── */
 .product-img {
   height: auto !important;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 4 / 3;
   width: 100%;
   border-radius: 0;             /* card overflow:hidden handles it */
   background: var(--cream-mid);
