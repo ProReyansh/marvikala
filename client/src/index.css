@@ -4072,7 +4072,7 @@ body {
   justify-content: center;
   gap: 8px;
   margin: 0;
-  background: var(--cream-mid);
+  background: #fff;
   border: 1px solid var(--border);
   border-radius: 0;
   overflow: hidden;
@@ -9417,29 +9417,29 @@ body {
 
 /* ── 3. Feature strip — single box, no dividers ── */
 .feature-strip {
-  background: var(--cream-mid);
+  background: #fff;
   border: 1px solid var(--border);
   border-top: none;
   border-bottom: none;
   gap: 8px;
 }
 .feature-strip-item {
-  padding: 18px 7px;
-  gap: 8px;
+  padding: 10px 4px;
+  gap: 5px;
   border-right: none;
 }
-.feature-strip-icon { width: 28px; height: 28px; }
+.feature-strip-icon { width: 20px; height: 20px; }
 .feature-strip-label {
-  font-size: 11px;
+  font-size: 9px;
   font-weight: 700;
   color: var(--text-mid);
   letter-spacing: 0.1px;
 }
 
 @media (max-width: 600px) {
-  .feature-strip-item { padding: 16px 4px; gap: 6px; border-right: none; }
-  .feature-strip-icon { width: 20px; height: 20px; }
-  .feature-strip-label { font-size: 9.5px; }
+  .feature-strip-item { padding: 8px 3px; gap: 4px; border-right: none; }
+  .feature-strip-icon { width: 18px; height: 18px; }
+  .feature-strip-label { font-size: 8px; }
 }
 
 /* ── 4. Review cards — warmer, lift on hover ── */
