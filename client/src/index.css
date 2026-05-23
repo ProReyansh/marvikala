@@ -3068,7 +3068,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 10px;
+    padding: 0 18px;
     height: 56px;
     flex-wrap: nowrap;
   }
@@ -3083,7 +3083,7 @@ body {
   /* Logo — absolute centre, never pushed by side elements */
   .navbar-logo {
     position: absolute;
-    left: 50%;
+    left: calc(50% - 10px);
     transform: translateX(-50%);
   }
   .navbar-logo:hover  { transform: translateX(-50%) scale(1.06); }
