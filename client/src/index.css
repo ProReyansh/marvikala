@@ -10007,4 +10007,15 @@ body {
   scroll-snap-align: start;
 }
 
+/* ── Global: remove blue focus ring on all buttons/links ── */
+button:focus,
+button:focus-visible,
+a:focus,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
 /* cache bust */
