@@ -57,7 +57,7 @@ export default function ContactPage() {
     setErrors(prev => ({ ...prev, [name]: newErrors[name] }));
   }
 
-  async function handleSubmit(e) {
+  function handleSubmit(e) {
     e.preventDefault();
     setTouched({ name: true, email: true, message: true });
     const errs = validate(form);
@@ -66,22 +66,16 @@ export default function ContactPage() {
       return;
     }
 
-    setStatus('loading');
-    setErrors({});
+    const subject = encodeURIComponent(`Message from ${form.name}`);
+    const body = encodeURIComponent(
+      `Name: ${form.name}\nEmail: ${form.email}${form.phone ? `\nPhone: ${form.phone}` : ''}\n\nMessage:\n${form.message}`
+    );
+    window.location.href = `mailto:marvikala.shop@gmail.com?subject=${subject}&body=${body}`;
 
-    // Simulate async submit (replace with real API call / EmailJS)
-    await new Promise(res => setTimeout(res, 1400));
-
-    // Simulate 90% success rate
-    if (Math.random() > 0.1) {
-      setStatus('success');
-      toast({ message: "Message sent! We'll get back to you soon.", type: 'success', duration: 4000 });
-      setForm({ name: '', email: '', phone: '', message: '' });
-      setTouched({});
-    } else {
-      setStatus('error');
-      toast({ message: 'Something went wrong. Please try WhatsApp instead.', type: 'error' });
-    }
+    setStatus('success');
+    toast({ message: "Opening your email app — thanks for reaching out!", type: 'success', duration: 4000 });
+    setForm({ name: '', email: '', phone: '', message: '' });
+    setTouched({});
   }
 
   function resetForm() { setStatus('idle'); setErrors({}); setForm({ name: '', email: '', phone: '', message: '' }); setTouched({}); }
