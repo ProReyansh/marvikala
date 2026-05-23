@@ -59,8 +59,9 @@ export default function Navbar({ searchQuery, onSearch }) {
 
   const showSuggestions = searchOpen && suggestions.length > 0 && searchQuery.trim().length >= 2;
 
-  // Scroll tracking: update navbar shadow + close search on scroll
+  // Scroll tracking: update navbar shadow + close search on scroll/swipe
   const scrollAtOpen = useRef(0);
+  const touchStartY  = useRef(0);
   useEffect(() => {
     function onScroll() {
       setScrolled(window.scrollY > 8);
@@ -68,8 +69,22 @@ export default function Navbar({ searchQuery, onSearch }) {
       const diff = Math.abs(window.scrollY - scrollAtOpen.current);
       if (diff > 40) setSearchOpen(false);
     }
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    function onTouchStart(e) {
+      touchStartY.current = e.touches[0].clientY;
+    }
+    function onTouchMove(e) {
+      if (!searchOpen) return;
+      const dy = touchStartY.current - e.touches[0].clientY;
+      if (Math.abs(dy) > 30) setSearchOpen(false);
+    }
+    window.addEventListener('scroll',     onScroll,     { passive: true });
+    window.addEventListener('touchstart', onTouchStart, { passive: true });
+    window.addEventListener('touchmove',  onTouchMove,  { passive: true });
+    return () => {
+      window.removeEventListener('scroll',     onScroll);
+      window.removeEventListener('touchstart', onTouchStart);
+      window.removeEventListener('touchmove',  onTouchMove);
+    };
   }, [searchOpen]);
 
   // Hide dropdown on outside click
