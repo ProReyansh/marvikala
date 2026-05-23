@@ -918,7 +918,7 @@ body {
 }
 
 .bestseller-badge {
-  background: var(--olive) !important;
+  background: #d4a017 !important;
   color: white !important;
 }
 
@@ -7001,6 +7001,7 @@ body {
   background: var(--teal);
   color: #fff;
   border: none;
+  outline: none;
   width: 40px;
   height: 40px;
   display: flex;
@@ -7014,6 +7015,7 @@ body {
   flex-shrink: 0;
   transition: background 0.15s;
 }
+.cart-qty-btn:focus { outline: none; }
 .cart-qty-btn:hover { background: var(--olive-hover); }
 .cart-qty-btn--minus { border-radius: 50px 0 0 50px; }
 .cart-qty-btn--plus  { border-radius: 0 50px 50px 0; }
@@ -9970,6 +9972,7 @@ body {
 .pc-cart-icon-ctrl button {
   background: none;
   border: none;
+  outline: none;
   color: var(--teal);
   font-size: 16px;
   font-weight: 700;
@@ -9977,6 +9980,8 @@ body {
   line-height: 1;
   padding: 0 2px;
 }
+.pc-cart-icon-btn:focus { outline: none; }
+.pc-cart-icon-ctrl button:focus { outline: none; }
 .pc-cart-icon-ctrl span {
   font-size: 13px;
   font-weight: 700;
