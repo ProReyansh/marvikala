@@ -118,26 +118,29 @@ function ShopCard({ product }) {
 
   return (
     <div
-      className="sa-card"
+      className="product-card"
       onClick={() => navigate(`/product/${slugify(product.name)}`, { state: { product } })}
     >
-      <div className="sa-card-img">
-        {imgSrc ? <img src={imgSrc} alt={product.name} /> : <span className="sa-card-placeholder">🧶</span>}
-        {(product.bestseller || product.featured) && (
-          <span className="sa-card-badge">Bestseller</span>
-        )}
-        {!product.inStock && <div className="sa-card-oos">Out of Stock</div>}
+      <div className="product-img">
+        {imgSrc ? <img src={imgSrc} alt={product.name} /> : <span>🧶</span>}
+        {product.newArrival ? (
+          <span className="product-badge new-arrival-badge">New</span>
+        ) : (product.bestseller || product.featured) ? (
+          <span className="product-badge bestseller-badge">Bestseller</span>
+        ) : null}
+        {!product.inStock && <div className="out-of-stock-overlay">Out of Stock</div>}
       </div>
-      <div className="sa-card-body">
-        <div className="sa-card-cat">{CAT_LABEL[product.category] || product.category}</div>
-        <div className="sa-card-name">{product.name}</div>
+      <div className="product-info">
+        <div className="product-name">{product.name}</div>
+        {product.description && <div className="product-desc">{product.description}</div>}
+        <div className="product-cat">{CAT_LABEL[product.category] || product.category}</div>
         {(product.price || product.originalPrice) && (
-          <div className="sa-card-price-row">
-            {product.price && <span className="sa-card-price-sale">₹{product.price}</span>}
-            {product.originalPrice && <span className="sa-card-price-orig">₹{product.originalPrice}</span>}
+          <div className="product-price-row">
+            {product.price && <span className="price-sale">₹{product.price}</span>}
+            {product.originalPrice && <span className="price-original">₹{product.originalPrice}</span>}
           </div>
         )}
-        <CartQtyBtn product={product} addClassName="sa-card-btn" />
+        <CartQtyBtn product={product} addClassName="enquire-btn" />
       </div>
     </div>
   );
@@ -150,8 +153,6 @@ export default function ShopAllPage() {
   const [products, setProducts]   = useState(getCachedProducts);
   const [loading, setLoading]     = useState(() => getCachedProducts().length === 0);
   const [searchQuery, setSearchQuery] = useState('');
-  const [exiting, setExiting]     = useState(false);
-
   const [activeFilter, setActiveFilter] = useState('all');
   const [activeSort, setActiveSort]     = useState('default');
   const [filterOpen, setFilterOpen]     = useState(false);
@@ -220,7 +221,7 @@ export default function ShopAllPage() {
 
       <Navbar searchQuery={searchQuery} onSearch={handleSearch} />
 
-      <div className={`sa-page${exiting ? ' page-exiting' : ''}`}>
+      <div className="sa-page">
 
         {/* ── Header Row ── */}
         <div className="sa-header-row">
@@ -279,7 +280,7 @@ export default function ShopAllPage() {
             <p>No products found</p>
           </div>
         ) : (
-          <div className="sa-grid" key={`${activeFilter}-${activeSort}`}>
+          <div className="products-grid" key={`${activeFilter}-${activeSort}`}>
             {sorted.map(p => (
               <ShopCard key={p._id} product={p} />
             ))}
