@@ -9914,4 +9914,10 @@ body {
   #collections { padding-top: 22px !important; }
 }
 
+/* ── Reduce top space above New Arrivals ── */
+#new-arrivals { padding-top: 24px !important; }
+@media (max-width: 768px) {
+  #new-arrivals { padding-top: 18px !important; }
+}
+
 /* cache bust */
