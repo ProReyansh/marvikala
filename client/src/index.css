@@ -9925,15 +9925,15 @@ body {
 }
 
 /* ── Reduce top space above New Arrivals ── */
-#new-arrivals { padding-top: 24px !important; }
+#new-arrivals { padding-top: 24px !important; padding-bottom: 20px !important; }
 @media (max-width: 768px) {
-  #new-arrivals { padding-top: 18px !important; }
+  #new-arrivals { padding-top: 18px !important; padding-bottom: 16px !important; }
 }
 
 /* ── Reduce top space above Our Bestsellers ── */
-#bestsellers { padding-top: 24px !important; }
+#bestsellers { padding-top: 20px !important; }
 @media (max-width: 768px) {
-  #bestsellers { padding-top: 18px !important; }
+  #bestsellers { padding-top: 16px !important; }
 }
 
 /* ── Product card — stock status label ── */
