@@ -7999,14 +7999,11 @@ body {
 
 /* ── Cart: premium empty state ── */
 .cart-empty {
-  padding: 100px 24px 80px;
+  padding: 48px 24px 80px;
   gap: 16px;
 }
 .cart-empty-lottie {
-  font-size: 64px;
-  line-height: 1;
-  margin-bottom: 4px;
-  animation: fadeUpIn 0.5s cubic-bezier(0.22,1,0.36,1) 0.1s both;
+  display: none;
 }
 .cart-empty-title {
   font-size: 24px;
