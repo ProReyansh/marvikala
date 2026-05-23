@@ -275,7 +275,6 @@ export default function ShopAllPage() {
           </div>
         ) : sorted.length === 0 ? (
           <div className="sa-empty">
-            <div className="sa-empty-icon"></div>
             <p>No products found</p>
           </div>
         ) : (

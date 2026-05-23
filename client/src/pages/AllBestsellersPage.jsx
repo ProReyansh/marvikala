@@ -106,7 +106,6 @@ export default function AllBestsellersPage() {
           <div className="sa-loading"><div className="spinner" /></div>
         ) : bestsellers.length === 0 ? (
           <div className="sa-empty">
-            <div className="sa-empty-icon"></div>
             <p>No bestsellers yet — check back soon!</p>
           </div>
         ) : (

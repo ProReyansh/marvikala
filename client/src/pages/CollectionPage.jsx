@@ -136,7 +136,6 @@ export default function CollectionPage() {
           <div className="sa-loading"><div className="spinner" /></div>
         ) : filtered.length === 0 ? (
           <div className="sa-empty">
-            <div className="sa-empty-icon"></div>
             <p>No products in this collection yet.<br />Check back soon!</p>
           </div>
         ) : (

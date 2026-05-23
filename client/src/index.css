@@ -542,7 +542,6 @@ body {
   color: var(--text-light);
 }
 
-.search-empty-icon { font-size: 56px; margin-bottom: 20px; }
 .search-empty h3   { font-family: var(--serif); font-size: 22px; font-weight: 600; color: var(--text); margin-bottom: 10px; }
 .search-empty p    { font-size: 15px; color: var(--text-mid); line-height: 1.6; }
 
@@ -2250,7 +2249,6 @@ body {
   padding: 12px;
 }
 
-.product-page-placeholder { font-size: 80px; }
 
 .product-page-badge {
   position: absolute;
@@ -3836,7 +3834,6 @@ body {
   padding: 60px 20px;
   color: var(--text-light);
 }
-.sa-empty-icon { font-size: 52px; margin-bottom: 14px; }
 .sa-empty p { font-size: 15px; }
 
 /* ── Product Grid ── */
@@ -4639,7 +4636,6 @@ body {
   height: 100%;
   object-fit: cover;
 }
-.cart-item-placeholder { font-size: 28px; }
 
 .cart-item-info {
   flex: 1;
@@ -4873,7 +4869,6 @@ body {
   gap: 10px;
   margin-bottom: 14px;
 }
-.faq-section-icon { font-size: 17px; }
 .faq-section-title {
   font-size: 19px;
   font-weight: 700;
@@ -4954,7 +4949,6 @@ body {
   text-align: center;
   margin-bottom: 36px;
 }
-.ws-hero-emoji { font-size: 40px; margin-bottom: 12px; }
 .ws-hero-text {
   font-size: 15px;
   color: var(--text-mid);
@@ -5017,7 +5011,6 @@ body {
   align-items: center;
   gap: 12px;
 }
-.ws-card-emoji { font-size: 32px; }
 .ws-card-meta {
   display: flex;
   align-items: center;
@@ -5164,7 +5157,6 @@ body {
   align-items: center;
   gap: 8px;
 }
-.policy-icon { font-size: 18px; }
 .policy-section p {
   font-size: 14px;
   color: var(--text-mid);
@@ -5526,7 +5518,6 @@ body {
   padding: 12px 16px;
   margin: 12px 0 16px;
 }
-.pp-delivery-icon { font-size: 20px; flex-shrink: 0; }
 .pp-delivery-text { display: flex; flex-direction: column; gap: 2px; }
 .pp-delivery-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--olive); }
 .pp-delivery-date  { font-size: 13px; font-weight: 600; color: var(--text); }
@@ -5969,7 +5960,6 @@ body {
   padding: 48px 24px;
   color: var(--text-mid);
 }
-.faq-no-results-icon { font-size: 40px; margin-bottom: 12px; }
 .faq-clear-search {
   margin-top: 12px;
   padding: 8px 20px;
@@ -6135,7 +6125,6 @@ body {
 }
 .ws-modal-close:hover { background: var(--cream-mid); }
 
-.ws-modal-emoji { font-size: 36px; margin-bottom: 8px; }
 .ws-modal-badge { position: static; display: inline-block; margin-bottom: 8px; }
 .ws-modal-title {
   font-size: 21px;
@@ -6262,7 +6251,6 @@ body {
   border: 1px solid rgba(61,74,34,0.15);
   border-radius: 16px;
 }
-.contact-success-icon { font-size: 48px; margin-bottom: 12px; }
 .contact-success h3 {
   font-size: 22px;
   font-weight: 700;
@@ -6601,24 +6589,6 @@ body {
   z-index: 1;
 }
 
-.mk-popup-flowers {
-  display: flex;
-  gap: 8px;
-  margin-top: 10px;
-  position: relative;
-  z-index: 1;
-}
-.mk-popup-flower {
-  font-size: 20px;
-  animation: floatFlower 3s ease-in-out infinite;
-}
-.mk-popup-flower--2 {
-  animation-delay: 0.5s;
-  font-size: 18px;
-}
-.mk-popup-flower--3 {
-  animation-delay: 1s;
-}
 
 /* Body */
 .mk-popup-body {
@@ -6728,10 +6698,6 @@ body {
   background: var(--cream);
   white-space: nowrap;
   flex-shrink: 0;
-}
-.mk-popup-flag {
-  font-size: 18px;
-  line-height: 1;
 }
 .mk-popup-country-code {
   font-size: 14px;
@@ -6890,7 +6856,6 @@ body {
 .hto-step-num { width: 40px; height: 40px; border-radius: 50%; background: var(--yellow); color: var(--navy); font-weight: 800; font-size: 13px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .hto-step-line { width: 2px; flex: 1; background: var(--border); margin: 4px 0; min-height: 32px; }
 .hto-step-right { padding-bottom: 32px; flex: 1; }
-.hto-step-icon { font-size: 24px; margin-bottom: 6px; }
 .hto-step-title { font-family: var(--serif); font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
 .hto-step-desc { font-size: 14px; color: var(--text-mid); line-height: 1.65; }
 /* ── FLOATING WHATSAPP BUTTON ── */
@@ -7455,10 +7420,6 @@ body {
 }
 .home-links-card:hover {
   background: rgba(255,255,255,0.7);
-}
-.home-links-icon {
-  font-size: 32px;
-  margin-bottom: 14px;
 }
 .home-links-title {
   font-family: var(--serif);
@@ -8291,7 +8252,6 @@ body {
 }
 .faq-sections { gap: 32px; }
 .faq-section-header { margin-bottom: 16px; }
-.faq-section-icon { font-size: 17px; }
 .faq-section-title { font-size: 20px; }
 .faq-list { border-radius: 16px; }
 @media (max-width: 600px) {
@@ -8962,10 +8922,6 @@ body {
   color: var(--text-mid);
   line-height: 1.35;
 }
-.product-trust-item-icon {
-  font-size: 14px;
-  flex-shrink: 0;
-}
 @media (max-width: 480px) {
   .product-trust-row { grid-template-columns: 1fr; }
   .product-trust-item { font-size: 12px; }
@@ -9171,10 +9127,6 @@ body {
   transform: translateY(-3px);
 }
 
-.ws-card-emoji {
-  font-size: 38px;
-  line-height: 1;
-}
 
 .ws-card-title {
   font-size: 18px;
@@ -9525,12 +9477,6 @@ body {
   background: rgba(255,255,255,0.12);
 }
 
-.ws-card-emoji {
-  font-size: 52px;
-  position: relative;
-  z-index: 1;
-  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.08));
-}
 
 /* Content padding after hero */
 .ws-card-meta-row {
@@ -9597,7 +9543,6 @@ body {
 
 @media (max-width: 768px) {
   .ws-card-hero { height: 90px; }
-  .ws-card-emoji { font-size: 44px; }
   .ws-card-footer { flex-direction: row; align-items: center; margin: 10px 16px 16px; }
   .ws-card-meta-row,
   .ws-card-title,
