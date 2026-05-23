@@ -9990,21 +9990,21 @@ body {
   text-align: center;
 }
 
-/* ── New Arrivals scroll-snap track ── */
-.na-scroll-track {
+/* ── New Arrivals horizontal scroll ── */
+.na-hscroll {
   display: flex;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
-  gap: 16px;
-  padding: 0 4px 8px;
+  gap: 14px;
+  padding-bottom: 6px;
 }
-.na-scroll-track::-webkit-scrollbar { display: none; }
+.na-hscroll::-webkit-scrollbar { display: none; }
 
-.na-scroll-item {
-  flex: 0 0 calc(100% - 48px);
-  scroll-snap-align: center;
+.na-hscroll-item {
+  flex: 0 0 160px;
+  scroll-snap-align: start;
 }
 
 /* cache bust */
