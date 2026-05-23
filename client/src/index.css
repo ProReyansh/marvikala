@@ -9422,13 +9422,15 @@ body {
   border-top: none;
   border-bottom: none;
   gap: 8px;
+  justify-content: center;
 }
 .feature-strip-item {
-  padding: 10px 4px;
-  gap: 5px;
+  flex: 0 0 70px;
+  padding: 18px 4px;
+  gap: 6px;
   border-right: none;
 }
-.feature-strip-icon { width: 20px; height: 20px; }
+.feature-strip-icon { width: 22px; height: 22px; }
 .feature-strip-label {
   font-size: 9px;
   font-weight: 700;
@@ -9437,9 +9439,9 @@ body {
 }
 
 @media (max-width: 600px) {
-  .feature-strip-item { padding: 8px 3px; gap: 4px; border-right: none; }
-  .feature-strip-icon { width: 18px; height: 18px; }
-  .feature-strip-label { font-size: 8px; }
+  .feature-strip-item { flex: 0 0 62px; padding: 16px 3px; gap: 5px; border-right: none; }
+  .feature-strip-icon { width: 20px; height: 20px; }
+  .feature-strip-label { font-size: 8.5px; }
 }
 
 /* ── 4. Review cards — warmer, lift on hover ── */
