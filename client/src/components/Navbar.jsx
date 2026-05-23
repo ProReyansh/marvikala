@@ -59,14 +59,18 @@ export default function Navbar({ searchQuery, onSearch }) {
 
   const showSuggestions = searchOpen && suggestions.length > 0 && searchQuery.trim().length >= 2;
 
-  // Scroll tracking: update navbar shadow state only
+  // Scroll tracking: update navbar shadow + close search on scroll
+  const scrollAtOpen = useRef(0);
   useEffect(() => {
     function onScroll() {
       setScrolled(window.scrollY > 8);
+      if (!searchOpen) return;
+      const diff = Math.abs(window.scrollY - scrollAtOpen.current);
+      if (diff > 40) setSearchOpen(false);
     }
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
-  }, []);
+  }, [searchOpen]);
 
   // Hide dropdown on outside click
   useEffect(() => {
@@ -156,6 +160,7 @@ export default function Navbar({ searchQuery, onSearch }) {
   function handleSearchSubmit(e) { e.preventDefault(); }
 
   function openSearch() {
+    scrollAtOpen.current = window.scrollY;
     setSearchOpen(true);
     setTimeout(() => {
       if (window.innerWidth <= 768) mobileRef.current?.focus();
