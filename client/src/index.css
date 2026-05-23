@@ -3292,8 +3292,9 @@ body {
 }
 .drawer-social-link:hover  { transform: scale(1.08); }
 .drawer-social-link:active { transform: scale(0.92); }
-.drawer-ig { background: rgba(200,50,107,0.1); color: #C8326B; }
-.drawer-wa { background: rgba(37,211,102,0.1); color: #25d366; }
+.drawer-ig    { background: rgba(200,50,107,0.1); color: #C8326B; }
+.drawer-wa    { background: rgba(37,211,102,0.1); color: #25d366; }
+.drawer-email { background: rgba(0,150,136,0.1);  color: var(--teal); }
 
 /* ── Drawer footer — centered ── */
 .drawer-footer {
