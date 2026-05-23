@@ -70,39 +70,6 @@ const WORKSHOPS = [
     badge: 'Seasonal',
     upcoming: true,
   },
-  // Past workshops
-  {
-    id: 5,
-    title: 'Spring Flowers Workshop',
-    description: 'A lovely spring edition where participants made beautiful crochet bouquets and flower crowns.',
-    duration: '3 hours',
-    level: 'Beginner',
-    date: new Date('2026-03-15T11:00:00'),
-    seatsLeft: 0,
-    totalSeats: 10,
-    includes: [],
-    price: '₹799',
-    emoji: '🌷',
-    color: '#FEF0F0',
-    badge: null,
-    upcoming: false,
-  },
-  {
-    id: 6,
-    title: 'Valentine\'s Crochet Hearts',
-    description: 'A special Valentine\'s Day session creating heart keychains, bookmarks and small bouquets as gifts.',
-    duration: '2.5 hours',
-    level: 'All Levels',
-    date: new Date('2026-02-14T15:00:00'),
-    seatsLeft: 0,
-    totalSeats: 12,
-    includes: [],
-    price: '₹649',
-    emoji: '❤️',
-    color: '#FFF0F0',
-    badge: null,
-    upcoming: false,
-  },
 ];
 
 function formatDate(date) {
@@ -119,7 +86,7 @@ function SeatsIndicator({ left, total }) {
   return (
     <div className="ws-seats">
       <div className="ws-seats-bar">
-        <div className="ws-seats-fill" style={{ width: `${pct}%`, background: isFull ? '#dc2626' : isLow ? '#f59e0b' : '#3D4A22' }} />
+        <div className="ws-seats-fill" style={{ width: `${pct}%`, background: isFull ? '#dc2626' : isLow ? '#f59e0b' : '#6aaa3a' }} />
       </div>
       <span className={`ws-seats-label${isFull ? ' full' : isLow ? ' low' : ''}`}>
         {isFull ? 'Fully Booked' : `${left} of ${total} seats left`}
@@ -248,9 +215,7 @@ function WorkshopCard({ ws, onClick }) {
 
 export default function WorkshopsPage() {
   const navigate = useNavigate();
-  const [exiting, setExiting] = useState(false);
   const [selectedWs, setSelectedWs] = useState(null);
-  const [tab, setTab] = useState('upcoming');
   const [workshops, setWorkshops] = useState(WORKSHOPS); // static fallback
   const [wsLoading, setWsLoading] = useState(true);
 
@@ -268,7 +233,6 @@ export default function WorkshopsPage() {
   }, []);
 
   const upcomingList = workshops.filter(w => w.upcoming);
-  const pastList     = workshops.filter(w => !w.upcoming);
 
   return (
     <>
@@ -285,7 +249,7 @@ export default function WorkshopsPage() {
 
       <Navbar searchQuery="" onSearch={() => {}} />
 
-      <div className={`sa-page${exiting ? ' page-exiting' : ''}`}>
+      <div className="sa-page">
 
         <div className="sa-header-row">
           <h1 className="sa-title">Workshops</h1>
@@ -306,38 +270,13 @@ export default function WorkshopsPage() {
           </div>
         </div>
 
-        {/* Tabs */}
-        <div className="ws-tabs">
-          <button className={`ws-tab${tab === 'upcoming' ? ' active' : ''}`} onClick={() => setTab('upcoming')}>
-            Upcoming <span className="ws-tab-count">{upcomingList.length}</span>
-          </button>
-          <button className={`ws-tab${tab === 'past' ? ' active' : ''}`} onClick={() => setTab('past')}>
-            Past Workshops <span className="ws-tab-count">{pastList.length}</span>
-          </button>
-        </div>
-
         {/* Workshop cards */}
         <div className="ws-grid">
-          {(tab === 'upcoming' ? upcomingList : pastList).map(ws => (
+          {upcomingList.map(ws => (
             <WorkshopCard key={ws.id} ws={ws} onClick={() => setSelectedWs(ws)} />
           ))}
         </div>
 
-        {/* Private workshops CTA */}
-        <div className="ws-private-block">
-          <div className="ws-private-emoji">🏠</div>
-          <h3 className="ws-private-title">Private & Group Workshops</h3>
-          <p className="ws-private-desc">
-            Want to host a crochet session for your friends, office, or a special occasion?
-            We do private workshops at our studio or at your venue in Mumbai.
-          </p>
-          <a href="https://wa.me/919769238160?text=Hi! I'm interested in a private/group crochet workshop." className="faq-cta-btn" target="_blank" rel="noreferrer">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style={{ flexShrink: 0 }}>
-              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-            </svg>
-            Enquire Now
-          </a>
-        </div>
 
       </div>
 

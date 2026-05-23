@@ -35,7 +35,6 @@ function validate(form) {
 export default function ContactPage() {
   const navigate = useNavigate();
   const toast = useToast();
-  const [exiting, setExiting] = useState(false);
   const [form, setForm]       = useState({ name: '', email: '', phone: '', message: '' });
   const [errors, setErrors]   = useState({});
   const [status, setStatus]   = useState('idle'); // idle | loading | success | error
@@ -103,11 +102,11 @@ export default function ContactPage() {
 
       <Navbar searchQuery="" onSearch={() => {}} />
 
-      <main className={`contact-page-wrapper${exiting ? ' page-exiting' : ''}`}>
+      <div className="sa-page">
 
-        <div className="contact-page-header">
-          <h1 className="contact-page-title">Contact Us</h1>
-          <button className="contact-page-back" onClick={() => navigate(-1)}>← Back</button>
+        <div className="sa-header-row">
+          <h1 className="sa-title">Contact Us</h1>
+          <button className="sa-back-btn" onClick={() => navigate(-1)}>← Back</button>
         </div>
 
         <div className="contact-page-body">
@@ -228,7 +227,7 @@ export default function ContactPage() {
           </div>
 
         </div>
-      </main>
+      </div>
 
       <Footer />
     </>

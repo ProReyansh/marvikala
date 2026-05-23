@@ -1,11 +1,9 @@
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
 export default function PrivacyPage() {
   const navigate = useNavigate();
-  const [exiting, setExiting] = useState(false);
 
   return (
     <>
@@ -28,7 +26,7 @@ export default function PrivacyPage() {
 
       <Navbar searchQuery="" onSearch={() => {}} />
 
-      <div className={`sa-page${exiting ? ' page-exiting' : ''}`}>
+      <div className="sa-page">
 
         <div className="sa-header-row">
           <h1 className="sa-title">Privacy Policy</h1>
@@ -36,8 +34,6 @@ export default function PrivacyPage() {
         </div>
 
         <div className="policy-doc">
-          <p className="policy-updated">Last updated: January 2025</p>
-
           <div className="policy-intro">
             <p>
               At Marvikala, we respect your privacy and are committed to protecting any personal
@@ -97,17 +93,6 @@ export default function PrivacyPage() {
             </ul>
           </div>
 
-          <div className="policy-section">
-            <h2><span className="policy-icon">📱</span> Contact Us</h2>
-            <p>
-              If you have any questions about this privacy policy or how we handle your data,
-              please reach out to us:
-            </p>
-            <ul>
-              <li>WhatsApp: <a href="https://wa.me/919769238160" target="_blank" rel="noreferrer">+91 97692 38160</a></li>
-              <li>Instagram: <a href="https://instagram.com/marvikala" target="_blank" rel="noreferrer">@marvikala</a></li>
-            </ul>
-          </div>
         </div>
 
       </div>

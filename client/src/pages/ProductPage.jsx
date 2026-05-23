@@ -3,6 +3,7 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import CartQtyBtn from '../components/CartQtyBtn';
 import { useCart } from '../context/CartContext';
 import { useToast } from '../context/ToastContext';
 
@@ -141,28 +142,14 @@ export default function ProductPage() {
   const [imgAnimKey, setImgAnimKey] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
   const [qty, setQty]               = useState(1);
-  const [addedToCart, setAddedToCart] = useState(false);
   const [zoomOpen, setZoomOpen]     = useState(false);
-  const [stickyVisible, setStickyVisible] = useState(false);
   const [shared, setShared]         = useState(false);
 
   const [pageAnim, setPageAnim] = useState('pp-enter');
   const [exiting, setExiting]   = useState(false);
   const [similar, setSimilar]   = useState([]);
 
-  const addBtnRef    = useRef(null);
   const touchStartX  = useRef(null);
-
-  // Sticky bar — appears when add-to-cart button scrolls out of view
-  useEffect(() => {
-    if (!addBtnRef.current || !product) return;
-    const obs = new IntersectionObserver(
-      ([entry]) => setStickyVisible(!entry.isIntersecting),
-      { threshold: 0, rootMargin: '-72px 0px 0px 0px' }
-    );
-    obs.observe(addBtnRef.current);
-    return () => obs.disconnect();
-  }, [product]);
 
   useEffect(() => {
     setPageAnim('pp-enter');
@@ -171,7 +158,6 @@ export default function ProductPage() {
     setImgAnimKey(0);
     setSimilar([]);
     setQty(1);
-    setAddedToCart(false);
 
     function resolve(prod, all) {
       setProduct(prod);
@@ -267,15 +253,20 @@ export default function ProductPage() {
     return (
       <div className="product-card" onClick={() => navigate(`/product/${slugify(p.name)}`, { state: { product: p }, replace: true })}>
         <div className="product-img">
-          {imgSrc ? <img src={imgSrc} alt={p.name} loading="lazy" /> : <span>🧶</span>}
+          {imgSrc ? <img src={imgSrc} alt={p.name} /> : <span>🧶</span>}
           {(p.bestseller || p.featured) && <span className="product-badge bestseller-badge">Bestseller</span>}
           {!p.inStock && <div className="out-of-stock-overlay">Out of Stock</div>}
         </div>
         <div className="product-info">
           <div className="product-name">{p.name}</div>
-          {p.description && <div className="product-desc">{p.description}</div>}
           <div className="product-cat">{CAT_LABEL[p.category] || p.category}</div>
-          <button className="enquire-btn" style={{ pointerEvents: 'none' }}>View Product</button>
+          {(p.price || p.originalPrice) && (
+            <div className="product-price-row">
+              {p.price && <span className="price-sale">₹{p.price}</span>}
+              {p.originalPrice && <span className="price-original">₹{p.originalPrice}</span>}
+            </div>
+          )}
+          <CartQtyBtn product={p} addClassName="enquire-btn" />
         </div>
       </div>
     );
@@ -283,6 +274,16 @@ export default function ProductPage() {
 
   if (loading) return (
     <>
+      <div className="top-ribbon">
+        <div className="top-ribbon-track">
+          <span>📍 Based in Mumbai</span><span className="ribbon-sep">|</span>
+          <span>🚛 Free delivery over ₹999</span><span className="ribbon-sep">|</span>
+          <span>🌍 Shipping Pan India</span><span className="ribbon-gap">✦</span>
+          <span>📍 Based in Mumbai</span><span className="ribbon-sep">|</span>
+          <span>🚛 Free delivery over ₹999</span><span className="ribbon-sep">|</span>
+          <span>🌍 Shipping Pan India</span><span className="ribbon-gap">✦</span>
+        </div>
+      </div>
       <Navbar searchQuery={searchQuery} onSearch={handleSearch} />
       <ProductSkeleton />
       <Footer />
@@ -299,23 +300,17 @@ export default function ProductPage() {
 
   return (
     <>
-      <Navbar searchQuery={searchQuery} onSearch={handleSearch} />
-
-      {/* ── Sticky CTA Bar ── */}
-      <div className={`pp-sticky-bar${stickyVisible && product.inStock ? ' visible' : ''}`} aria-hidden={!stickyVisible}>
-        <div className="pp-sticky-inner">
-          <div className="pp-sticky-info">
-            <span className="pp-sticky-name">{product.name}</span>
-            {product.price && <span className="pp-sticky-price">₹{product.price}</span>}
-          </div>
-          <button
-            className="pp-sticky-btn"
-            onClick={handleAddToCart}
-          >
-            + Add to Cart
-          </button>
+      <div className="top-ribbon">
+        <div className="top-ribbon-track">
+          <span>📍 Based in Mumbai</span><span className="ribbon-sep">|</span>
+          <span>🚛 Free delivery over ₹999</span><span className="ribbon-sep">|</span>
+          <span>🌍 Shipping Pan India</span><span className="ribbon-gap">✦</span>
+          <span>📍 Based in Mumbai</span><span className="ribbon-sep">|</span>
+          <span>🚛 Free delivery over ₹999</span><span className="ribbon-sep">|</span>
+          <span>🌍 Shipping Pan India</span><span className="ribbon-gap">✦</span>
         </div>
       </div>
+      <Navbar searchQuery={searchQuery} onSearch={handleSearch} />
 
       {/* ── Zoom Lightbox ── */}
       {zoomOpen && images.length > 0 && (
@@ -436,9 +431,7 @@ export default function ProductPage() {
                   </div>
                 </div>
 
-                {/* Add to Cart — observed for sticky bar */}
                 <button
-                  ref={addBtnRef}
                   className="pp-add-cart-btn"
                   onClick={handleAddToCart}
                 >
@@ -477,54 +470,27 @@ export default function ProductPage() {
               </div>
             )}
 
-            <div className="product-page-divider" />
-
-            {/* Perks */}
-            <div className="product-page-perks">
-              <div className="perk-item">
-                <span className="perk-icon">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M18 11V6a2 2 0 0 0-2-2 2 2 0 0 0-2 2v0"/>
-                    <path d="M14 10V4a2 2 0 0 0-2-2 2 2 0 0 0-2 2v2"/>
-                    <path d="M10 10.5V6a2 2 0 0 0-2-2 2 2 0 0 0-2 2v8"/>
-                    <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/>
-                  </svg>
-                </span>
-                <div className="perk-text"><strong>100% Handmade</strong><span>Every piece crafted stitch by stitch with care</span></div>
+            {/* Trust signals row */}
+            <div className="product-trust-row">
+              <div className="product-trust-item">
+                <span className="product-trust-item-icon">🤝</span>
+                <span>Handmade with care</span>
               </div>
-              <div className="perk-item">
-                <span className="perk-icon">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-                    <line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/>
-                    <line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/>
-                    <line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/>
-                    <line x1="1" y1="14" x2="7" y2="14"/>
-                    <line x1="9" y1="8" x2="15" y2="8"/>
-                    <line x1="17" y1="16" x2="23" y2="16"/>
-                  </svg>
-                </span>
-                <div className="perk-text"><strong>Custom Colours & Sizes</strong><span>Tell us your preferences — we'll make it just for you!</span></div>
+              <div className="product-trust-item">
+                <span className="product-trust-item-icon">📦</span>
+                <span>Packed &amp; shipped in 2–4 days</span>
               </div>
-              <div className="perk-item">
-                <span className="perk-icon">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="1" y="3" width="15" height="13"/>
-                    <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
-                    <circle cx="5.5" cy="18.5" r="2.5"/>
-                    <circle cx="18.5" cy="18.5" r="2.5"/>
-                  </svg>
-                </span>
-                <div className="perk-text"><strong>Pan India Delivery</strong><span>Shipping across India with careful packaging</span></div>
+              <div className="product-trust-item">
+                <span className="product-trust-item-icon">🔄</span>
+                <span>Easy replacement if damaged</span>
               </div>
-              <div className="perk-item">
-                <span className="perk-icon">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-                  </svg>
-                </span>
-                <div className="perk-text"><strong>Made with Love</strong><span>From a small studio in Mumbai, just for you</span></div>
+              <div className="product-trust-item">
+                <span className="product-trust-item-icon">🔒</span>
+                <span>Secure WhatsApp checkout</span>
               </div>
             </div>
+
+            <div className="product-page-divider" />
 
             {/* Details accordion */}
             <Accordion items={[
@@ -600,8 +566,8 @@ export default function ProductPage() {
               <h2>You May Also Like</h2>
               <p>More from {catLabel}</p>
             </div>
-            <div className="products-grid">
-              {similar.map(p => <SimilarCard key={p._id} p={p} />)}
+            <div className="new-arrivals-2x2">
+              {similar.slice(0, 4).map(p => <SimilarCard key={p._id} p={p} />)}
             </div>
           </div>
         )}

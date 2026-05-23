@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react';
 
-const POPUP_KEY = 'mk_popup_v2_dismissed';
-const DELAY_MS  = 4000;
+const POPUP_KEY = 'mk_popup_v4_dismissed';
+const DELAY_MS  = 1000;
 
 export default function WelcomePopup({ forceShow = false, onClose }) {
   const [visible, setVisible] = useState(false);
   const [animate, setAnimate] = useState(false);
   const [phone, setPhone]     = useState('');
 
-  // Auto-show on first visit (4s delay)
+  // Auto-show on first visit only
   useEffect(() => {
     try { if (localStorage.getItem(POPUP_KEY)) return; } catch {}
     const t = setTimeout(() => show(), DELAY_MS);
