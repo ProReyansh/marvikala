@@ -9413,16 +9413,17 @@ body {
   margin: 0 0 12px;
 }
 
-/* ── 3. Feature strip — no background, clean white ── */
+/* ── 3. Feature strip — single box, no dividers ── */
 .feature-strip {
-  background: var(--white);
-  border-top: 1px solid rgba(42,32,22,0.07);
-  border-bottom: 1px solid rgba(42,32,22,0.07);
+  background: var(--cream-mid);
+  border: 1px solid var(--border);
+  border-top: none;
+  border-bottom: none;
 }
 .feature-strip-item {
   padding: 22px 8px;
   gap: 8px;
-  border-right: 1px solid rgba(42,32,22,0.07);
+  border-right: none;
 }
 .feature-strip-icon { width: 28px; height: 28px; }
 .feature-strip-label {
@@ -9433,7 +9434,7 @@ body {
 }
 
 @media (max-width: 600px) {
-  .feature-strip-item { padding: 16px 4px; gap: 6px; }
+  .feature-strip-item { padding: 16px 4px; gap: 6px; border-right: none; }
   .feature-strip-icon { width: 20px; height: 20px; }
   .feature-strip-label { font-size: 9.5px; }
 }
