@@ -3715,7 +3715,7 @@ body {
 /* Page title */
 .sa-title {
   font-family: var(--serif);
-  font-size: 26px;
+  font-size: 22px;
   font-weight: 700;
   color: var(--text);
   letter-spacing: -0.4px;
