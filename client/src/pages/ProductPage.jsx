@@ -211,7 +211,8 @@ export default function ProductPage() {
       if (q) sessionStorage.setItem('mk_focus_search', '1');
       else sessionStorage.removeItem('mk_focus_search');
     } catch {}
-    navigate('/');
+    if (q) navigate('/');
+    // If q is empty (user cancelled search), stay on product page
   }
 
   function handleAddToCart() {

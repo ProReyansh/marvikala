@@ -681,14 +681,16 @@ export default function Home() {
         </>
       )}
 
-      {/* Popup trigger — 10% off section */}
-      <div className="popup-trigger-wrap">
-        <h3 className="popup-trigger-heading">New here? Get 10% off your first order.</h3>
-        <p className="popup-trigger-subtext">Enter your details and we'll send you an exclusive discount code — just for you.</p>
-        <button className="popup-trigger-btn" onClick={() => setShowPopup(true)}>
-          Claim My 10% Off
-        </button>
-      </div>
+      {/* Popup trigger — 10% off section (hidden during search) */}
+      {!q && (
+        <div className="popup-trigger-wrap">
+          <h3 className="popup-trigger-heading">New here? Get 10% off your first order.</h3>
+          <p className="popup-trigger-subtext">Enter your details and we'll send you an exclusive discount code — just for you.</p>
+          <button className="popup-trigger-btn" onClick={() => setShowPopup(true)}>
+            Claim My 10% Off
+          </button>
+        </div>
+      )}
 
       <Footer />
 

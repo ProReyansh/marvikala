@@ -33,7 +33,6 @@ export default function Navbar({ searchQuery, onSearch }) {
   const mobileRef   = useRef();
   const navRef      = useRef();
   const dropdownRef = useRef();
-  const scrollAtOpen = useRef(0);
 
   const navigate  = useNavigate();
   const location  = useLocation();
@@ -60,23 +59,14 @@ export default function Navbar({ searchQuery, onSearch }) {
 
   const showSuggestions = searchOpen && suggestions.length > 0 && searchQuery.trim().length >= 2;
 
-  // Scroll tracking: collapse search when user scrolls down
+  // Scroll tracking: update navbar shadow state only
   useEffect(() => {
     function onScroll() {
       setScrolled(window.scrollY > 8);
-      if (!searchOpen) return;
-      const diff = Math.abs(window.scrollY - scrollAtOpen.current);
-      if (diff > 60 && !searchQuery) {
-        // No query typed yet — close search entirely on scroll
-        setSearchOpen(false);
-      } else if (diff > 120 && searchQuery) {
-        // Query typed — just hide dropdown (keep results visible below)
-        setSearchOpen(false);
-      }
     }
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
-  }, [searchOpen, searchQuery]);
+  }, []);
 
   // Hide dropdown on outside click
   useEffect(() => {
@@ -166,7 +156,6 @@ export default function Navbar({ searchQuery, onSearch }) {
   function handleSearchSubmit(e) { e.preventDefault(); }
 
   function openSearch() {
-    scrollAtOpen.current = window.scrollY;
     setSearchOpen(true);
     setTimeout(() => {
       if (window.innerWidth <= 768) mobileRef.current?.focus();
