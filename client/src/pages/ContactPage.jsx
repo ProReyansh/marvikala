@@ -134,6 +134,14 @@ export default function ContactPage() {
               </div>
               <span className="contact-reach-arrow">→</span>
             </a>
+            <a href="mailto:marvikala.shop@gmail.com" className="contact-reach-btn contact-email">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/></svg>
+              <div className="contact-reach-info">
+                <span className="contact-reach-label">Email</span>
+                <span className="contact-reach-value">marvikala.shop@gmail.com</span>
+              </div>
+              <span className="contact-reach-arrow">→</span>
+            </a>
           </div>
 
           {/* Form */}

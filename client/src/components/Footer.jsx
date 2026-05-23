@@ -79,6 +79,15 @@ export default function Footer() {
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="3.5"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
             </span>
           </a>
+          <a href="mailto:marvikala.shop@gmail.com" className="footer-connect-row" aria-label="Email">
+            <div className="footer-connect-text">
+              <span className="footer-connect-label">Email</span>
+              <span className="footer-connect-value">marvikala.shop@gmail.com</span>
+            </div>
+            <span className="footer-connect-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/></svg>
+            </span>
+          </a>
         </div>
       </div>
 
