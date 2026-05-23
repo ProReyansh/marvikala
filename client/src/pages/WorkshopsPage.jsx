@@ -173,9 +173,6 @@ function WorkshopCard({ ws, onClick }) {
       {ws.badge && <span className="ws-badge">{ws.badge}</span>}
       {isLow && !isFull && <span className="ws-badge ws-badge-low">{ws.seatsLeft} seats left</span>}
 
-      {/* Visual image area */}
-      <div className="ws-card-hero" style={{ background: ws.color }} />
-
       {/* Meta row */}
       <div className="ws-card-meta-row">
         <span className="ws-level">{ws.level}</span>
