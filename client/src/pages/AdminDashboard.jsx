@@ -34,9 +34,6 @@ function getStoredCollections() {
   return DEFAULT_COLLECTIONS;
 }
 
-function getMostLovedKey() {
-  try { return localStorage.getItem('mk_most_loved_collection') || 'flowers'; } catch { return 'flowers'; }
-}
 
 const EMPTY_FORM = {
   name: '', description: '', category: 'flowers',
@@ -256,19 +253,11 @@ export default function AdminDashboard() {
 
   // Collections tab state
   const [collections, setCollections]     = useState(getStoredCollections);
-  const [mostLovedKey, setMostLovedKey]   = useState(getMostLovedKey);
   const [collSaved, setCollSaved]         = useState(false);
   const [newColl, setNewColl]             = useState({ key: '', label: '', emoji: '🧶', desc: '', imgSeed: 'crochet' });
   const [collError, setCollError]         = useState('');
   const [editingColl, setEditingColl]     = useState(null);
   const [editCollForm, setEditCollForm]   = useState({ label: '', emoji: '', desc: '', img: '' });
-
-  function saveMostLoved(key) {
-    setMostLovedKey(key);
-    try { localStorage.setItem('mk_most_loved_collection', key); } catch {}
-    setCollSaved(true);
-    setTimeout(() => setCollSaved(false), 2000);
-  }
 
   function saveCollections(list) {
     setCollections(list);
@@ -292,13 +281,11 @@ export default function AdminDashboard() {
     if (!window.confirm('Remove this collection from the page?')) return;
     const next = collections.filter(c => c.key !== key);
     saveCollections(next);
-    if (mostLovedKey === key) saveMostLoved(next[0]?.key || 'flowers');
   }
 
   function handleResetCollections() {
     if (!window.confirm('Reset to default collections? This cannot be undone.')) return;
     saveCollections(DEFAULT_COLLECTIONS);
-    saveMostLoved('flowers');
   }
 
   function startEditColl(c) {
@@ -629,28 +616,6 @@ export default function AdminDashboard() {
               <div className="admin-coll-saved-toast">✓ Saved! Changes will appear on the Collections page.</div>
             )}
 
-            {/* Most Loved Collection */}
-            <div className="admin-coll-section">
-              <h2>✦ Most Loved Collection</h2>
-              <p className="admin-coll-desc">
-                This collection appears as the featured banner at the top of the Collections page.
-              </p>
-              <div className="admin-coll-most-loved-row">
-                <select
-                  className="filter-select"
-                  value={mostLovedKey}
-                  onChange={(e) => saveMostLoved(e.target.value)}
-                >
-                  {collections.map(c => (
-                    <option key={c.key} value={c.key}>{c.emoji} {c.label}</option>
-                  ))}
-                </select>
-                <span className="admin-coll-preview-label">
-                  Preview: <strong>{collections.find(c => c.key === mostLovedKey)?.label || '—'}</strong>
-                </span>
-              </div>
-            </div>
-
             {/* Manage Collections */}
             <div className="admin-coll-section">
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
@@ -735,9 +700,6 @@ export default function AdminDashboard() {
                           <div className="admin-coll-item-desc">{c.desc || <span style={{ color: '#bbb', fontStyle: 'italic' }}>No description</span>}</div>
                           <div className="admin-coll-item-key">key: {c.key}</div>
                         </div>
-                        {c.key === mostLovedKey && (
-                          <span className="admin-coll-item-badge">★ Most Loved</span>
-                        )}
                         <div style={{ display: 'flex', gap: 6, marginLeft: 'auto', flexShrink: 0 }}>
                           <button className="btn-edit" onClick={() => startEditColl(c)}>Edit</button>
                           <button className="btn-delete" onClick={() => handleDeleteColl(c.key)}>Remove</button>

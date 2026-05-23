@@ -7259,14 +7259,6 @@ body {
 }
 .admin-coll-desc { font-size: 13px; color: var(--text-mid); margin: 0 0 18px; }
 
-.admin-coll-most-loved-row {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-.admin-coll-preview-label { font-size: 13px; color: var(--text-mid); }
-.admin-coll-preview-label strong { color: var(--navy); }
 
 .admin-coll-saved-toast {
   background: #d4f5ec;
@@ -7331,24 +7323,6 @@ body {
 }
 
 /* Most Loved badge on collection card */
-.coll-most-loved-badge {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  z-index: 2;
-  background: #fff8e1;
-  color: #b8860b;
-  border: 1px solid #ffe082;
-  border-radius: 20px;
-  font-size: 10px;
-  font-weight: 700;
-  padding: 3px 10px;
-  letter-spacing: 0.04em;
-  font-family: var(--sans);
-}
-.coll-card--most-loved {
-  box-shadow: 0 0 0 2px #ffe082, 0 4px 20px rgba(184,134,11,0.12);
-}
 
 .admin-coll-reset-btn {
   background: none;
@@ -7394,7 +7368,6 @@ body {
   .admin-coll-section { padding: 18px 14px; margin-bottom: 14px; }
   .admin-coll-section h2 { font-size: 17px; }
   .admin-coll-form-row { flex-direction: column; }
-  .admin-coll-most-loved-row { flex-direction: column; align-items: flex-start; gap: 10px; }
   .admin-coll-list { gap: 8px; }
   .admin-coll-item { padding: 10px 12px; gap: 10px; }
 

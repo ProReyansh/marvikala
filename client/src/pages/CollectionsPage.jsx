@@ -103,10 +103,6 @@ function getStoredCollections() {
   return null;
 }
 
-function getMostLovedKey() {
-  try { return localStorage.getItem('mk_most_loved_collection') || 'flowers'; } catch { return 'flowers'; }
-}
-
 // ── Helpers ───────────────────────────────────────────────────────────────────
 function imgUrl(src) {
   if (!src) return null;
@@ -143,12 +139,12 @@ function getCollectionCoverImg(products, key, seed, colImg) {
 }
 
 // ── Components ────────────────────────────────────────────────────────────────
-function CollectionCard({ col, count, coverImg, index, mostLoved }) {
+function CollectionCard({ col, count, coverImg, index }) {
   const navigate = useNavigate();
 
   return (
     <div
-      className={`coll-card${mostLoved ? ' coll-card--most-loved' : ''}`}
+      className="coll-card"
       onClick={() => navigate(`/collection/${col.key}`)}
       role="button"
       tabIndex={0}
@@ -158,7 +154,6 @@ function CollectionCard({ col, count, coverImg, index, mostLoved }) {
     >
       {/* Image */}
       <div className="coll-card-img-wrap">
-        {mostLoved && <span className="coll-most-loved-badge">★ Most Loved</span>}
         <div
           className="coll-card-img"
           style={{ backgroundImage: `url(${coverImg})` }}
@@ -213,7 +208,6 @@ export default function CollectionsPage() {
   // Read admin settings from localStorage
   const [storedCollections] = useState(getStoredCollections);
   const COLLECTIONS = storedCollections || DEFAULT_COLLECTIONS;
-  const mostLovedKey = getMostLovedKey();
 
   useEffect(() => {
     document.title = 'Collections — Marvikala';
@@ -281,7 +275,6 @@ export default function CollectionsPage() {
                   count={countMap[col.key] || 0}
                   coverImg={getCollectionCoverImg(products, col.key, col.imgSeed)}
                   index={i}
-                  mostLoved={col.key === mostLovedKey}
                 />
               ))}
         </div>
