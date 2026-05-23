@@ -450,7 +450,7 @@ export default function Navbar({ searchQuery, onSearch }) {
             aria-label="Instagram" className="drawer-social-link drawer-ig">
             <IgIcon size={24} />
           </a>
-          <a href="https://wa.me/919769238160" target="_blank" rel="noreferrer"
+          <a href="https://wa.me/918767797815" target="_blank" rel="noreferrer"
             aria-label="WhatsApp" className="drawer-social-link drawer-wa">
             <WaIcon size={24} />
           </a>

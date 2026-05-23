@@ -28,7 +28,7 @@ export default function CustomOrderModal({ onClose }) {
         </p>
         <div className="modal-btns">
           <a
-            href={`https://wa.me/919769238160?text=${waMsg}`}
+            href={`https://wa.me/918767797815?text=${waMsg}`}
             className="modal-btn modal-wa"
             target="_blank"
             rel="noreferrer"

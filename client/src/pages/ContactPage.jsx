@@ -112,11 +112,11 @@ export default function ContactPage() {
 
           {/* Contact Buttons */}
           <div className="contact-reach-row">
-            <a href="https://wa.me/919769238160" target="_blank" rel="noreferrer" className="contact-reach-btn contact-wa">
+            <a href="https://wa.me/918767797815" target="_blank" rel="noreferrer" className="contact-reach-btn contact-wa">
               <WaIcon />
               <div className="contact-reach-info">
                 <span className="contact-reach-label">WhatsApp</span>
-                <span className="contact-reach-value">+91 97692 38160</span>
+                <span className="contact-reach-value">+91 87677 97815</span>
               </div>
               <span className="contact-reach-arrow">→</span>
             </a>

@@ -468,7 +468,7 @@ export default function ProductPage() {
               <div className="product-page-oos-msg">
                 <p>This item is currently out of stock but can be made to order.</p>
                 <a
-                  href={`https://wa.me/919769238160?text=Hi! I'd like to order: ${encodeURIComponent(product?.name || '')}`}
+                  href={`https://wa.me/918767797815?text=Hi! I'd like to order: ${encodeURIComponent(product?.name || '')}`}
                   className="pp-made-to-order-btn"
                   target="_blank"
                   rel="noreferrer"

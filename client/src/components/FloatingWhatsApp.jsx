@@ -5,7 +5,7 @@ export default function FloatingWhatsApp() {
   if (pathname.startsWith('/admin')) return null;
   return (
     <a
-      href="https://wa.me/919769238160"
+      href="https://wa.me/918767797815"
       target="_blank"
       rel="noreferrer"
       className="floating-wa"

@@ -29,7 +29,7 @@ export default function EnquireModal({ product, onClose }) {
         </p>
         <div className="modal-btns">
           <a
-            href={`https://wa.me/919769238160?text=Hi! I'm interested in: ${encodeURIComponent(product.name)}`}
+            href={`https://wa.me/918767797815?text=Hi! I'm interested in: ${encodeURIComponent(product.name)}`}
             className="modal-btn modal-wa"
             target="_blank"
             rel="noreferrer"

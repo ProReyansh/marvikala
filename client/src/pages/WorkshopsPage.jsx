@@ -141,7 +141,7 @@ function WorkshopModal({ ws, onClose }) {
           <span className="ws-price">{ws.price} <span className="ws-price-per">/ person</span></span>
           {ws.seatsLeft > 0 ? (
             <a
-              href={`https://wa.me/919769238160?text=Hi! I'd like to register for the "${ws.title}" workshop on ${formatDate(ws.date)}. Please share the details!`}
+              href={`https://wa.me/918767797815?text=Hi! I'd like to register for the "${ws.title}" workshop on ${formatDate(ws.date)}. Please share the details!`}
               className="ws-enquire-btn"
               target="_blank"
               rel="noreferrer"
@@ -150,7 +150,7 @@ function WorkshopModal({ ws, onClose }) {
             </a>
           ) : (
             <a
-              href={`https://wa.me/919769238160?text=Hi! I'd like to join the waitlist for "${ws.title}". Please let me know when it's available again!`}
+              href={`https://wa.me/918767797815?text=Hi! I'd like to join the waitlist for "${ws.title}". Please let me know when it's available again!`}
               className="ws-enquire-btn ws-waitlist-btn"
               target="_blank"
               rel="noreferrer"

@@ -363,7 +363,7 @@ export default function CartPage() {
                 </div>
 
                 <a
-                  href={`https://wa.me/919769238160?text=${encodeURIComponent(buildWhatsAppMsg())}`}
+                  href={`https://wa.me/918767797815?text=${encodeURIComponent(buildWhatsAppMsg())}`}
                   className="cart-whatsapp-btn"
                   target="_blank"
                   rel="noreferrer"
