@@ -102,6 +102,7 @@ export default function Home() {
   const [heroHeading, setHeroHeading]       = useState('');
   const [heroSubtitle, setHeroSubtitle]     = useState('');
   const [naIndex, setNaIndex]               = useState(0);
+  const [reviewIndex, setReviewIndex]       = useState(0);
 
   // True only on the very first ever visit — mark visited immediately so
   // navigating back to home (same session or later) never re-triggers intro animations.
@@ -595,9 +596,10 @@ export default function Home() {
                 <h2>Loved by Customers</h2>
                 <p>Kind words from 100+ happy customers across Mumbai</p>
               </div>
-              <div className="na-hscroll">
-                {STATIC_REVIEWS.map((r, i) => (
-                  <div className="na-hscroll-review-item" key={i}>
+              <div className="na-carousel-card review-carousel-card" key={reviewIndex}>
+                {(() => {
+                  const r = STATIC_REVIEWS[reviewIndex];
+                  return (
                     <div className="review-card">
                       <div className="review-stars">
                         {[1,2,3,4,5].map((s) => (
@@ -608,7 +610,17 @@ export default function Home() {
                       <div className="review-author">{r.author}</div>
                       <div className="review-location">{r.location}</div>
                     </div>
-                  </div>
+                  );
+                })()}
+              </div>
+              <div className="na-dots">
+                {STATIC_REVIEWS.map((_, i) => (
+                  <button
+                    key={i}
+                    className={`na-dot${i === reviewIndex ? ' na-dot-active' : ''}`}
+                    onClick={() => setReviewIndex(i)}
+                    aria-label={`Go to review ${i + 1}`}
+                  />
                 ))}
               </div>
             </section>
