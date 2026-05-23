@@ -706,17 +706,17 @@ body {
 
 .section-head h2 {
   font-family: var(--serif);
-  font-size: 36px;
+  font-size: 28px;
   font-weight: 700;
   color: var(--text);
   margin-bottom: 10px;
   letter-spacing: -0.3px;
 }
 
-/* Collections section — larger heading */
+/* Collections section — same as other headings */
 #collections .section-head h2 {
-  font-size: 52px;
-  letter-spacing: -0.5px;
+  font-size: 28px;
+  letter-spacing: -0.3px;
 }
 
 .section-head p {
@@ -2881,7 +2881,7 @@ body {
 
   /* Sections */
   .section          { padding: 40px 18px; }
-  .section-head h2  { font-size: 28px; }
+  .section-head h2  { font-size: 22px; }
   .contact-section  { padding: 0 18px 40px; }
   .about-section    { padding: 40px 18px; }
 
@@ -3468,7 +3468,7 @@ body {
 
 /* ═══ INSTAGRAM SECTION ═══ */
 .insta-section { padding: 40px 20px; text-align: center; background: var(--white); }
-.insta-section h2 { font-family: var(--serif); font-size: 24px; margin-bottom: 4px; }
+.insta-section h2 { font-family: var(--serif); font-size: 28px; margin-bottom: 4px; }
 .insta-section h2 span { color: var(--rose); }
 .insta-section > p { font-size: 13px; color: var(--text-light); margin-bottom: 20px; }
 .insta-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 20px; max-width: 400px; margin-left: auto; margin-right: auto; margin-bottom: 20px; }
@@ -7404,7 +7404,7 @@ body {
 }
 .workshop-teaser-title {
   font-family: var(--serif);
-  font-size: 34px;
+  font-size: 28px;
   font-weight: 800;
   color: var(--text);
   line-height: 1.2;
@@ -7418,11 +7418,11 @@ body {
 }
 @media (min-width: 769px) {
   .workshop-teaser { padding: 80px 48px; }
-  .workshop-teaser-title { font-size: 42px; }
+  .workshop-teaser-title { font-size: 28px; }
   .workshop-teaser-desc { font-size: 15px; }
 }
 @media (max-width: 480px) {
-  .workshop-teaser-title { font-size: 26px; }
+  .workshop-teaser-title { font-size: 22px; }
   .workshop-teaser-desc { font-size: 13px; }
 }
 
@@ -7457,7 +7457,7 @@ body {
 }
 .home-links-title {
   font-family: var(--serif);
-  font-size: 22px;
+  font-size: 28px;
   font-weight: 700;
   color: var(--text);
   margin-bottom: 10px;
@@ -7479,14 +7479,14 @@ body {
 }
 @media (min-width: 769px) {
   .home-links-card { padding: 64px 56px; }
-  .home-links-title { font-size: 28px; }
+  .home-links-title { font-size: 28px; /* desktop override: same as base */ }
   .home-links-desc { font-size: 14px; }
 }
 @media (max-width: 600px) {
   .home-links-section { grid-template-columns: 1fr; }
   .home-links-card:first-child { border-right: none; border-bottom: 1.5px solid var(--border); }
   .home-links-card { padding: 36px 20px; }
-  .home-links-title { font-size: 19px; }
+  .home-links-title { font-size: 22px; }
 }
 
 
@@ -7509,7 +7509,7 @@ body {
 }
 .how-to-order-heading {
   font-family: var(--serif);
-  font-size: 32px;
+  font-size: 28px;
   font-weight: 800;
   color: var(--text);
   text-align: center;
@@ -9921,8 +9921,8 @@ body {
 
 /* ── Collections section heading — larger at all breakpoints ── */
 @media (max-width: 768px) {
-  #collections .section-head h2 { font-size: 36px !important; }
+  #collections .section-head h2 { font-size: 24px !important; }
 }
 @media (max-width: 599px) {
-  #collections .section-head h2 { font-size: 30px !important; }
+  #collections .section-head h2 { font-size: 22px !important; }
 }
