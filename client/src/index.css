@@ -10006,6 +10006,10 @@ body {
   flex: 0 0 160px;
   scroll-snap-align: start;
 }
+.na-hscroll-review-item {
+  flex: 0 0 280px;
+  scroll-snap-align: start;
+}
 
 /* ── Navbar cart button — matches product card cart icon ── */
 .navbar-cart-btn {
