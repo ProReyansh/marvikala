@@ -10007,6 +10007,22 @@ body {
   scroll-snap-align: start;
 }
 
+/* ── Navbar cart button — matches product card cart icon ── */
+.navbar-cart-btn {
+  width: 34px !important;
+  height: 34px !important;
+  border-radius: 50% !important;
+  background: #fff !important;
+  color: var(--teal) !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: none !important;
+  padding: 0 !important;
+}
+.navbar-cart-btn:hover { box-shadow: 0 4px 14px rgba(0,0,0,0.18) !important; transform: scale(1.07); }
+
 /* ── Global: remove blue focus ring on all buttons/links ── */
 button:focus,
 button:focus-visible,
