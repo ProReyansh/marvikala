@@ -9380,7 +9380,7 @@ body {
 .product-card { border-radius: 18px; }
 
 .product-info {
-  padding: 10px 12px 12px;
+  padding: 8px 10px 10px;
   gap: 0;
   display: flex;
   flex-direction: column;
@@ -9388,20 +9388,20 @@ body {
 }
 
 .product-cat {
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 500;
   color: var(--text-light);
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  margin-bottom: 5px;
+  margin-bottom: 3px;
 }
 
 .product-name {
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 700;
   color: var(--text);
-  line-height: 1.35;
-  margin-bottom: 4px;
+  line-height: 1.3;
+  margin-bottom: 3px;
 }
 
 .product-desc {
@@ -9925,10 +9925,10 @@ body {
 
 /* ── Product card — stock status label ── */
 .pc-stock-status {
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 600;
   font-family: var(--sans);
-  margin-top: 8px;
+  margin-top: 4px;
   letter-spacing: 0.2px;
 }
 .pc-stock-in  { color: #2e9e5b; }
