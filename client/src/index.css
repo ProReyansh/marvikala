@@ -2880,8 +2880,13 @@ body {
   .feature-badge-icon    { font-size: 16px; }
 
   /* Sections */
-  .section          { padding: 40px 18px; }
-  .section-head h2  { font-size: 22px; }
+  .section              { padding: 40px 18px; }
+  .section-head h2      { font-size: 22px; }
+  .workshop-teaser-title { font-size: 22px; }
+  .how-to-order-heading  { font-size: 22px; }
+  .insta-section h2      { font-size: 22px; }
+  .home-links-title      { font-size: 22px; }
+  .story-teaser-label    { font-size: 22px; }
   .contact-section  { padding: 0 18px 40px; }
   .about-section    { padding: 40px 18px; }
 
