@@ -2841,7 +2841,7 @@ body {
 /* Mobile (up to 599px) */
 @media (max-width: 599px) {
   .navbar           { height: 56px; min-height: 56px; flex-wrap: nowrap; padding: 0 18px; gap: 0; align-items: center; }
-  .navbar-logo        { position: absolute; left: 50%; transform: translateX(-50%); flex: none; order: 0; }
+  .navbar-logo        { position: absolute; left: calc(50% - 10px); transform: translateX(-50%); flex: none; order: 0; }
   .navbar-logo:hover  { transform: translateX(-50%) scale(1.06); }
   .navbar-logo:active { transform: translateX(-50%) scale(0.93) !important; }
   .navbar-logo-text { font-size: 18px; }
