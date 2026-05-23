@@ -4071,8 +4071,6 @@ body {
   flex-wrap: nowrap;
   overflow: hidden;
   background: var(--white);
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
 }
 
 .feature-strip-item {
@@ -4084,9 +4082,7 @@ body {
   gap: 5px;
   padding: 18px 6px;
   text-align: center;
-  border-right: 1px solid var(--border);
 }
-.feature-strip-item:last-child { border-right: none; }
 
 .feature-strip-icon {
   width: 26px;
