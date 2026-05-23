@@ -52,7 +52,7 @@ function ShopCard({ product }) {
         ) : (product.bestseller || product.featured) ? (
           <span className="product-badge bestseller-badge">Bestseller</span>
         ) : null}
-        {!product.inStock && <div className="out-of-stock-overlay">Out of Stock</div>}
+        {!product.inStock && <div className="out-of-stock-overlay">Made to Order</div>}
       </div>
       <div className="product-info">
         <div className="product-name">{product.name}</div>

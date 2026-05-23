@@ -256,7 +256,7 @@ export default function ProductPage() {
         <div className="product-img">
           {imgSrc && <img src={imgSrc} alt={p.name} />}
           {(p.bestseller || p.featured) && <span className="product-badge bestseller-badge">Bestseller</span>}
-          {!p.inStock && <div className="out-of-stock-overlay">Out of Stock</div>}
+          {!p.inStock && <div className="out-of-stock-overlay">Made to Order</div>}
         </div>
         <div className="product-info">
           <div className="product-name">{p.name}</div>
@@ -361,7 +361,7 @@ export default function ProductPage() {
                 ? <img key={imgAnimKey} src={imgUrl(images[activeImg])} alt={product.name} className="product-page-img-anim" />
                 : null}
               {isBestseller && <span className="product-page-badge bestseller-badge">Bestseller</span>}
-              {!product.inStock && <div className="product-page-oos-overlay">Out of Stock</div>}
+              {!product.inStock && <div className="product-page-oos-overlay">Made to Order</div>}
               {images.length > 0 && (
                 <div className="pp-zoom-hint-badge">
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
@@ -422,7 +422,7 @@ export default function ProductPage() {
             )}
 
             <div className={`product-page-stock ${product.inStock ? 'in' : 'out'}`}>
-              {product.inStock ? '● In Stock' : '● Out of Stock'}
+              {product.inStock ? '● In Stock' : '● Made to Order'}
             </div>
 
             {product.description && <p className="product-page-desc">{product.description}</p>}

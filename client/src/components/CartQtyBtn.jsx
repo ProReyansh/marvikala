@@ -17,9 +17,16 @@ export default function CartQtyBtn({ product, addClassName = '', ctrlClassName =
 
   if (!product.inStock) {
     return (
-      <button className={`${addClassName} cart-qty-oos`} disabled style={style}>
-        Out of Stock
-      </button>
+      <a
+        href={`https://wa.me/919769238160?text=${encodeURIComponent(`Hi! I'd like to order "${product.name}" as a made-to-order piece. Could you let me know the details?`)}`}
+        target="_blank"
+        rel="noreferrer"
+        className={`${addClassName} cart-qty-mto`}
+        style={style}
+        onClick={e => e.stopPropagation()}
+      >
+        Made to Order
+      </a>
     );
   }
 

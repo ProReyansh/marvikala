@@ -926,8 +926,10 @@ body {
   justify-content: center;
   color: white;
   font-weight: 600;
-  font-size: 14px;
-  letter-spacing: 1px;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  text-align: center;
+  padding: 0 8px;
 }
 
 .product-info  { padding: 16px 18px; display: flex; flex-direction: column; flex: 1; }
@@ -6955,6 +6957,25 @@ body {
 .cart-qty-oos {
   opacity: 0.45;
   cursor: not-allowed !important;
+}
+.cart-qty-mto {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  background: var(--olive);
+  color: #fff;
+  font-size: inherit;
+  font-weight: 600;
+  font-family: inherit;
+  border-radius: 50px;
+  padding: inherit;
+  transition: background 0.18s, transform 0.15s;
+  cursor: pointer;
+}
+.cart-qty-mto:hover {
+  background: var(--olive-dark, #2a6050);
+  transform: translateY(-1px);
 }
 
 /* Quantity control strip [− 1 +] */
