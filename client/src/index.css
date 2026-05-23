@@ -9420,8 +9420,11 @@ body {
 }
 
 .product-price-row {
-  margin: 0 0 2px;
+  margin: 0;
+  line-height: 1;
 }
+.product-card .price-sale { font-size: 11px; }
+.product-card .price-original { font-size: 10px; }
 
 /* ── 3. Feature strip — single box, no dividers ── */
 .feature-strip {
