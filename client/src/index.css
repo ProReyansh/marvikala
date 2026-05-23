@@ -9891,5 +9891,11 @@ body {
   #collections .section-head h2 { font-size: 24px !important; }
 }
 @media (max-width: 599px) {
-  #collections .section-head h2 { font-size: 22px !important; }
+  #collections .section-head h2   { font-size: 22px !important; }
+  .section-head h2                { font-size: 22px !important; }
+  .how-to-order-heading           { font-size: 22px !important; }
+  .insta-section h2               { font-size: 22px !important; }
+  .workshop-teaser-title          { font-size: 22px !important; }
+  .home-links-title               { font-size: 22px !important; }
+  .story-teaser-label             { font-size: 22px !important; }
 }
