@@ -911,9 +911,9 @@ body {
   left: 12px;
   background: var(--olive);
   color: white;
-  font-size: 10px;
-  font-weight: 600;
-  padding: 4px 10px;
+  font-size: 8px;
+  font-weight: 700;
+  padding: 3px 8px;
   border-radius: 50px;
 }
 
@@ -9964,8 +9964,8 @@ body {
   position: absolute;
   top: 10px;
   right: 10px;
-  width: 34px;
-  height: 34px;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
   background: var(--teal);
   border: none;
@@ -9978,6 +9978,7 @@ body {
   transition: transform 0.18s, box-shadow 0.18s;
   z-index: 2;
 }
+.pc-cart-icon-btn svg { width: 11px; height: 11px; }
 .pc-cart-icon-btn:hover { transform: scale(1.1); box-shadow: 0 4px 14px rgba(0,0,0,0.18); }
 .pc-cart-icon-btn:active { transform: scale(0.93); }
 
