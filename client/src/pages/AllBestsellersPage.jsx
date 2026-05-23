@@ -40,7 +40,7 @@ function ShopCard({ product }) {
       onClick={() => navigate(`/product/${slugify(product.name)}`, { state: { product } })}
     >
       <div className="product-img">
-        {imgSrc ? <img src={imgSrc} alt={product.name} /> : <span>🧶</span>}
+        {imgSrc && <img src={imgSrc} alt={product.name} />}
         {product.newArrival ? (
           <span className="product-badge new-arrival-badge">New</span>
         ) : (product.bestseller || product.featured) ? (
@@ -85,12 +85,12 @@ export default function AllBestsellersPage() {
     <>
       <div className="top-ribbon">
         <div className="top-ribbon-track">
-          <span>📍 Based in Mumbai</span><span className="ribbon-sep">|</span>
-          <span>🚛 Free delivery over ₹999</span><span className="ribbon-sep">|</span>
-          <span>🌍 Shipping Pan India</span><span className="ribbon-gap">✦</span>
-          <span>📍 Based in Mumbai</span><span className="ribbon-sep">|</span>
-          <span>🚛 Free delivery over ₹999</span><span className="ribbon-sep">|</span>
-          <span>🌍 Shipping Pan India</span><span className="ribbon-gap">✦</span>
+          <span>Based in Mumbai</span><span className="ribbon-sep">|</span>
+          <span>Free delivery over ₹999</span><span className="ribbon-sep">|</span>
+          <span>Shipping Pan India</span><span className="ribbon-gap">✦</span>
+          <span>Based in Mumbai</span><span className="ribbon-sep">|</span>
+          <span>Free delivery over ₹999</span><span className="ribbon-sep">|</span>
+          <span>Shipping Pan India</span><span className="ribbon-gap">✦</span>
         </div>
       </div>
 
@@ -106,7 +106,7 @@ export default function AllBestsellersPage() {
           <div className="sa-loading"><div className="spinner" /></div>
         ) : bestsellers.length === 0 ? (
           <div className="sa-empty">
-            <div className="sa-empty-icon">🧶</div>
+            <div className="sa-empty-icon"></div>
             <p>No bestsellers yet — check back soon!</p>
           </div>
         ) : (

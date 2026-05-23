@@ -83,7 +83,7 @@ function CartItem({ item, onSaveForLater }) {
       {/* Top: image + text */}
       <div className="cart-item-top">
         <div className="cart-item-img" onClick={goToProduct} style={{ cursor: 'pointer' }}>
-          {src ? <img src={src} alt={item.name} loading="lazy" /> : <span className="cart-item-placeholder">🧶</span>}
+          {src ? <img src={src} alt={item.name} loading="lazy" /> : <span className="cart-item-placeholder"></span>}
         </div>
         <div className="cart-item-info">
           <div className="cart-item-cat">{CAT_LABEL[item.category] || item.category}</div>
@@ -142,7 +142,7 @@ function SavedItem({ item, onMoveToCart }) {
     <div className={`cart-item cart-item-saved${moving ? ' cart-item--exit' : ''}`}>
       <div className="cart-item-top">
         <div className="cart-item-img">
-          {src ? <img src={src} alt={item.name} loading="lazy" /> : <span className="cart-item-placeholder">🧶</span>}
+          {src ? <img src={src} alt={item.name} loading="lazy" /> : <span className="cart-item-placeholder"></span>}
         </div>
         <div className="cart-item-info">
           <div className="cart-item-cat">{CAT_LABEL[item.category] || item.category}</div>
@@ -223,8 +223,8 @@ export default function CartPage() {
     if (!items.length) return '';
     const lines = items.map(i => `• ${i.name} × ${i.qty}${i.price ? ` — ₹${i.price * i.qty}` : ''}`);
     const couponLine = appliedCoupon ? `\nCoupon: ${appliedCoupon.code} (${appliedCoupon.discount}% off)` : '';
-    const totalLine = grandTotal > 0 ? `\n\nTotal: ₹${grandTotal}${shippingCost === 0 ? ' (Free delivery 🎉)' : ` + ₹${shippingCost} delivery`}` : '';
-    return `Hi! I'd like to place an order from Marvikala:\n\n${lines.join('\n')}${couponLine}${totalLine}\n\nPlease confirm availability. Thank you! 🌸`;
+    const totalLine = grandTotal > 0 ? `\n\nTotal: ₹${grandTotal}${shippingCost === 0 ? ' (Free delivery)' : ` + ₹${shippingCost} delivery`}` : '';
+    return `Hi! I'd like to place an order from Marvikala:\n\n${lines.join('\n')}${couponLine}${totalLine}\n\nPlease confirm availability. Thank you!`;
   }
 
   const isEmpty = items.length === 0;
@@ -234,12 +234,12 @@ export default function CartPage() {
     <>
       <div className="top-ribbon">
         <div className="top-ribbon-track">
-          <span>📍 Based in Mumbai</span><span className="ribbon-sep">|</span>
-          <span>🚛 Free delivery over ₹999</span><span className="ribbon-sep">|</span>
-          <span>🌍 Shipping Pan India</span><span className="ribbon-gap">✦</span>
-          <span>📍 Based in Mumbai</span><span className="ribbon-sep">|</span>
-          <span>🚛 Free delivery over ₹999</span><span className="ribbon-sep">|</span>
-          <span>🌍 Shipping Pan India</span><span className="ribbon-gap">✦</span>
+          <span>Based in Mumbai</span><span className="ribbon-sep">|</span>
+          <span>Free delivery over ₹999</span><span className="ribbon-sep">|</span>
+          <span>Shipping Pan India</span><span className="ribbon-gap">✦</span>
+          <span>Based in Mumbai</span><span className="ribbon-sep">|</span>
+          <span>Free delivery over ₹999</span><span className="ribbon-sep">|</span>
+          <span>Shipping Pan India</span><span className="ribbon-gap">✦</span>
         </div>
       </div>
       <Navbar searchQuery="" onSearch={() => {}} />
@@ -252,7 +252,7 @@ export default function CartPage() {
 
         {isEmpty ? (
           <div className="cart-empty">
-            <div className="cart-empty-lottie" aria-hidden="true">🧺</div>
+            <div className="cart-empty-lottie" aria-hidden="true"></div>
             <h3 className="cart-empty-title">Your cart is empty</h3>
             <p className="cart-empty-sub">Discover something handmade and beautiful, just for you.</p>
             <div className="cart-empty-actions">
@@ -260,11 +260,11 @@ export default function CartPage() {
               <button className="cart-shop-btn cart-shop-btn-outline" onClick={() => navigate('/collections')}>Explore Collections</button>
             </div>
             <div className="cart-empty-perks">
-              <span>🚛 Free delivery over ₹999</span>
+              <span>Free delivery over ₹999</span>
               <span>·</span>
-              <span>🧶 100% Handmade</span>
+              <span>100% Handmade</span>
               <span>·</span>
-              <span>📍 Made in Mumbai</span>
+              <span>Made in Mumbai</span>
             </div>
           </div>
         ) : (
@@ -314,7 +314,7 @@ export default function CartPage() {
 
                 <div className="cart-summary-row">
                   <span>Delivery</span>
-                  <span>{shippingCost === 0 && discountedTotal > 0 ? <span className="cart-free-ship">Free 🎉</span> : shippingCost > 0 ? `₹${shippingCost}` : '—'}</span>
+                  <span>{shippingCost === 0 && discountedTotal > 0 ? <span className="cart-free-ship">Free</span> : shippingCost > 0 ? `₹${shippingCost}` : '—'}</span>
                 </div>
 
                 {discountedTotal < 999 && discountedTotal > 0 && (

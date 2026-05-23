@@ -17,12 +17,12 @@ export default function HowToOrderPage() {
   return (
     <>
       <div className="top-ribbon"><div className="top-ribbon-track">
-        <span>📍 Based in Mumbai</span><span className="ribbon-sep">|</span>
-        <span>🚛 Free delivery over ₹999</span><span className="ribbon-sep">|</span>
-        <span>🌍 Shipping Pan India</span><span className="ribbon-gap">✦</span>
-        <span>📍 Based in Mumbai</span><span className="ribbon-sep">|</span>
-        <span>🚛 Free delivery over ₹999</span><span className="ribbon-sep">|</span>
-        <span>🌍 Shipping Pan India</span><span className="ribbon-gap">✦</span>
+        <span>Based in Mumbai</span><span className="ribbon-sep">|</span>
+        <span>Free delivery over ₹999</span><span className="ribbon-sep">|</span>
+        <span>Shipping Pan India</span><span className="ribbon-gap">✦</span>
+        <span>Based in Mumbai</span><span className="ribbon-sep">|</span>
+        <span>Free delivery over ₹999</span><span className="ribbon-sep">|</span>
+        <span>Shipping Pan India</span><span className="ribbon-gap">✦</span>
       </div></div>
       <Navbar searchQuery="" onSearch={() => {}} />
       <div className="sa-page hto-page">
@@ -39,7 +39,6 @@ export default function HowToOrderPage() {
                 {i < STEPS.length - 1 && <div className="hto-step-line" />}
               </div>
               <div className="hto-step-right">
-                <div className="hto-step-icon">{s.icon}</div>
                 <h3 className="hto-step-title">{s.title}</h3>
                 <p className="hto-step-desc">{s.desc}</p>
               </div>

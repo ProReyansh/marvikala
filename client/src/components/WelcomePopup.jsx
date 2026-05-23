@@ -63,11 +63,6 @@ export default function WelcomePopup({ forceShow = false, onClose }) {
             <span className="mk-popup-blob mk-popup-blob--3" />
           </div>
           <img src="/logo-new.png" alt="Marvikala" className="mk-popup-logo" />
-          <div className="mk-popup-flowers">
-            <span className="mk-popup-flower">🌸</span>
-            <span className="mk-popup-flower mk-popup-flower--2">🌼</span>
-            <span className="mk-popup-flower mk-popup-flower--3">🌸</span>
-          </div>
         </div>
 
         <div className="mk-popup-body">
@@ -83,13 +78,10 @@ export default function WelcomePopup({ forceShow = false, onClose }) {
             Join our WhatsApp community for exclusive discounts, early access to new crochet drops, festive launches &amp; workshop updates.
           </p>
 
-          <div className="mk-popup-divider">
-            <span className="mk-popup-divider-icon">🌿</span>
-          </div>
+          <div className="mk-popup-divider" />
 
           <div className="mk-popup-input-row">
             <div className="mk-popup-flag-prefix">
-              <span className="mk-popup-flag">🇮🇳</span>
               <span className="mk-popup-country-code">+91</span>
             </div>
             <input

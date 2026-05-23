@@ -64,9 +64,9 @@ function Accordion({ items }) {
 }
 
 const REVIEWS = [
-  { name: 'Priya M.',  rating: 5, date: 'March 2025',    text: 'Absolutely beautiful! The craftsmanship is incredible — each stitch is so neat and colours are exactly as shown. Packed so lovingly too. Will definitely order again! 🌸', avatar: 'P' },
+  { name: 'Priya M.',  rating: 5, date: 'March 2025',    text: 'Absolutely beautiful! The craftsmanship is incredible — each stitch is so neat and colours are exactly as shown. Packed so lovingly too. Will definitely order again!', avatar: 'P' },
   { name: 'Ananya S.', rating: 5, date: 'February 2025', text: 'Ordered a custom piece and Marvikala delivered beyond my expectations. Quick responses, beautiful packaging and quality is outstanding.', avatar: 'A' },
-  { name: 'Ritu K.',   rating: 5, date: 'April 2025',    text: 'Such a talented creator! Got this as a gift and everyone was asking where I bought it from. The attention to detail is just wow 💛', avatar: 'R' },
+  { name: 'Ritu K.',   rating: 5, date: 'April 2025',    text: 'Such a talented creator! Got this as a gift and everyone was asking where I bought it from. The attention to detail is just wow!', avatar: 'R' },
 ];
 
 function getDeliveryRange() {
@@ -253,7 +253,7 @@ export default function ProductPage() {
     return (
       <div className="product-card" onClick={() => navigate(`/product/${slugify(p.name)}`, { state: { product: p }, replace: true })}>
         <div className="product-img">
-          {imgSrc ? <img src={imgSrc} alt={p.name} /> : <span>🧶</span>}
+          {imgSrc && <img src={imgSrc} alt={p.name} />}
           {(p.bestseller || p.featured) && <span className="product-badge bestseller-badge">Bestseller</span>}
           {!p.inStock && <div className="out-of-stock-overlay">Out of Stock</div>}
         </div>
@@ -276,12 +276,12 @@ export default function ProductPage() {
     <>
       <div className="top-ribbon">
         <div className="top-ribbon-track">
-          <span>📍 Based in Mumbai</span><span className="ribbon-sep">|</span>
-          <span>🚛 Free delivery over ₹999</span><span className="ribbon-sep">|</span>
-          <span>🌍 Shipping Pan India</span><span className="ribbon-gap">✦</span>
-          <span>📍 Based in Mumbai</span><span className="ribbon-sep">|</span>
-          <span>🚛 Free delivery over ₹999</span><span className="ribbon-sep">|</span>
-          <span>🌍 Shipping Pan India</span><span className="ribbon-gap">✦</span>
+          <span>Based in Mumbai</span><span className="ribbon-sep">|</span>
+          <span>Free delivery over ₹999</span><span className="ribbon-sep">|</span>
+          <span>Shipping Pan India</span><span className="ribbon-gap">✦</span>
+          <span>Based in Mumbai</span><span className="ribbon-sep">|</span>
+          <span>Free delivery over ₹999</span><span className="ribbon-sep">|</span>
+          <span>Shipping Pan India</span><span className="ribbon-gap">✦</span>
         </div>
       </div>
       <Navbar searchQuery={searchQuery} onSearch={handleSearch} />
@@ -302,12 +302,12 @@ export default function ProductPage() {
     <>
       <div className="top-ribbon">
         <div className="top-ribbon-track">
-          <span>📍 Based in Mumbai</span><span className="ribbon-sep">|</span>
-          <span>🚛 Free delivery over ₹999</span><span className="ribbon-sep">|</span>
-          <span>🌍 Shipping Pan India</span><span className="ribbon-gap">✦</span>
-          <span>📍 Based in Mumbai</span><span className="ribbon-sep">|</span>
-          <span>🚛 Free delivery over ₹999</span><span className="ribbon-sep">|</span>
-          <span>🌍 Shipping Pan India</span><span className="ribbon-gap">✦</span>
+          <span>Based in Mumbai</span><span className="ribbon-sep">|</span>
+          <span>Free delivery over ₹999</span><span className="ribbon-sep">|</span>
+          <span>Shipping Pan India</span><span className="ribbon-gap">✦</span>
+          <span>Based in Mumbai</span><span className="ribbon-sep">|</span>
+          <span>Free delivery over ₹999</span><span className="ribbon-sep">|</span>
+          <span>Shipping Pan India</span><span className="ribbon-gap">✦</span>
         </div>
       </div>
       <Navbar searchQuery={searchQuery} onSearch={handleSearch} />
@@ -358,10 +358,10 @@ export default function ProductPage() {
             >
               {images.length > 0
                 ? <img key={imgAnimKey} src={imgUrl(images[activeImg])} alt={product.name} className="product-page-img-anim" />
-                : <span className="product-page-placeholder">🧶</span>}
+                : null}
               {isBestseller && <span className="product-page-badge bestseller-badge">Bestseller</span>}
               {!product.inStock && <div className="product-page-oos-overlay">Out of Stock</div>}
-              {images.length > 0 && <div className="pp-zoom-hint-badge">🔍</div>}
+              {images.length > 0 && <div className="pp-zoom-hint-badge">Tap to zoom</div>}
               {images.length > 1 && (
                 <div className="pp-swipe-dots" aria-hidden="true">
                   {images.map((_, i) => (
@@ -435,12 +435,11 @@ export default function ProductPage() {
                   className="pp-add-cart-btn"
                   onClick={handleAddToCart}
                 >
-                  🛒 Add to Cart
+                  Add to Cart
                 </button>
 
                 {/* Delivery estimate */}
                 <div className="pp-delivery-box">
-                  <span className="pp-delivery-icon">🚛</span>
                   <div className="pp-delivery-text">
                     <span className="pp-delivery-label">Estimated Delivery</span>
                     <span className="pp-delivery-date">{getDeliveryRange()}</span>
@@ -473,19 +472,15 @@ export default function ProductPage() {
             {/* Trust signals row */}
             <div className="product-trust-row">
               <div className="product-trust-item">
-                <span className="product-trust-item-icon">🤝</span>
                 <span>Handmade with care</span>
               </div>
               <div className="product-trust-item">
-                <span className="product-trust-item-icon">📦</span>
                 <span>Packed &amp; shipped in 2–4 days</span>
               </div>
               <div className="product-trust-item">
-                <span className="product-trust-item-icon">🔄</span>
                 <span>Easy replacement if damaged</span>
               </div>
               <div className="product-trust-item">
-                <span className="product-trust-item-icon">🔒</span>
                 <span>Secure WhatsApp checkout</span>
               </div>
             </div>

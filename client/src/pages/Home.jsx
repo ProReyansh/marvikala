@@ -225,7 +225,7 @@ export default function Home() {
         onClick={() => navigate(productUrl(product), { state: { product } })}
       >
         <div className="product-img">
-          {imgSrc ? <img src={imgSrc} alt={product.name} /> : <span>🧶</span>}
+          {imgSrc && <img src={imgSrc} alt={product.name} />}
           {product.newArrival ? (
             <span className="product-badge new-arrival-badge">New</span>
           ) : (product.bestseller || product.featured) ? (
@@ -256,12 +256,12 @@ export default function Home() {
     <>
       <div className="top-ribbon">
         <div className="top-ribbon-track">
-          <span>📍 Based in Mumbai</span><span className="ribbon-sep">|</span>
-          <span>🚛 Free delivery over ₹999</span><span className="ribbon-sep">|</span>
-          <span>🌍 Shipping Pan India</span><span className="ribbon-gap">✦</span>
-          <span>📍 Based in Mumbai</span><span className="ribbon-sep">|</span>
-          <span>🚛 Free delivery over ₹999</span><span className="ribbon-sep">|</span>
-          <span>🌍 Shipping Pan India</span><span className="ribbon-gap">✦</span>
+          <span>Based in Mumbai</span><span className="ribbon-sep">|</span>
+          <span>Free delivery over ₹999</span><span className="ribbon-sep">|</span>
+          <span>Shipping Pan India</span><span className="ribbon-gap">✦</span>
+          <span>Based in Mumbai</span><span className="ribbon-sep">|</span>
+          <span>Free delivery over ₹999</span><span className="ribbon-sep">|</span>
+          <span>Shipping Pan India</span><span className="ribbon-gap">✦</span>
         </div>
       </div>
       <Navbar searchQuery={searchQuery} onSearch={handleSearch} />
@@ -286,7 +286,6 @@ export default function Home() {
             <div className="spinner-wrap"><div className="spinner" /></div>
           ) : searchResults.length === 0 ? (
             <div className="search-empty">
-              <div className="search-empty-icon">🔍</div>
               <h3>No results found</h3>
               <p>We couldn't find anything matching "<strong>{searchQuery}</strong>". Try a different word!</p>
               <button className="btn-primary" style={{ marginTop: 24 }} onClick={() => {
@@ -319,7 +318,7 @@ export default function Home() {
             {/* Text content — positioned over the image */}
             <div className="hero-content">
               <h1>
-                {heroHeading || <>Handmade with love,<br />crafted for your<br />everyday joy ♡</>}
+                {heroHeading || <>Handmade with love,<br />crafted for your<br />everyday joy</>}
               </h1>
               <p className="hero-desc">
                 {heroSubtitle || <>Thoughtfully handmade creations that bring warmth,<br className="hero-br" />charm and happiness into your life.</>}
@@ -673,8 +672,7 @@ export default function Home() {
           {/* CONTACT + FAQ */}
           <section className="home-links-section fade-section">
             <div className="home-links-card" onClick={() => navigate('/faq')}>
-              <div className="home-links-icon">❓</div>
-              <h3 className="home-links-title">Got Questions?</h3>
+                <h3 className="home-links-title">Got Questions?</h3>
               <p className="home-links-desc">Everything about orders, shipping, custom pieces & more — answered.</p>
               <span className="home-links-cta">Read FAQ →</span>
             </div>
@@ -685,11 +683,11 @@ export default function Home() {
 
       {/* Popup trigger — 10% off section */}
       <div className="popup-trigger-wrap">
-        <p className="popup-trigger-eyebrow">✦ Welcome Gift</p>
+        <p className="popup-trigger-eyebrow">Welcome Gift</p>
         <h3 className="popup-trigger-heading">New here? Get 10% off your first order.</h3>
         <p className="popup-trigger-subtext">Enter your details and we'll send you an exclusive discount code — just for you.</p>
         <button className="popup-trigger-btn" onClick={() => setShowPopup(true)}>
-          🎁 Claim My 10% Off
+          Claim My 10% Off
         </button>
       </div>
 

@@ -103,12 +103,12 @@ export default function FAQPage() {
     <>
       <div className="top-ribbon">
         <div className="top-ribbon-track">
-          <span>📍 Based in Mumbai</span><span className="ribbon-sep">|</span>
-          <span>🚛 Free delivery over ₹999</span><span className="ribbon-sep">|</span>
-          <span>🌍 Shipping Pan India</span><span className="ribbon-gap">✦</span>
-          <span>📍 Based in Mumbai</span><span className="ribbon-sep">|</span>
-          <span>🚛 Free delivery over ₹999</span><span className="ribbon-sep">|</span>
-          <span>🌍 Shipping Pan India</span><span className="ribbon-gap">✦</span>
+          <span>Based in Mumbai</span><span className="ribbon-sep">|</span>
+          <span>Free delivery over ₹999</span><span className="ribbon-sep">|</span>
+          <span>Shipping Pan India</span><span className="ribbon-gap">✦</span>
+          <span>Based in Mumbai</span><span className="ribbon-sep">|</span>
+          <span>Free delivery over ₹999</span><span className="ribbon-sep">|</span>
+          <span>Shipping Pan India</span><span className="ribbon-gap">✦</span>
         </div>
       </div>
 
@@ -157,7 +157,6 @@ export default function FAQPage() {
             {filtered.map(section => (
               <div key={section.section} className="faq-section">
                 <div className="faq-section-header">
-                  <span className="faq-section-icon" aria-hidden="true">{section.icon}</span>
                   <h2 className="faq-section-title">{section.section}</h2>
                 </div>
                 <div className="faq-list" role="list">
@@ -170,7 +169,6 @@ export default function FAQPage() {
           </div>
         ) : (
           <div className="faq-no-results">
-            <div className="faq-no-results-icon">🔍</div>
             <p>No questions match your search.</p>
             <button className="faq-clear-search" onClick={() => { setSearch(''); setActiveCategory('all'); }}>Clear filters</button>
           </div>

@@ -46,7 +46,7 @@ function ShopCard({ product }) {
       onClick={() => navigate(`/product/${slugify(product.name)}`, { state: { product } })}
     >
       <div className="product-img">
-        {imgSrc ? <img src={imgSrc} alt={product.name} /> : <span>🧶</span>}
+        {imgSrc && <img src={imgSrc} alt={product.name} />}
         {product.newArrival ? (
           <span className="product-badge new-arrival-badge">New</span>
         ) : (product.bestseller || product.featured) ? (
@@ -97,17 +97,17 @@ export default function CollectionPage() {
       {/* TOP RIBBON */}
       <div className="top-ribbon">
         <div className="top-ribbon-track">
-          <span>📍 Based in Mumbai</span>
+          <span>Based in Mumbai</span>
           <span className="ribbon-sep">|</span>
-          <span>🚛 Free delivery over ₹999</span>
+          <span>Free delivery over ₹999</span>
           <span className="ribbon-sep">|</span>
-          <span>🌍 Shipping Pan India</span>
+          <span>Shipping Pan India</span>
           <span className="ribbon-gap">✦</span>
-          <span>📍 Based in Mumbai</span>
+          <span>Based in Mumbai</span>
           <span className="ribbon-sep">|</span>
-          <span>🚛 Free delivery over ₹999</span>
+          <span>Free delivery over ₹999</span>
           <span className="ribbon-sep">|</span>
-          <span>🌍 Shipping Pan India</span>
+          <span>Shipping Pan India</span>
           <span className="ribbon-gap">✦</span>
         </div>
       </div>
@@ -136,7 +136,7 @@ export default function CollectionPage() {
           <div className="sa-loading"><div className="spinner" /></div>
         ) : filtered.length === 0 ? (
           <div className="sa-empty">
-            <div className="sa-empty-icon">{catEmoji}</div>
+            <div className="sa-empty-icon"></div>
             <p>No products in this collection yet.<br />Check back soon!</p>
           </div>
         ) : (

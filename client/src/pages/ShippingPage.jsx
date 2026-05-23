@@ -9,17 +9,17 @@ export default function ShippingPage() {
     <>
       <div className="top-ribbon">
         <div className="top-ribbon-track">
-          <span>📍 Based in Mumbai</span>
+          <span>Based in Mumbai</span>
           <span className="ribbon-sep">|</span>
-          <span>🚛 Free delivery over ₹999</span>
+          <span>Free delivery over ₹999</span>
           <span className="ribbon-sep">|</span>
-          <span>🌍 Shipping Pan India</span>
+          <span>Shipping Pan India</span>
           <span className="ribbon-gap">✦</span>
-          <span>📍 Based in Mumbai</span>
+          <span>Based in Mumbai</span>
           <span className="ribbon-sep">|</span>
-          <span>🚛 Free delivery over ₹999</span>
+          <span>Free delivery over ₹999</span>
           <span className="ribbon-sep">|</span>
-          <span>🌍 Shipping Pan India</span>
+          <span>Shipping Pan India</span>
           <span className="ribbon-gap">✦</span>
         </div>
       </div>
@@ -41,15 +41,15 @@ export default function ShippingPage() {
               <h2>Delivery Timeline</h2>
               <div className="ship-table">
                 <div className="ship-row">
-                  <span className="ship-location">📍 Mumbai (Local)</span>
+                  <span className="ship-location">Mumbai (Local)</span>
                   <span className="ship-time">2–4 business days</span>
                 </div>
                 <div className="ship-row">
-                  <span className="ship-location">🌍 Pan India</span>
+                  <span className="ship-location">Pan India</span>
                   <span className="ship-time">5–8 business days</span>
                 </div>
                 <div className="ship-row">
-                  <span className="ship-location">🎨 Custom Orders</span>
+                  <span className="ship-location">Custom Orders</span>
                   <span className="ship-time">7–14 days (crafting time) + delivery</span>
                 </div>
               </div>
@@ -64,7 +64,7 @@ export default function ShippingPage() {
               <div className="ship-table">
                 <div className="ship-row">
                   <span className="ship-location">Orders above ₹999</span>
-                  <span className="ship-time ship-free">FREE 🎉</span>
+                  <span className="ship-time ship-free">FREE</span>
                 </div>
                 <div className="ship-row">
                   <span className="ship-location">Mumbai orders below ₹999</span>

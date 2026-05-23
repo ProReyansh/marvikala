@@ -107,7 +107,6 @@ function WorkshopModal({ ws, onClose }) {
       <div className="ws-modal" role="dialog" aria-modal="true" aria-label={ws.title}>
         <button className="ws-modal-close" onClick={onClose} aria-label="Close">✕</button>
 
-        <div className="ws-modal-emoji">{ws.emoji}</div>
         {ws.badge && <span className="ws-badge ws-modal-badge">{ws.badge}</span>}
 
         <h2 className="ws-modal-title">{ws.title}</h2>
@@ -115,12 +114,11 @@ function WorkshopModal({ ws, onClose }) {
         <div className="ws-modal-meta">
           <span className="ws-level">{ws.level}</span>
           <span className="ws-dot">·</span>
-          <span className="ws-duration">⏱ {ws.duration}</span>
+          <span className="ws-duration">{ws.duration}</span>
         </div>
 
         <div className="ws-modal-date">
-          <span className="ws-modal-date-icon">📅</span>
-          <div>
+            <div>
             <div className="ws-modal-date-text">{formatDate(ws.date)}</div>
             <div className="ws-modal-time">{formatTime(ws.date)}</div>
           </div>
@@ -173,18 +171,16 @@ function WorkshopCard({ ws, onClick }) {
   return (
     <div className="ws-card" style={{ '--ws-bg': ws.color, background: 'var(--white)' }} onClick={onClick} role="button" tabIndex={0} onKeyDown={e => e.key === 'Enter' && onClick()}>
       {ws.badge && <span className="ws-badge">{ws.badge}</span>}
-      {isLow && !isFull && <span className="ws-badge ws-badge-low">⚡ {ws.seatsLeft} seats left</span>}
+      {isLow && !isFull && <span className="ws-badge ws-badge-low">{ws.seatsLeft} seats left</span>}
 
       {/* Visual image area */}
-      <div className="ws-card-hero" style={{ background: ws.color }}>
-        <span className="ws-card-emoji">{ws.emoji}</span>
-      </div>
+      <div className="ws-card-hero" style={{ background: ws.color }} />
 
       {/* Meta row */}
       <div className="ws-card-meta-row">
         <span className="ws-level">{ws.level}</span>
         <span className="ws-dot">·</span>
-        <span className="ws-duration">⏱ {ws.duration}</span>
+        <span className="ws-duration">{ws.duration}</span>
       </div>
 
       <h3 className="ws-card-title">{ws.title}</h3>
@@ -238,12 +234,12 @@ export default function WorkshopsPage() {
     <>
       <div className="top-ribbon">
         <div className="top-ribbon-track">
-          <span>📍 Based in Mumbai</span><span className="ribbon-sep">|</span>
-          <span>🚛 Free delivery over ₹999</span><span className="ribbon-sep">|</span>
-          <span>🌍 Shipping Pan India</span><span className="ribbon-gap">✦</span>
-          <span>📍 Based in Mumbai</span><span className="ribbon-sep">|</span>
-          <span>🚛 Free delivery over ₹999</span><span className="ribbon-sep">|</span>
-          <span>🌍 Shipping Pan India</span><span className="ribbon-gap">✦</span>
+          <span>Based in Mumbai</span><span className="ribbon-sep">|</span>
+          <span>Free delivery over ₹999</span><span className="ribbon-sep">|</span>
+          <span>Shipping Pan India</span><span className="ribbon-gap">✦</span>
+          <span>Based in Mumbai</span><span className="ribbon-sep">|</span>
+          <span>Free delivery over ₹999</span><span className="ribbon-sep">|</span>
+          <span>Shipping Pan India</span><span className="ribbon-gap">✦</span>
         </div>
       </div>
 
@@ -258,15 +254,14 @@ export default function WorkshopsPage() {
 
         {/* Hero blurb */}
         <div className="ws-hero">
-          <div className="ws-hero-emoji">🧶</div>
           <p className="ws-hero-text">
             Join us in our cozy Mumbai studio for hands-on crochet workshops.
             Whether you're a complete beginner or looking to level up, there's something for everyone.
           </p>
           <div className="ws-hero-chips">
-            <span className="ws-chip">📍 Mumbai Studio</span>
+            <span className="ws-chip">Mumbai Studio</span>
             <span className="ws-chip">✦ Small Groups (max 12)</span>
-            <span className="ws-chip">🎨 All Materials Included</span>
+            <span className="ws-chip">All Materials Included</span>
           </div>
         </div>
 

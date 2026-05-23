@@ -9,17 +9,17 @@ export default function PrivacyPage() {
     <>
       <div className="top-ribbon">
         <div className="top-ribbon-track">
-          <span>📍 Based in Mumbai</span>
+          <span>Based in Mumbai</span>
           <span className="ribbon-sep">|</span>
-          <span>🚛 Free delivery over ₹999</span>
+          <span>Free delivery over ₹999</span>
           <span className="ribbon-sep">|</span>
-          <span>🌍 Shipping Pan India</span>
+          <span>Shipping Pan India</span>
           <span className="ribbon-gap">✦</span>
-          <span>📍 Based in Mumbai</span>
+          <span>Based in Mumbai</span>
           <span className="ribbon-sep">|</span>
-          <span>🚛 Free delivery over ₹999</span>
+          <span>Free delivery over ₹999</span>
           <span className="ribbon-sep">|</span>
-          <span>🌍 Shipping Pan India</span>
+          <span>Shipping Pan India</span>
           <span className="ribbon-gap">✦</span>
         </div>
       </div>
@@ -43,7 +43,7 @@ export default function PrivacyPage() {
           </div>
 
           <div className="policy-section">
-            <h2><span className="policy-icon">📋</span> Information We Collect</h2>
+            <h2>Information We Collect</h2>
             <p>When you interact with us, we may collect:</p>
             <ul>
               <li><strong>Contact details</strong> — name, phone number, address (when you place an order via WhatsApp or Instagram)</li>
@@ -54,7 +54,7 @@ export default function PrivacyPage() {
           </div>
 
           <div className="policy-section">
-            <h2><span className="policy-icon">🎯</span> How We Use Your Information</h2>
+            <h2>How We Use Your Information</h2>
             <p>We use your information solely to:</p>
             <ul>
               <li>Process and fulfil your orders</li>
@@ -66,7 +66,7 @@ export default function PrivacyPage() {
           </div>
 
           <div className="policy-section">
-            <h2><span className="policy-icon">🔒</span> Data Security</h2>
+            <h2>Data Security</h2>
             <p>
               Your data is stored securely and only accessible to the Marvikala team. We use
               WhatsApp and Instagram (end-to-end encrypted) as our primary communication channels,
@@ -75,7 +75,7 @@ export default function PrivacyPage() {
           </div>
 
           <div className="policy-section">
-            <h2><span className="policy-icon">🍪</span> Cookies</h2>
+            <h2>Cookies</h2>
             <p>
               This website uses minimal cookies to improve your browsing experience — such as
               remembering your cart items and search queries during a session. We do not use
@@ -84,7 +84,7 @@ export default function PrivacyPage() {
           </div>
 
           <div className="policy-section">
-            <h2><span className="policy-icon">🗑️</span> Your Rights</h2>
+            <h2>Your Rights</h2>
             <p>You have the right to:</p>
             <ul>
               <li>Ask us what information we hold about you</li>

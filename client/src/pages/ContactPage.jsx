@@ -75,7 +75,7 @@ export default function ContactPage() {
     // Simulate 90% success rate
     if (Math.random() > 0.1) {
       setStatus('success');
-      toast({ message: "Message sent! We'll get back to you soon 💛", type: 'success', duration: 4000 });
+      toast({ message: "Message sent! We'll get back to you soon.", type: 'success', duration: 4000 });
       setForm({ name: '', email: '', phone: '', message: '' });
       setTouched({});
     } else {
@@ -91,12 +91,12 @@ export default function ContactPage() {
       {/* TOP RIBBON */}
       <div className="top-ribbon">
         <div className="top-ribbon-track">
-          <span>📍 Based in Mumbai</span><span className="ribbon-sep">|</span>
-          <span>🚛 Free delivery over ₹999</span><span className="ribbon-sep">|</span>
-          <span>🌍 Shipping Pan India</span><span className="ribbon-gap">✦</span>
-          <span>📍 Based in Mumbai</span><span className="ribbon-sep">|</span>
-          <span>🚛 Free delivery over ₹999</span><span className="ribbon-sep">|</span>
-          <span>🌍 Shipping Pan India</span><span className="ribbon-gap">✦</span>
+          <span>Based in Mumbai</span><span className="ribbon-sep">|</span>
+          <span>Free delivery over ₹999</span><span className="ribbon-sep">|</span>
+          <span>Shipping Pan India</span><span className="ribbon-gap">✦</span>
+          <span>Based in Mumbai</span><span className="ribbon-sep">|</span>
+          <span>Free delivery over ₹999</span><span className="ribbon-sep">|</span>
+          <span>Shipping Pan India</span><span className="ribbon-gap">✦</span>
         </div>
       </div>
 
@@ -142,7 +142,6 @@ export default function ContactPage() {
 
             {status === 'success' ? (
               <div className="contact-success">
-                <div className="contact-success-icon">🌸</div>
                 <h3>Message sent!</h3>
                 <p>Thank you for reaching out, {form.name || 'friend'}! We'll get back to you within 24 hours.</p>
                 <button className="contact-submit-btn" onClick={resetForm} style={{ marginTop: 16 }}>Send another message</button>
