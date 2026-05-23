@@ -129,6 +129,10 @@ export default function Navbar({ searchQuery, onSearch }) {
   }
 
   function animateOutThenGo(destination) {
+    if (location.pathname === destination) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
     const productPage = document.querySelector('.product-page');
     if (productPage) { productPage.classList.add('pp-exit'); setTimeout(() => navigate(destination), 260); return; }
     const pageWrapper = document.querySelector('.sa-page') || document.querySelector('.story-page-wrapper') || document.querySelector('.contact-page-wrapper');
@@ -221,26 +225,6 @@ export default function Navbar({ searchQuery, onSearch }) {
 
   return (
     <>
-      {isHome && (
-        <div className="fixed-header">
-          <div className="top-ribbon">
-            <div className="top-ribbon-track">
-              <span>📍 Based in Mumbai</span>
-              <span className="ribbon-sep">|</span>
-              <span>🚛 Free delivery over ₹999</span>
-              <span className="ribbon-sep">|</span>
-              <span>🌍 Shipping Pan India</span>
-              <span className="ribbon-gap">✦</span>
-              <span>📍 Based in Mumbai</span>
-              <span className="ribbon-sep">|</span>
-              <span>🚛 Free delivery over ₹999</span>
-              <span className="ribbon-sep">|</span>
-              <span>🌍 Shipping Pan India</span>
-              <span className="ribbon-gap">✦</span>
-            </div>
-          </div>
-        </div>
-      )}
       <nav className={`navbar${scrolled ? ' navbar-scrolled' : ''}`} ref={navRef}>
         {/* LEFT: Hamburger (mobile) */}
         <button
@@ -258,7 +242,7 @@ export default function Navbar({ searchQuery, onSearch }) {
 
         {/* Desktop inline search */}
         {searchOpen && (
-          <div style={{ flex: 1, maxWidth: 380, display: 'flex' }} className="navbar-search-wrap-desktop">
+          <div className="navbar-search-wrap-desktop">
             <form className="navbar-search" onSubmit={handleSearchSubmit}>
               <input
                 ref={desktopRef}
@@ -318,7 +302,6 @@ export default function Navbar({ searchQuery, onSearch }) {
           </div>
         </div>
       </nav>
-      <div className={`fixed-header-spacer${isHome ? ' with-ribbon' : ''}`} aria-hidden="true" />
 
       {/* MOBILE SEARCH PANEL */}
       <div
@@ -454,7 +437,7 @@ export default function Navbar({ searchQuery, onSearch }) {
         </div>
 
         <div className="drawer-footer">
-          <p className="drawer-copyright">© 2025 Marvikala. All rights reserved.</p>
+          <p className="drawer-copyright">© {new Date().getFullYear()} Marvikala. All rights reserved.</p>
           <div className="drawer-footer-links">
             <button className="drawer-footer-link" onClick={() => { setDrawerOpen(false); navigate('/privacy'); }}>Privacy Policy</button>
             <span className="drawer-footer-sep">·</span>

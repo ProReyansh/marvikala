@@ -75,7 +75,6 @@ export default function CollectionPage() {
 
   const [products, setProducts] = useState(getCachedProducts);
   const [loading, setLoading]   = useState(() => getCachedProducts().length === 0);
-  const [exiting, setExiting]   = useState(false);
 
   const catLabel = CAT_LABEL[category] || category;
   const catEmoji = CAT_EMOJI[category] || '✨';
@@ -115,11 +114,11 @@ export default function CollectionPage() {
 
       <Navbar searchQuery="" onSearch={() => {}} />
 
-      <div className={`sa-page${exiting ? ' page-exiting' : ''}`}>
+      <div className="sa-page">
 
         {/* ── Header Row ── */}
         <div className="sa-header-row">
-          <h1 className="sa-title">{catEmoji} {catLabel}</h1>
+          <h1 className="sa-title">{catLabel}</h1>
           <button className="sa-back-btn" onClick={() => navigate(-1)}>
             ← Back
           </button>

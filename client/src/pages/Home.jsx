@@ -19,25 +19,23 @@ const CATEGORIES = [
   { key: 'custom',           label: 'Custom',            icon: '🎨', sub: 'Your idea, our hands', cls: 'cc10', img: 'https://picsum.photos/seed/custom/400/400' },
 ];
 
+// Static cover images for specific categories — override picsum placeholders
+const STATIC_CAT_IMGS = {
+  flowers:          '/images/flower-collection.png',
+  keychains:        '/images/keychain-collection.png',
+  bookmarks:        '/images/bookmarks-collection.png',
+  laddugopaldress:  '/images/laddugopaldress-collection.png',
+  jewellery:        '/images/jewellery-collection.jpeg',
+  homedecor:        '/images/homedecor-collection.png',
+  hairaccessories:  '/images/hairaccessories-collection.png',
+  rakhi:            '/images/rakhi-collection.png',
+};
+
 const CAT_LABEL = {
   flowers: 'Flowers', keychains: 'Keychains', bookmarks: 'Bookmarks',
   laddugopaldress: 'Laddu Gopal', homedecor: 'Home Decor',
   hairaccessories: 'Hair Accessories', jewellery: 'Jewellery',
   rakhi: 'Rakhi', custom: 'Custom',
-};
-
-// Collection card color class mapping
-const CAT_COLOR_CLASS = {
-  flowers:         'cc-flowers',
-  keychains:       'cc-keychains',
-  bookmarks:       'cc-bookmarks',
-  laddugopaldress: 'cc-gopal',
-  homedecor:       'cc-homedecor',
-  hairaccessories: 'cc-hair',
-  jewellery:       'cc-jewellery',
-  rakhi:           'cc-rakhi',
-  custom:          'cc-custom',
-  all:             'cc-flowers',
 };
 
 // Build a clean SEO-friendly URL: /product/crochet-flower-bouquet
@@ -214,7 +212,7 @@ export default function Home() {
 
   const bestsellers = products.filter((p) => p.bestseller || p.featured);
 
-  function ProductCard({ product }) {
+  function ProductCard({ product, noCart = false }) {
     const imgSrc = (() => {
       const imgs = product.images?.length > 0 ? product.images : (product.image ? [product.image] : []);
       if (!imgs[0]) return null;
@@ -249,7 +247,7 @@ export default function Home() {
               )}
             </div>
           )}
-          <CartQtyBtn product={product} addClassName="enquire-btn" />
+          {!noCart && <CartQtyBtn product={product} addClassName="enquire-btn" />}
         </div>
       </div>
     );
@@ -257,6 +255,16 @@ export default function Home() {
 
   return (
     <>
+      <div className="top-ribbon">
+        <div className="top-ribbon-track">
+          <span>📍 Based in Mumbai</span><span className="ribbon-sep">|</span>
+          <span>🚛 Free delivery over ₹999</span><span className="ribbon-sep">|</span>
+          <span>🌍 Shipping Pan India</span><span className="ribbon-gap">✦</span>
+          <span>📍 Based in Mumbai</span><span className="ribbon-sep">|</span>
+          <span>🚛 Free delivery over ₹999</span><span className="ribbon-sep">|</span>
+          <span>🌍 Shipping Pan India</span><span className="ribbon-gap">✦</span>
+        </div>
+      </div>
       <Navbar searchQuery={searchQuery} onSearch={handleSearch} />
 
 
@@ -339,10 +347,15 @@ export default function Home() {
             {[
               {
                 icon: (
-                  /* Heart cradled in hands */
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M12 7.5C12 7.5 10 4.5 7.5 4.5C5.2 4.5 3.5 6.5 3.5 8.5C3.5 11.5 7.5 15 12 18C16.5 15 20.5 11.5 20.5 8.5C20.5 6.5 18.8 4.5 16.5 4.5C14 4.5 12 7.5 12 7.5Z"/>
-                    <path d="M3 15.5C2 17 2 19 4 20C6.5 21 9 21.5 12 21.5C15 21.5 17.5 21 20 20C22 19 22 17 21 15.5"/>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    {/* Heart */}
+                    <path d="M12,10 C12,10 10.5,7.5 8,7.5 C5.8,7.5 4,9.2 4,11 C4,14 8,17 12,20 C16,17 20,14 20,11 C20,9.2 18.2,7.5 16,7.5 C13.5,7.5 12,10 12,10Z"/>
+                    {/* Left arm cradling */}
+                    <path d="M1.5,22 C2,19.5 4,18 6.5,17.5"/>
+                    {/* Right arm cradling */}
+                    <path d="M22.5,22 C22,19.5 20,18 17.5,17.5"/>
+                    {/* Cupped palms under heart */}
+                    <path d="M6.5,17.5 Q12,20 17.5,17.5"/>
                   </svg>
                 ),
                 text: 'Handmade\nwith love',
@@ -373,9 +386,22 @@ export default function Home() {
               },
               {
                 icon: (
-                  /* Simplified India map outline */
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M7 2 L13 2 L17 3 L19 5 L20 7.5 L19 9.5 L20.5 11.5 L18.5 13.5 L17 16.5 L14 20 L12 22 L10 20 L7 16.5 L5.5 13.5 L5 11.5 L4.5 9.5 L5 7 L6.5 4.5 Z"/>
+                  /* Ashoka Chakra — 12-spoke wheel, iconic Indian symbol */
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="9"/>
+                    <circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/>
+                    <line x1="12" y1="3" x2="12" y2="12"/>
+                    <line x1="16.5" y1="4.2" x2="12" y2="12"/>
+                    <line x1="19.8" y1="7.5" x2="12" y2="12"/>
+                    <line x1="21" y1="12" x2="12" y2="12"/>
+                    <line x1="19.8" y1="16.5" x2="12" y2="12"/>
+                    <line x1="16.5" y1="19.8" x2="12" y2="12"/>
+                    <line x1="12" y1="21" x2="12" y2="12"/>
+                    <line x1="7.5" y1="19.8" x2="12" y2="12"/>
+                    <line x1="4.2" y1="16.5" x2="12" y2="12"/>
+                    <line x1="3" y1="12" x2="12" y2="12"/>
+                    <line x1="4.2" y1="7.5" x2="12" y2="12"/>
+                    <line x1="7.5" y1="4.2" x2="12" y2="12"/>
                   </svg>
                 ),
                 text: 'Made in\nIndia',
@@ -395,21 +421,34 @@ export default function Home() {
                 <h2>Shop by Collection</h2>
               </div>
               <div className="categories-3x3-grid">
-                {CATEGORIES.filter((c) => c.key !== 'all').map((c) => (
-                  <div
-                    key={c.key}
-                    className={`cat-card ${activeCategory === c.key ? 'active' : ''} ${bouncingCat === c.key ? 'cat-bounce' : ''}`}
-                    onClick={() => navigate('/collection/' + c.key)}
-                  >
+                {CATEGORIES.filter((c) => c.key !== 'all').map((c) => {
+                  // Priority: static override → real product photo → picsum fallback
+                  const catImg = (() => {
+                    if (STATIC_CAT_IMGS[c.key]) return STATIC_CAT_IMGS[c.key];
+                    const pool = products.filter(p => p.category === c.key);
+                    const pick = pool.find(p => p.bestseller || p.featured) || pool[0];
+                    if (pick) {
+                      const imgs = pick.images?.length > 0 ? pick.images : (pick.image ? [pick.image] : []);
+                      if (imgs[0]) return imgs[0].startsWith('http') ? imgs[0] : `/uploads/${imgs[0]}`;
+                    }
+                    return c.img;
+                  })();
+                  return (
                     <div
-                      className={`cat-card-img ${c.cls}`}
-                      style={{ backgroundImage: `url('${c.img}')` }}
-                    />
-                    <div className="cat-card-body">
-                      <div className="cat-name">{c.label}</div>
+                      key={c.key}
+                      className={`cat-card ${activeCategory === c.key ? 'active' : ''} ${bouncingCat === c.key ? 'cat-bounce' : ''}`}
+                      onClick={() => navigate('/collection/' + c.key)}
+                    >
+                      <div
+                        className={`cat-card-img ${c.cls}`}
+                        style={{ backgroundImage: `url('${catImg}')` }}
+                      />
+                      <div className="cat-card-body">
+                        <div className="cat-name">{c.label}</div>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </section>
           </div>
@@ -495,7 +534,6 @@ export default function Home() {
           {/* WORKSHOPS */}
           <section className="workshop-teaser fade-section" id="workshops">
             <div className="workshop-teaser-inner">
-              <p className="workshop-teaser-overline">✦ Learn the Craft</p>
               <h2 className="workshop-teaser-title">Join Our Workshops</h2>
               <p className="workshop-teaser-desc">
                 Learn the art of crochet from the hands that made it — beginner-friendly sessions held right here in our Mumbai studio.
@@ -599,36 +637,42 @@ export default function Home() {
             <h2>Let's be friends! <span>@marvikala_</span></h2>
             <p>Follow us for daily crochet inspiration</p>
             <div className="insta-grid">
-              {['🌸','🔑','🧶','🌿','🎀','💍'].map((emoji, i) => (
-                <a
-                  key={i}
-                  href="https://instagram.com/marvikala"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="insta-item"
-                >
-                  {emoji}
-                </a>
-              ))}
+              {products
+                .filter(p => {
+                  const imgs = p.images?.length > 0 ? p.images : (p.image ? [p.image] : []);
+                  return !!imgs[0];
+                })
+                .slice(0, 6)
+                .map((p) => {
+                  const imgs = p.images?.length > 0 ? p.images : (p.image ? [p.image] : []);
+                  const src = imgs[0].startsWith('http') ? imgs[0] : `/uploads/${imgs[0]}`;
+                  return (
+                    <a
+                      key={p._id}
+                      href="https://instagram.com/marvikala_"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="insta-item"
+                      aria-label={p.name}
+                    >
+                      <img src={src} alt={p.name} loading="lazy" />
+                    </a>
+                  );
+                })
+              }
             </div>
             <a
-              href="https://instagram.com/marvikala"
+              href="https://instagram.com/marvikala_"
               target="_blank"
               rel="noreferrer"
               className="btn-outline"
             >
-              Follow on Instagram @marvikala
+              Follow on Instagram @marvikala_
             </a>
           </section>
 
           {/* CONTACT + FAQ */}
           <section className="home-links-section fade-section">
-            <div className="home-links-card" onClick={() => navigate('/contact')}>
-              <div className="home-links-icon">💬</div>
-              <h3 className="home-links-title">Get in Touch</h3>
-              <p className="home-links-desc">Have a custom idea or need help? We'd love to hear from you.</p>
-              <span className="home-links-cta">Contact Us →</span>
-            </div>
             <div className="home-links-card" onClick={() => navigate('/faq')}>
               <div className="home-links-icon">❓</div>
               <h3 className="home-links-title">Got Questions?</h3>
@@ -640,10 +684,13 @@ export default function Home() {
         </>
       )}
 
-      {/* Popup trigger button */}
+      {/* Popup trigger — 10% off section */}
       <div className="popup-trigger-wrap">
+        <p className="popup-trigger-eyebrow">✦ Welcome Gift</p>
+        <h3 className="popup-trigger-heading">New here? Get 10% off your first order.</h3>
+        <p className="popup-trigger-subtext">Enter your details and we'll send you an exclusive discount code — just for you.</p>
         <button className="popup-trigger-btn" onClick={() => setShowPopup(true)}>
-          🎁 Get 10% Off
+          🎁 Claim My 10% Off
         </button>
       </div>
 

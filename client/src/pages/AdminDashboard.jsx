@@ -261,6 +261,7 @@ export default function AdminDashboard() {
   const [newColl, setNewColl]             = useState({ key: '', label: '', emoji: '🧶', desc: '', imgSeed: 'crochet' });
   const [collError, setCollError]         = useState('');
   const [editingColl, setEditingColl]     = useState(null);
+  const [editCollForm, setEditCollForm]   = useState({ label: '', emoji: '', desc: '', img: '' });
 
   function saveMostLoved(key) {
     setMostLovedKey(key);
@@ -298,6 +299,26 @@ export default function AdminDashboard() {
     if (!window.confirm('Reset to default collections? This cannot be undone.')) return;
     saveCollections(DEFAULT_COLLECTIONS);
     saveMostLoved('flowers');
+  }
+
+  function startEditColl(c) {
+    setEditingColl(c.key);
+    setEditCollForm({ label: c.label, emoji: c.emoji || '🧶', desc: c.desc || '', img: c.img || '' });
+  }
+
+  function cancelEditColl() {
+    setEditingColl(null);
+  }
+
+  function saveEditColl() {
+    if (!editCollForm.label.trim()) return;
+    const updated = collections.map(c =>
+      c.key === editingColl
+        ? { ...c, label: editCollForm.label.trim(), emoji: editCollForm.emoji, desc: editCollForm.desc.trim(), img: editCollForm.img || '' }
+        : c
+    );
+    saveCollections(updated);
+    setEditingColl(null);
   }
 
   function closeModal() {
@@ -644,24 +665,85 @@ export default function AdminDashboard() {
 
               {/* Existing collections list */}
               <div className="admin-coll-list">
-                {collections.map((c, i) => (
-                  <div key={c.key} className="admin-coll-item">
-                    <span className="admin-coll-item-emoji">{c.emoji}</span>
-                    <div className="admin-coll-item-info">
-                      <div className="admin-coll-item-name">{c.label}</div>
-                      <div className="admin-coll-item-key">key: {c.key}</div>
-                    </div>
-                    {c.key === mostLovedKey && (
-                      <span className="admin-coll-item-badge">★ Most Loved</span>
+                {collections.map((c) => (
+                  <div key={c.key}>
+                    {editingColl === c.key ? (
+                      /* ── Inline edit row ── */
+                      <div className="admin-coll-edit-row">
+                        <div className="admin-coll-edit-fields">
+                          <div className="form-group" style={{ flex: 1 }}>
+                            <label>Name *</label>
+                            <input
+                              type="text"
+                              value={editCollForm.label}
+                              onChange={e => setEditCollForm(f => ({ ...f, label: e.target.value }))}
+                              placeholder="Collection name"
+                            />
+                          </div>
+                          <div className="form-group" style={{ flex: 2 }}>
+                            <label>Description</label>
+                            <input
+                              type="text"
+                              value={editCollForm.desc}
+                              onChange={e => setEditCollForm(f => ({ ...f, desc: e.target.value }))}
+                              placeholder="Short description"
+                            />
+                          </div>
+                        </div>
+                        <div className="form-group">
+                          <label>Cover Image <small style={{ color: '#999', fontWeight: 400 }}>(click to select)</small></label>
+                          <div className="admin-coll-img-picker">
+                            {[
+                              { path: '/images/flower-collection.png',          label: 'Flowers' },
+                              { path: '/images/keychain-collection.png',         label: 'Keychains' },
+                              { path: '/images/bookmarks-collection.png',        label: 'Bookmarks' },
+                              { path: '/images/laddugopaldress-collection.png',  label: 'Laddu Gopal' },
+                              { path: '/images/jewellery-collection.jpeg',       label: 'Jewellery' },
+                              { path: '/images/homedecor-collection.png',        label: 'Home Decor' },
+                              { path: '/images/hairaccessories-collection.png',  label: 'Hair Acc.' },
+                              { path: '/images/rakhi-collection.png',            label: 'Rakhi' },
+                            ].map(img => (
+                              <div
+                                key={img.path}
+                                className={`admin-coll-img-option${editCollForm.img === img.path ? ' selected' : ''}`}
+                                onClick={() => setEditCollForm(f => ({ ...f, img: f.img === img.path ? '' : img.path }))}
+                                title={img.label}
+                              >
+                                <img src={img.path} alt={img.label} />
+                                <span>{img.label}</span>
+                                {editCollForm.img === img.path && <span className="admin-coll-img-check">✓</span>}
+                              </div>
+                            ))}
+                          </div>
+                          {editCollForm.img && (
+                            <button type="button" style={{ fontSize: 11, color: '#c0392b', background: 'none', border: 'none', cursor: 'pointer', padding: '4px 0', textDecoration: 'underline' }} onClick={() => setEditCollForm(f => ({ ...f, img: '' }))}>
+                              Remove — use auto photo
+                            </button>
+                          )}
+                        </div>
+                        <div className="admin-coll-edit-actions">
+                          <button className="btn-save" style={{ padding: '6px 14px', fontSize: 12 }} onClick={saveEditColl}>Save</button>
+                          <button className="btn-cancel" style={{ padding: '6px 14px', fontSize: 12 }} onClick={cancelEditColl}>Cancel</button>
+                        </div>
+                      </div>
+                    ) : (
+                      /* ── Normal row ── */
+                      <div className="admin-coll-item">
+                        <span className="admin-coll-item-emoji">{c.emoji}</span>
+                        <div className="admin-coll-item-info">
+                          <div className="admin-coll-item-name">{c.label}</div>
+                          <div className="admin-coll-item-desc">{c.desc || <span style={{ color: '#bbb', fontStyle: 'italic' }}>No description</span>}</div>
+                          <div className="admin-coll-item-key">key: {c.key}</div>
+                        </div>
+                        {c.key === mostLovedKey && (
+                          <span className="admin-coll-item-badge">★ Most Loved</span>
+                        )}
+                        <div style={{ display: 'flex', gap: 6, marginLeft: 'auto', flexShrink: 0 }}>
+                          <button className="btn-edit" onClick={() => startEditColl(c)}>Edit</button>
+                          <button className="btn-delete" onClick={() => handleDeleteColl(c.key)}>Remove</button>
+                        </div>
+                      </div>
                     )}
-                    <button
-                      className="btn-delete"
-                      style={{ marginLeft: 'auto', flexShrink: 0 }}
-                      onClick={() => handleDeleteColl(c.key)}
-                      title="Remove this collection"
-                    >
-                      Remove
-                    </button>
                   </div>
                 ))}
               </div>

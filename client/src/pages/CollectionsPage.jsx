@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react'; // useMemo still used for countMap
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
@@ -12,6 +12,7 @@ const DEFAULT_COLLECTIONS = [
     desc: 'Handcrafted crochet bouquets, blooms & arrangements crafted for every occasion and loved one',
     emoji: '🌸',
     imgSeed: 'flowers',
+    staticImg: '/images/flower-collection.png',
     accent: '#FFF0F3',
     accentText: '#9C3B5A',
   },
@@ -91,10 +92,6 @@ const DEFAULT_COLLECTIONS = [
 
 
 // ── localStorage helpers ──────────────────────────────────────────────────────
-function getMostLovedKey() {
-  try { return localStorage.getItem('mk_most_loved_collection') || 'flowers'; } catch { return 'flowers'; }
-}
-
 function getStoredCollections() {
   try {
     const c = localStorage.getItem('mk_custom_collections');
@@ -104,6 +101,10 @@ function getStoredCollections() {
     }
   } catch {}
   return null;
+}
+
+function getMostLovedKey() {
+  try { return localStorage.getItem('mk_most_loved_collection') || 'flowers'; } catch { return 'flowers'; }
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -117,7 +118,21 @@ function getCachedProducts() {
   catch { return []; }
 }
 
-function getCollectionCoverImg(products, key, seed) {
+// Static cover images — always take priority regardless of product data or localStorage overrides
+const STATIC_COVER_IMGS = {
+  flowers:          '/images/flower-collection.png',
+  keychains:        '/images/keychain-collection.png',
+  bookmarks:        '/images/bookmarks-collection.png',
+  laddugopaldress:  '/images/laddugopaldress-collection.png',
+  jewellery:        '/images/jewellery-collection.jpeg',
+  homedecor:        '/images/homedecor-collection.png',
+  hairaccessories:  '/images/hairaccessories-collection.png',
+  rakhi:            '/images/rakhi-collection.png',
+};
+
+function getCollectionCoverImg(products, key, seed, colImg) {
+  if (STATIC_COVER_IMGS[key]) return STATIC_COVER_IMGS[key];
+  if (colImg) return colImg; // admin-selected image for this collection
   const pool = products.filter(p => p.category === key);
   const pick = pool.find(p => p.bestseller || p.featured) || pool[0];
   if (pick) {
@@ -128,12 +143,12 @@ function getCollectionCoverImg(products, key, seed) {
 }
 
 // ── Components ────────────────────────────────────────────────────────────────
-function CollectionCard({ col, count, coverImg, index }) {
+function CollectionCard({ col, count, coverImg, index, mostLoved }) {
   const navigate = useNavigate();
 
   return (
     <div
-      className="coll-card"
+      className={`coll-card${mostLoved ? ' coll-card--most-loved' : ''}`}
       onClick={() => navigate(`/collection/${col.key}`)}
       role="button"
       tabIndex={0}
@@ -143,6 +158,7 @@ function CollectionCard({ col, count, coverImg, index }) {
     >
       {/* Image */}
       <div className="coll-card-img-wrap">
+        {mostLoved && <span className="coll-most-loved-badge">★ Most Loved</span>}
         <div
           className="coll-card-img"
           style={{ backgroundImage: `url(${coverImg})` }}
@@ -155,13 +171,7 @@ function CollectionCard({ col, count, coverImg, index }) {
       {/* Body */}
       <div className="coll-card-body">
         <div className="coll-card-top">
-          <span className="coll-card-emoji" aria-hidden="true">{col.emoji}</span>
-          <div className="coll-card-title-group">
-            <h3 className="coll-card-label">{col.label}</h3>
-            {count > 0 && (
-              <span className="coll-card-count">{count} item{count !== 1 ? 's' : ''}</span>
-            )}
-          </div>
+          <h3 className="coll-card-label">{col.label}</h3>
         </div>
         <p className="coll-card-desc">{col.desc}</p>
         <div className="coll-card-cta">
@@ -199,13 +209,11 @@ export default function CollectionsPage() {
   const navigate = useNavigate();
   const [products, setProducts] = useState(getCachedProducts);
   const [loading, setLoading]   = useState(() => getCachedProducts().length === 0);
-  const [exiting, setExiting]   = useState(false);
 
   // Read admin settings from localStorage
-  const [mostLovedKey]        = useState(getMostLovedKey);
-  const [storedCollections]   = useState(getStoredCollections);
+  const [storedCollections] = useState(getStoredCollections);
   const COLLECTIONS = storedCollections || DEFAULT_COLLECTIONS;
-  const heroCollection = COLLECTIONS.find(c => c.key === mostLovedKey) || COLLECTIONS[0];
+  const mostLovedKey = getMostLovedKey();
 
   useEffect(() => {
     document.title = 'Collections — Marvikala';
@@ -227,8 +235,6 @@ export default function CollectionsPage() {
     return m;
   }, [products]);
 
-  const totalProducts = products.length;
-
   // Display in default catalogue order
   const displayed = COLLECTIONS;
 
@@ -248,75 +254,19 @@ export default function CollectionsPage() {
 
       <Navbar searchQuery="" onSearch={() => {}} />
 
-      <div className={`coll-page${exiting ? ' page-exiting' : ''}`}>
+      <div className="coll-page">
 
-        {/* ══ HERO ══════════════════════════════════════════════════════════ */}
-        <section className="coll-hero" aria-label="Collections hero">
-          <div className="coll-hero-content">
-            <p className="coll-hero-overline">✦ Handmade with Love</p>
-            <h1 className="coll-hero-title">Our Collections</h1>
-            <p className="coll-hero-sub">
-              Every piece in our collections is crafted stitch by stitch in our Mumbai studio.
-              Explore categories curated with care, warmth, and artisan pride.
-            </p>
-            <div className="coll-hero-chips">
-              <span className="coll-hero-chip">
-                <span className="coll-hero-chip-num">{COLLECTIONS.length}</span> Collections
-              </span>
-              <span className="coll-hero-chip-sep" aria-hidden="true">·</span>
-              {loading ? (
-                <span className="coll-hero-chip">
-                  <span className="skeleton-box" style={{ display: 'inline-block', width: 24, height: 14, borderRadius: 4 }} /> Products
-                </span>
-              ) : (
-                <span className="coll-hero-chip">
-                  <span className="coll-hero-chip-num">{totalProducts}+</span> Products
-                </span>
-              )}
-            </div>
-            <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}>
-              <button className="coll-back-btn" onClick={() => navigate(-1)}>
-                ← Back
-              </button>
-              <button className="coll-hero-shop-btn" onClick={() => navigate('/shop')}>
-                Shop All Products <span aria-hidden="true">→</span>
-              </button>
-            </div>
-          </div>
-          <div className="coll-hero-decoration" aria-hidden="true">
-            <span className="coll-deco-blob coll-deco-blob-1" />
-            <span className="coll-deco-blob coll-deco-blob-2" />
-            <span className="coll-deco-emoji">🌸</span>
-          </div>
-        </section>
+        {/* ══ HEADER ROW ═════════════════════════════════════════════════════ */}
+        <div className="sa-header-row coll-back-row">
+          <h1 className="sa-title">Our Collections</h1>
+          <button className="sa-back-btn" onClick={() => navigate(-1)}>← Back</button>
+        </div>
 
-        {/* ══ MOST LOVED BANNER ═══════════════════════════════════════════════ */}
-        <section
-          className="coll-featured-banner"
-          onClick={() => navigate(`/collection/${heroCollection.key}`)}
-          role="button"
-          tabIndex={0}
-          onKeyDown={e => e.key === 'Enter' && navigate(`/collection/${heroCollection.key}`)}
-          aria-label={`Most Loved: ${heroCollection.label} collection`}
-          style={{
-            backgroundImage: `url(https://picsum.photos/seed/${heroCollection.imgSeed}/1200/500)`,
-          }}
-        >
-          <div className="coll-banner-overlay" aria-hidden="true" />
-          <div className="coll-banner-content">
-            <span className="coll-banner-label">✦ Most Loved Collection</span>
-            <h2 className="coll-banner-title">{heroCollection.label}</h2>
-            <p className="coll-banner-desc">{heroCollection.desc}</p>
-            <div className="coll-banner-cta">
-              <span>Explore Collection</span>
-              <span className="coll-banner-arrow" aria-hidden="true">→</span>
-            </div>
-          </div>
-        </section>
-
-        {/* ══ ALL COLLECTIONS HEADING ═══════════════════════════════════════ */}
-        <div className="coll-all-heading-wrap">
-          <h2 className="coll-all-heading">All Collections</h2>
+        {/* ══ INTRO ══════════════════════════════════════════════════════════ */}
+        <div className="coll-intro">
+          <p className="coll-intro-sub">
+            Every piece is crafted stitch by stitch in our Mumbai studio — made with care, warmth, and artisan pride.
+          </p>
         </div>
 
 
@@ -331,6 +281,7 @@ export default function CollectionsPage() {
                   count={countMap[col.key] || 0}
                   coverImg={getCollectionCoverImg(products, col.key, col.imgSeed)}
                   index={i}
+                  mostLoved={col.key === mostLovedKey}
                 />
               ))}
         </div>
