@@ -63,7 +63,9 @@ function ShopCard({ product }) {
             {product.originalPrice && <span className="price-original">₹{product.originalPrice}</span>}
           </div>
         )}
-        <CartQtyBtn product={product} addClassName="enquire-btn" />
+        <div className={`pc-stock-status ${product.inStock ? 'pc-stock-in' : 'pc-stock-mto'}`}>
+          {product.inStock ? '● Ready to Ship' : '● Made to Order'}
+        </div>
       </div>
     </div>
   );

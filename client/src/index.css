@@ -9921,6 +9921,17 @@ body {
   #new-arrivals { padding-top: 18px !important; }
 }
 
+/* ── Product card — stock status label ── */
+.pc-stock-status {
+  font-size: 10px;
+  font-weight: 600;
+  font-family: var(--sans);
+  margin-top: 8px;
+  letter-spacing: 0.2px;
+}
+.pc-stock-in  { color: #2e9e5b; }
+.pc-stock-mto { color: #d94040; }
+
 /* ── Product card — teal cart icon (top-right of image) ── */
 .pc-cart-icon-btn {
   position: absolute;
