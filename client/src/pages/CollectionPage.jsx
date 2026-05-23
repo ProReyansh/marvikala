@@ -84,7 +84,7 @@ function ShopCard({ product }) {
           </div>
         )}
         <div className={`pc-stock-status ${product.inStock ? 'pc-stock-in' : 'pc-stock-mto'}`}>
-          {product.inStock ? '● Ready to Ship' : '● Made to Order'}
+          {product.inStock ? 'READY TO SHIP' : 'MADE TO ORDER'}
         </div>
       </div>
     </div>
