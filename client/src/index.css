@@ -911,9 +911,9 @@ body {
   left: 12px;
   background: var(--olive);
   color: white;
-  font-size: 8px;
+  font-size: 9px;
   font-weight: 700;
-  padding: 3px 8px;
+  padding: 3px 9px;
   border-radius: 50px;
 }
 
@@ -9988,10 +9988,10 @@ body {
   right: 10px;
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 2px;
   background: #fff;
   border-radius: 50px;
-  padding: 4px 8px;
+  padding: 3px 6px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.12);
   z-index: 2;
 }
@@ -10000,16 +10000,16 @@ body {
   border: none;
   outline: none;
   color: var(--teal);
-  font-size: 16px;
+  font-size: 11px;
   font-weight: 700;
   cursor: pointer;
   line-height: 1;
-  padding: 0 2px;
+  padding: 0 1px;
 }
 .pc-cart-icon-btn:focus { outline: none; }
 .pc-cart-icon-ctrl button:focus { outline: none; }
 .pc-cart-icon-ctrl span {
-  font-size: 13px;
+  font-size: 10px;
   font-weight: 700;
   color: var(--text-dark);
   min-width: 14px;
