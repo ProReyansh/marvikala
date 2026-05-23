@@ -9811,7 +9811,7 @@ body {
 
 /* ── New Arrival badge (product grid cards) ── */
 .new-arrival-badge {
-  background: #e8564a;
+  background: var(--teal);
   color: #fff;
   font-size: 9px;
   font-weight: 800;
