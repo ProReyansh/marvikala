@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import CartQtyBtn from '../components/CartQtyBtn';
+import { useCart } from '../context/CartContext';
 
 const CAT_LABEL = {
   flowers: 'Flowers', keychains: 'Keychains', bookmarks: 'Bookmarks',
@@ -28,6 +28,10 @@ function getCachedProducts() {
 
 function ShopCard({ product }) {
   const navigate = useNavigate();
+  const { items, addToCart, updateQty, removeFromCart } = useCart();
+  const cartItem = items.find(i => i._id === product._id);
+  const qty = cartItem?.qty || 0;
+
   const imgSrc = (() => {
     const imgs = product.images?.length > 0 ? product.images : (product.image ? [product.image] : []);
     if (!imgs[0]) return null;
@@ -47,6 +51,22 @@ function ShopCard({ product }) {
           <span className="product-badge bestseller-badge">Bestseller</span>
         ) : null}
         {!product.inStock && <div className="out-of-stock-overlay">Made to Order</div>}
+        {product.inStock && (
+          qty === 0 ? (
+            <button className="pc-cart-icon-btn" onClick={e => { e.stopPropagation(); addToCart(product); }} aria-label="Add to cart">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+              </svg>
+            </button>
+          ) : (
+            <div className="pc-cart-icon-ctrl" onClick={e => e.stopPropagation()}>
+              <button onClick={() => qty <= 1 ? removeFromCart(product._id) : updateQty(product._id, qty - 1)}>−</button>
+              <span>{qty}</span>
+              <button onClick={() => updateQty(product._id, qty + 1)}>+</button>
+            </div>
+          )
+        )}
       </div>
       <div className="product-info">
         <div className="product-name">{product.name}</div>
@@ -57,7 +77,9 @@ function ShopCard({ product }) {
             {product.originalPrice && <span className="price-original">₹{product.originalPrice}</span>}
           </div>
         )}
-        <CartQtyBtn product={product} addClassName="enquire-btn" />
+        <div className={`pc-stock-status ${product.inStock ? 'pc-stock-in' : 'pc-stock-mto'}`}>
+          {product.inStock ? 'READY TO SHIP' : 'MADE TO ORDER'}
+        </div>
       </div>
     </div>
   );
