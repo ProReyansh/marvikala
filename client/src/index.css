@@ -9930,6 +9930,12 @@ body {
   #new-arrivals { padding-top: 18px !important; }
 }
 
+/* ── Reduce top space above Our Bestsellers ── */
+#bestsellers { padding-top: 24px !important; }
+@media (max-width: 768px) {
+  #bestsellers { padding-top: 18px !important; }
+}
+
 /* ── Product card — stock status label ── */
 .pc-stock-status {
   font-size: 9px;
