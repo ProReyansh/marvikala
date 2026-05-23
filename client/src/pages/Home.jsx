@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from 'react';
+﻿import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
@@ -211,6 +211,49 @@ export default function Home() {
       : products.filter((p) => p.category === activeCategory);
 
   const bestsellers = products.filter((p) => p.bestseller || p.featured);
+
+  function SwipeCarousel({ items, sectionId, title }) {
+    const trackRef = useRef(null);
+    const [activeIdx, setActiveIdx] = useState(0);
+
+    const onScroll = useCallback(() => {
+      const el = trackRef.current;
+      if (!el) return;
+      const idx = Math.round(el.scrollLeft / el.offsetWidth);
+      setActiveIdx(idx);
+    }, []);
+
+    function scrollTo(i) {
+      const el = trackRef.current;
+      if (!el) return;
+      el.scrollTo({ left: i * el.offsetWidth, behavior: 'smooth' });
+    }
+
+    return (
+      <section className="section fade-section" id={sectionId}>
+        <div className="section-head"><h2>{title}</h2></div>
+        <div className="na-swipe-track" ref={trackRef} onScroll={onScroll}>
+          {items.map((product) => (
+            <div className="na-swipe-item" key={product._id}>
+              <ProductCard product={product} />
+            </div>
+          ))}
+        </div>
+        {items.length > 1 && (
+          <div className="na-dots">
+            {items.map((_, i) => (
+              <button
+                key={i}
+                className={`na-dot${i === activeIdx ? ' na-dot-active' : ''}`}
+                onClick={() => scrollTo(i)}
+                aria-label={`Go to item ${i + 1}`}
+              />
+            ))}
+          </div>
+        )}
+      </section>
+    );
+  }
 
   function ProductCard({ product, noCart = false }) {
     const { items, addToCart, updateQty, removeFromCart } = useCart();
@@ -487,28 +530,8 @@ export default function Home() {
           {/* NEW ARRIVALS — horizontal scroll */}
           {!loading && products.filter(p => p.newArrival).length > 0 && (() => {
             const newArrivals = products.filter(p => p.newArrival);
-            const idx = Math.min(naIndex, newArrivals.length - 1);
             return (
-              <section className="section fade-section" id="new-arrivals">
-                <div className="section-head">
-                  <h2>New Arrivals</h2>
-                </div>
-                <div className="na-carousel-card" key={idx}>
-                  <ProductCard product={newArrivals[idx]} />
-                </div>
-                {newArrivals.length > 1 && (
-                  <div className="na-dots">
-                    {newArrivals.map((_, i) => (
-                      <button
-                        key={i}
-                        className={`na-dot${i === idx ? ' na-dot-active' : ''}`}
-                        onClick={() => setNaIndex(i)}
-                        aria-label={`Go to item ${i + 1}`}
-                      />
-                    ))}
-                  </div>
-                )}
-              </section>
+              <SwipeCarousel items={newArrivals} sectionId="new-arrivals" title="New Arrivals" />
             );
           })()}
 
