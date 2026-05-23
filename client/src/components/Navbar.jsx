@@ -29,10 +29,11 @@ export default function Navbar({ searchQuery, onSearch }) {
     try { return !!sessionStorage.getItem('mk_search'); } catch { return false; }
   });
 
-  const desktopRef  = useRef();
-  const mobileRef   = useRef();
-  const navRef      = useRef();
-  const dropdownRef = useRef();
+  const desktopRef   = useRef();
+  const mobileRef    = useRef();
+  const navRef       = useRef();
+  const dropdownRef  = useRef();
+  const blurTimeout  = useRef();
 
   const navigate  = useNavigate();
   const location  = useLocation();
@@ -332,6 +333,11 @@ export default function Navbar({ searchQuery, onSearch }) {
               value={searchQuery}
               onChange={(e) => onSearch?.(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && e.currentTarget.blur()}
+              onBlur={() => {
+                // Close panel when keyboard dismisses (scroll, tap outside, etc.)
+                // Delay lets suggestion taps register before closing
+                blurTimeout.current = setTimeout(() => setSearchOpen(false), 150);
+              }}
               className="msp-input"
               aria-label="Search"
               autoComplete="off"
@@ -354,7 +360,13 @@ export default function Navbar({ searchQuery, onSearch }) {
 
         {/* Suggestions dropdown */}
         {showSuggestions && (
-          <div className="msp-suggestions" role="listbox" aria-label="Search suggestions">
+          <div
+            className="msp-suggestions"
+            role="listbox"
+            aria-label="Search suggestions"
+            onMouseDown={() => clearTimeout(blurTimeout.current)}
+            onTouchStart={() => clearTimeout(blurTimeout.current)}
+          >
             {suggestions.map((p, i) => {
               const imgs = p.images?.length > 0 ? p.images : (p.image ? [p.image] : []);
               const src = imgs[0] ? imgUrl(imgs[0]) : null;
