@@ -764,7 +764,7 @@ body {
   border-radius: 50%;
   box-shadow: 0 4px 16px rgba(0,0,0,0.10);
   transition: box-shadow 0.2s, transform 0.2s;
-  background-size: contain;
+  background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 }

@@ -698,7 +698,7 @@ export default function AdminDashboard() {
                               { path: '/images/keychain-collection.png',         label: 'Keychains' },
                               { path: '/images/bookmarks-collection.png',        label: 'Bookmarks' },
                               { path: '/images/laddugopaldress-collection.png',  label: 'Laddu Gopal' },
-                              { path: '/images/jewellery-collection.jpeg',       label: 'Jewellery' },
+                              { path: '/images/jewellery-collection.png',        label: 'Jewellery' },
                               { path: '/images/homedecor-collection.png',        label: 'Home Decor' },
                               { path: '/images/hairaccessories-collection.png',  label: 'Hair Acc.' },
                               { path: '/images/rakhi-collection.png',            label: 'Rakhi' },

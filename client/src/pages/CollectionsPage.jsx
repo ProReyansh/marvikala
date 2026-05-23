@@ -124,7 +124,7 @@ const STATIC_COVER_IMGS = {
   keychains:        '/images/keychain-collection.png',
   bookmarks:        '/images/bookmarks-collection.png',
   laddugopaldress:  '/images/laddugopaldress-collection.png',
-  jewellery:        '/images/jewellery-collection.jpeg',
+  jewellery:        '/images/jewellery-collection.png',
   homedecor:        '/images/homedecor-collection.png',
   hairaccessories:  '/images/hairaccessories-collection.png',
   rakhi:            '/images/rakhi-collection.png',
