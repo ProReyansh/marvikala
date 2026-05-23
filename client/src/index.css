@@ -920,6 +920,9 @@ body {
 .bestseller-badge {
   background: var(--yellow) !important;
   color: var(--navy) !important;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.3px;
 }
 
 .out-of-stock-overlay {
@@ -9939,6 +9942,8 @@ body {
 /* ── Product card — stock status label (pill tag) ── */
 .pc-stock-status {
   display: inline-block;
+  align-self: flex-start;
+  width: fit-content;
   font-size: 9px;
   font-weight: 700;
   font-family: var(--sans);
