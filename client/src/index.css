@@ -3457,7 +3457,7 @@ body {
 .product-price-row { display: flex; align-items: center; gap: 6px; margin: 4px 0 8px; flex-wrap: wrap; }
 
 /* ═══ VIEW ALL BUTTON ═══ */
-.view-all-btn { display: block; margin: 16px auto 0; background: none; border: 1.5px solid var(--olive); color: var(--olive); border-radius: 50px; padding: 10px 28px; font-size: 13px; font-weight: 600; font-family: var(--sans); cursor: pointer; transition: all 0.18s; }
+.view-all-btn { display: block; margin: 4px auto 0; background: none; border: 1.5px solid var(--olive); color: var(--olive); border-radius: 50px; padding: 10px 28px; font-size: 13px; font-weight: 600; font-family: var(--sans); cursor: pointer; transition: all 0.18s; }
 .view-all-btn:hover { background: var(--olive); color: white; }
 
 /* ═══ STORY TEASER (Home) ═══ */
