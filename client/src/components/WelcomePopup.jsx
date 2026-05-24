@@ -66,7 +66,7 @@ export default function WelcomePopup({ forceShow = false, onClose }) {
 
         <div className="mk-popup-body">
           <p className="mk-popup-eyebrow">✦ Marvikala Community ✦</p>
-          <h2 className="mk-popup-heading">Join Our Community! 🧶</h2>
+          <h2 className="mk-popup-heading">Join Our Community!</h2>
 
           <p className="mk-popup-sub">
             Join our WhatsApp community for exclusive discounts, early access to new crochet drops, festive launches &amp; workshop updates.

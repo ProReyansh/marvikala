@@ -711,7 +711,7 @@ export default function Home() {
       {/* Community section (hidden during search) */}
       {!q && (
         <div className="popup-trigger-wrap">
-          <h3 className="popup-trigger-heading">Join Our WhatsApp Community 🧶</h3>
+          <h3 className="popup-trigger-heading">Join Our WhatsApp Community</h3>
           <p className="popup-trigger-subtext">Get exclusive early access to new drops, festive launches, workshop updates & more — straight to your WhatsApp.</p>
           <button className="popup-trigger-btn" onClick={() => setShowPopup(true)}>
             Join Our Community
