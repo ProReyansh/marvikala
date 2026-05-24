@@ -10021,12 +10021,19 @@ body {
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
+  align-items: stretch;
 }
 .na-swipe-track::-webkit-scrollbar { display: none; }
 
 .na-swipe-item {
   flex: 0 0 100%;
   scroll-snap-align: center;
+  display: flex;
+}
+.reviews-section .na-swipe-item .review-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 /* ── New Arrivals horizontal scroll ── */
