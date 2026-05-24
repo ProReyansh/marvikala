@@ -379,7 +379,7 @@ export default function Home() {
             <div className="search-empty">
               <h3>No results found</h3>
               <p>We couldn't find anything matching "<strong>{searchQuery}</strong>". Try a different word!</p>
-              <button className="btn-primary" style={{ marginTop: 24 }} onClick={() => handleSearch('')}>
+              <button className="btn-primary" style={{ marginTop: 24 }} onClick={() => { handleSearch(''); navigate('/shop'); }}>
                 Browse all products
               </button>
             </div>
