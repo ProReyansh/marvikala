@@ -3711,13 +3711,17 @@ body {
   .sa-page { padding: 40px 48px 80px; }
 }
 
-/* Header row: page title + back button */
+/* Header row: back button top-left, title below */
 .sa-header-row {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
+  align-items: flex-start;
   margin-bottom: 28px;
   animation: saHeaderIn 0.38s cubic-bezier(0.22,1,0.36,1) 0.05s both;
+}
+.sa-header-row .sa-back-btn {
+  order: -1;
+  margin-bottom: 8px;
 }
 @media (max-width: 600px) {
   .sa-header-row { margin-bottom: 20px; }
