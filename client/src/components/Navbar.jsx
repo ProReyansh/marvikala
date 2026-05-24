@@ -29,10 +29,9 @@ export default function Navbar({ searchQuery, onSearch }) {
     try { return !!sessionStorage.getItem('mk_search'); } catch { return false; }
   });
 
-  const desktopRef   = useRef();
-  const mobileRef    = useRef();
+  const panelRef     = useRef();
+  const inputRef     = useRef();
   const navRef       = useRef();
-  const dropdownRef  = useRef();
   const blurTimeout  = useRef();
 
   const navigate  = useNavigate();
@@ -44,12 +43,16 @@ export default function Navbar({ searchQuery, onSearch }) {
   // Products for suggestions (from sessionStorage cache)
   const [allProducts, setAllProducts] = useState(getCachedProducts);
   useEffect(() => {
-    // Refresh suggestions if cache updates
     const cached = getCachedProducts();
     if (cached.length > 0) setAllProducts(cached);
   }, [searchOpen]);
 
-  // Filtered suggestions (max 6)
+  // New arrivals shown when search is empty
+  const newArrivals = useMemo(() => {
+    return allProducts.filter(p => p.newArrival).slice(0, 5);
+  }, [allProducts]);
+
+  // Filtered suggestions shown when typing
   const suggestions = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
     if (!q || q.length < 2) return [];
@@ -58,9 +61,19 @@ export default function Navbar({ searchQuery, onSearch }) {
       .slice(0, 6);
   }, [searchQuery, allProducts]);
 
-  const showSuggestions = searchOpen && suggestions.length > 0 && searchQuery.trim().length >= 2;
+  const hasQuery        = searchQuery.trim().length >= 2;
+  const showSuggestions = searchOpen && hasQuery && suggestions.length > 0;
+  const showNewArrivals = searchOpen && !hasQuery && newArrivals.length > 0;
+  const showDropdown    = showSuggestions || showNewArrivals;
 
-  // Scroll tracking: update navbar shadow + close search on scroll/swipe
+  // Lock body scroll when search or drawer is open
+  useEffect(() => {
+    const locked = drawerOpen || searchOpen;
+    document.body.style.overflow = locked ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [drawerOpen, searchOpen]);
+
+  // Scroll tracking: close search on scroll/swipe
   const scrollAtOpen = useRef(0);
   const touchStartY  = useRef(0);
   useEffect(() => {
@@ -70,9 +83,7 @@ export default function Navbar({ searchQuery, onSearch }) {
       const diff = Math.abs(window.scrollY - scrollAtOpen.current);
       if (diff > 40) setSearchOpen(false);
     }
-    function onTouchStart(e) {
-      touchStartY.current = e.touches[0].clientY;
-    }
+    function onTouchStart(e) { touchStartY.current = e.touches[0].clientY; }
     function onTouchMove(e) {
       if (!searchOpen) return;
       const dy = touchStartY.current - e.touches[0].clientY;
@@ -88,12 +99,12 @@ export default function Navbar({ searchQuery, onSearch }) {
     };
   }, [searchOpen]);
 
-  // Hide dropdown on outside click
+  // Hide panel on outside click
   useEffect(() => {
     if (!searchOpen) return;
     const t = setTimeout(() => {
       function handleOutside(e) {
-        if (dropdownRef.current?.contains(e.target)) return;
+        if (panelRef.current?.contains(e.target)) return;
         if (navRef.current?.contains(e.target)) return;
         hideSearch();
       }
@@ -110,21 +121,13 @@ export default function Navbar({ searchQuery, onSearch }) {
     if (!should) return;
     try { sessionStorage.removeItem('mk_focus_search'); } catch {}
     setSearchOpen(true);
-    const t = setTimeout(() => {
-      if (window.innerWidth <= 768) mobileRef.current?.focus();
-      else desktopRef.current?.focus();
-    }, 80);
+    const t = setTimeout(() => inputRef.current?.focus(), 80);
     return () => clearTimeout(t);
   }, []);
 
   useEffect(() => {
     if (searchQuery) setSearchOpen(true);
   }, [searchQuery]);
-
-  useEffect(() => {
-    document.body.style.overflow = drawerOpen ? 'hidden' : '';
-    return () => { document.body.style.overflow = ''; };
-  }, [drawerOpen]);
 
   function goToSection(id) {
     setDrawerOpen(false);
@@ -178,10 +181,7 @@ export default function Navbar({ searchQuery, onSearch }) {
   function openSearch() {
     scrollAtOpen.current = window.scrollY;
     setSearchOpen(true);
-    setTimeout(() => {
-      if (window.innerWidth <= 768) mobileRef.current?.focus();
-      else desktopRef.current?.focus();
-    }, 80);
+    setTimeout(() => inputRef.current?.focus(), 80);
   }
 
   function closeSearch() {
@@ -194,7 +194,9 @@ export default function Navbar({ searchQuery, onSearch }) {
   }
 
   function handleSuggestionClick(product) {
+    clearTimeout(blurTimeout.current);
     setSearchOpen(false);
+    onSearch?.(''); // clear query so panel doesn't reopen
     navigate(`/product/${slugify(product.name)}`, { state: { product } });
   }
 
@@ -249,29 +251,6 @@ export default function Navbar({ searchQuery, onSearch }) {
           <img src="/logo-new.png" alt="Marvikala" className="navbar-logo-img" />
         </a>
 
-        {/* Desktop inline search */}
-        {searchOpen && (
-          <div className="navbar-search-wrap-desktop">
-            <form className="navbar-search" onSubmit={handleSearchSubmit}>
-              <input
-                ref={desktopRef}
-                type="text"
-                placeholder="Search products..."
-                value={searchQuery}
-                onChange={(e) => onSearch?.(e.target.value)}
-                className="search-input"
-              />
-              {searchQuery ? (
-                <button type="button" className="search-btn search-btn-clear"
-                  onClick={() => { onSearch?.(''); desktopRef.current?.focus(); }} aria-label="Clear">✕</button>
-              ) : (
-                <button type="button" className="search-btn search-btn-clear"
-                  onClick={closeSearch} aria-label="Close search">✕</button>
-              )}
-            </form>
-          </div>
-        )}
-
         {/* Desktop Nav links */}
         <ul className="navbar-links navbar-links-desktop">
           <li><a href="/" onClick={handleHomeClick}>Home</a></li>
@@ -283,11 +262,11 @@ export default function Navbar({ searchQuery, onSearch }) {
 
         {/* RIGHT: Icons */}
         <div className="navbar-right-group">
-          {!searchOpen && (
-            <button onClick={openSearch} aria-label="Search" className="navbar-icon-btn navbar-desktop-only">
-              <SearchIcon />
-            </button>
-          )}
+          {/* Desktop search icon */}
+          <button onClick={searchOpen ? closeSearch : openSearch} aria-label={searchOpen ? 'Close search' : 'Search'} className="navbar-icon-btn navbar-desktop-only">
+            {searchOpen ? <CloseIcon size={18} /> : <SearchIcon />}
+          </button>
+
           <div className="navbar-mobile-icons">
             <button
               className={`navbar-icon-btn navbar-search-toggle${searchOpen ? ' active' : ''}`}
@@ -312,9 +291,14 @@ export default function Navbar({ searchQuery, onSearch }) {
         </div>
       </nav>
 
-      {/* MOBILE SEARCH PANEL */}
+      {/* SEARCH BACKDROP — dims page behind the panel */}
+      {searchOpen && (
+        <div className="search-backdrop" onClick={closeSearch} aria-hidden="true" />
+      )}
+
+      {/* UNIVERSAL SEARCH PANEL */}
       <div
-        ref={dropdownRef}
+        ref={panelRef}
         className={`mobile-search-panel${searchOpen ? ' open' : ''}`}
         role="search"
         aria-label="Search products"
@@ -326,15 +310,13 @@ export default function Navbar({ searchQuery, onSearch }) {
               <SearchIcon size={16} />
             </span>
             <input
-              ref={mobileRef}
+              ref={inputRef}
               type="text"
               placeholder="Search products..."
               value={searchQuery}
               onChange={(e) => onSearch?.(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && e.currentTarget.blur()}
               onBlur={() => {
-                // Close panel when keyboard dismisses (scroll, tap outside, etc.)
-                // Delay lets suggestion taps register before closing
                 blurTimeout.current = setTimeout(() => setSearchOpen(false), 150);
               }}
               className="msp-input"
@@ -345,7 +327,7 @@ export default function Navbar({ searchQuery, onSearch }) {
             {searchQuery ? (
               <button
                 className="msp-clear"
-                onClick={() => { onSearch?.(''); mobileRef.current?.focus(); }}
+                onClick={() => { onSearch?.(''); inputRef.current?.focus(); }}
                 aria-label="Clear search"
               >
                 <CloseIcon size={11} />
@@ -357,7 +339,51 @@ export default function Navbar({ searchQuery, onSearch }) {
           </button>
         </div>
 
-        {/* Suggestions dropdown */}
+        {/* NEW ARRIVALS — shown when query is empty */}
+        {showNewArrivals && (
+          <div
+            className="msp-suggestions"
+            role="listbox"
+            aria-label="New Arrivals"
+            onMouseDown={() => clearTimeout(blurTimeout.current)}
+            onTouchStart={() => clearTimeout(blurTimeout.current)}
+          >
+            <div className="msp-section-label">✨ New Arrivals</div>
+            {newArrivals.map((p, i) => {
+              const imgs = p.images?.length > 0 ? p.images : (p.image ? [p.image] : []);
+              const src = imgs[0] ? imgUrl(imgs[0]) : null;
+              return (
+                <button
+                  key={p._id}
+                  className="msp-suggestion-item"
+                  onClick={() => handleSuggestionClick(p)}
+                  role="option"
+                  style={{ animationDelay: `${i * 30}ms` }}
+                >
+                  <div className="msp-suggestion-img">
+                    {src
+                      ? <img src={src} alt={p.name} loading="lazy" />
+                      : <span className="msp-suggestion-placeholder">🧶</span>
+                    }
+                  </div>
+                  <div className="msp-suggestion-info">
+                    <span className="msp-suggestion-cat">{CAT_LABEL[p.category] || p.category}</span>
+                    <span className="msp-suggestion-name">{p.name}</span>
+                    {p.price && (
+                      <span className="msp-suggestion-price">
+                        ₹{p.price}
+                        {p.originalPrice && <span className="msp-suggestion-orig">₹{p.originalPrice}</span>}
+                      </span>
+                    )}
+                  </div>
+                  <span className="msp-suggestion-arrow" aria-hidden="true">→</span>
+                </button>
+              );
+            })}
+          </div>
+        )}
+
+        {/* SEARCH RESULTS — shown when typing */}
         {showSuggestions && (
           <div
             className="msp-suggestions"
@@ -397,14 +423,27 @@ export default function Navbar({ searchQuery, onSearch }) {
                 </button>
               );
             })}
-            {searchQuery.trim().length >= 2 && (
-              <button
-                className="msp-see-all"
-                onClick={() => { hideSearch(); }}
-              >
-                See all results for "<strong>{searchQuery}</strong>"
-              </button>
-            )}
+            <button
+              className="msp-see-all"
+              onMouseDown={() => clearTimeout(blurTimeout.current)}
+              onClick={() => { hideSearch(); }}
+            >
+              See all results for "<strong>{searchQuery}</strong>"
+            </button>
+          </div>
+        )}
+
+        {/* No results state */}
+        {searchOpen && hasQuery && suggestions.length === 0 && (
+          <div
+            className="msp-suggestions"
+            onMouseDown={() => clearTimeout(blurTimeout.current)}
+            onTouchStart={() => clearTimeout(blurTimeout.current)}
+          >
+            <div className="msp-no-results">
+              <span className="msp-no-results-emoji">🔍</span>
+              <span>No results for "<strong>{searchQuery}</strong>"</span>
+            </div>
           </div>
         )}
       </div>

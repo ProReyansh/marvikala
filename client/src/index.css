@@ -8396,7 +8396,19 @@ body {
 }
 
 /* ═══════════════════════════════════════════
-   MOBILE SEARCH PANEL (msp-*)
+   SEARCH BACKDROP
+   ═══════════════════════════════════════════ */
+
+.search-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(30,58,95,0.35);
+  z-index: 1099;
+  animation: fadeIn 0.22s ease both;
+}
+
+/* ═══════════════════════════════════════════
+   UNIVERSAL SEARCH PANEL (msp-*)
    ═══════════════════════════════════════════ */
 
 .mobile-search-panel {
@@ -8405,16 +8417,16 @@ body {
   left: 0;
   right: 0;
   z-index: 1100;
-  background: rgba(255,252,248,0.97);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: rgba(255,252,248,0.98);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border);
-  box-shadow: 0 4px 24px rgba(42,32,22,0.08);
+  box-shadow: 0 8px 32px rgba(42,32,22,0.12);
   transform: translateY(-100%);
   opacity: 0;
   pointer-events: none;
   transition: transform 0.28s cubic-bezier(0.32,0,0.1,1), opacity 0.22s ease;
-  display: none;
+  display: block; /* shown on all screen sizes */
 }
 .mobile-search-panel.open {
   transform: translateY(0);
@@ -8422,9 +8434,14 @@ body {
   pointer-events: all;
 }
 
-/* Only shown on mobile */
-@media (max-width: 768px) {
-  .mobile-search-panel { display: block; }
+/* On desktop, constrain suggestions width for readability */
+@media (min-width: 769px) {
+  .mobile-search-panel .msp-input-row,
+  .mobile-search-panel .msp-suggestions {
+    max-width: 680px;
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
 
 /* ── Input row ── */
@@ -8637,6 +8654,28 @@ body {
 }
 .msp-see-all:hover { text-decoration: underline; }
 .msp-see-all strong { font-weight: 700; }
+
+/* ── Section label (e.g. New Arrivals header) ── */
+.msp-section-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-light);
+  padding: 4px 10px 10px;
+}
+
+/* ── No results state ── */
+.msp-no-results {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 20px 10px;
+  font-size: 14px;
+  color: var(--text-mid);
+}
+.msp-no-results-emoji { font-size: 20px; }
+.msp-no-results strong { color: var(--text); }
 
 /* ── Mobile search toggle button active state ── */
 .navbar-search-toggle {
