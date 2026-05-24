@@ -16,11 +16,6 @@ const CAT_LABEL = {
   rakhi: 'Rakhi', custom: 'Custom',
 };
 
-const COUPONS = {
-  MARVIKALA10: { discount: 10, label: '10% off' },
-  WELCOME15:   { discount: 15, label: '15% off for new customers' },
-  MUMBAI20:    { discount: 20, label: '20% Mumbai special' },
-};
 
 function imgUrl(src) {
   if (!src) return null;
@@ -177,30 +172,6 @@ export default function CartPage() {
   const [saved, setSaved] = useState(loadSaved);
   useEffect(() => { persistSaved(saved); }, [saved]);
 
-  // Coupon
-  const [couponInput, setCouponInput] = useState('');
-  const [appliedCoupon, setAppliedCoupon] = useState(null);
-  const [couponError, setCouponError] = useState('');
-
-  function applyCoupon() {
-    const code = couponInput.trim().toUpperCase();
-    if (!code) { setCouponError('Enter a coupon code'); return; }
-    if (COUPONS[code]) {
-      setAppliedCoupon({ code, ...COUPONS[code] });
-      setCouponError('');
-      toast({ message: `Coupon applied — ${COUPONS[code].label}!`, type: 'success' });
-    } else {
-      setCouponError('Invalid coupon code');
-      setAppliedCoupon(null);
-    }
-  }
-
-  function removeCoupon() {
-    setAppliedCoupon(null);
-    setCouponInput('');
-    setCouponError('');
-  }
-
   function handleSaveForLater(item) {
     removeFromCart(item._id);
     setSaved(prev => [...prev.filter(s => s._id !== item._id), { ...item }]);
@@ -214,17 +185,14 @@ export default function CartPage() {
   }
 
   // Calculations
-  const discountAmt  = appliedCoupon ? Math.round(cartTotal * appliedCoupon.discount / 100) : 0;
-  const discountedTotal = cartTotal - discountAmt;
-  const shippingCost = discountedTotal === 0 ? 0 : discountedTotal >= 999 ? 0 : 80;
-  const grandTotal   = discountedTotal + shippingCost;
+  const shippingCost = cartTotal === 0 ? 0 : cartTotal >= 999 ? 0 : 80;
+  const grandTotal   = cartTotal + shippingCost;
 
   function buildWhatsAppMsg() {
     if (!items.length) return '';
     const lines = items.map(i => `• ${i.name} × ${i.qty}${i.price ? ` — ₹${i.price * i.qty}` : ''}`);
-    const couponLine = appliedCoupon ? `\nCoupon: ${appliedCoupon.code} (${appliedCoupon.discount}% off)` : '';
     const totalLine = grandTotal > 0 ? `\n\nTotal: ₹${grandTotal}${shippingCost === 0 ? ' (Free delivery)' : ` + ₹${shippingCost} delivery`}` : '';
-    return `Hi! I'd like to place an order from Marvikala:\n\n${lines.join('\n')}${couponLine}${totalLine}\n\nPlease confirm availability. Thank you!`;
+    return `Hi! I'd like to place an order from Marvikala:\n\n${lines.join('\n')}${totalLine}\n\nPlease confirm availability. Thank you!`;
   }
 
   const isEmpty = items.length === 0;
@@ -309,22 +277,15 @@ export default function CartPage() {
                   <span>{cartTotal > 0 ? `₹${cartTotal}` : '—'}</span>
                 </div>
 
-                {appliedCoupon && (
-                  <div className="cart-summary-row cart-discount-row">
-                    <span>Discount ({appliedCoupon.code})</span>
-                    <span className="cart-discount-val">−₹{discountAmt}</span>
-                  </div>
-                )}
-
                 <div className="cart-summary-row">
                   <span>Delivery</span>
-                  <span>{shippingCost === 0 && discountedTotal > 0 ? <span className="cart-free-ship">Free</span> : shippingCost > 0 ? `₹${shippingCost}` : '—'}</span>
+                  <span>{shippingCost === 0 && cartTotal > 0 ? <span className="cart-free-ship">Free</span> : shippingCost > 0 ? `₹${shippingCost}` : '—'}</span>
                 </div>
 
-                {discountedTotal < 999 && discountedTotal > 0 && (
+                {cartTotal < 999 && cartTotal > 0 && (
                   <div className="cart-ship-nudge">
-                    Add ₹{999 - discountedTotal} more for free delivery
-                    <div className="cart-ship-bar"><div className="cart-ship-fill" style={{ width: `${Math.min(100, (discountedTotal / 999) * 100)}%` }} /></div>
+                    Add ₹{999 - cartTotal} more for free delivery
+                    <div className="cart-ship-bar"><div className="cart-ship-fill" style={{ width: `${Math.min(100, (cartTotal / 999) * 100)}%` }} /></div>
                   </div>
                 )}
 
@@ -334,30 +295,6 @@ export default function CartPage() {
                   <div className="cart-summary-row cart-summary-total">
                     <span>Total</span>
                     <span>₹{grandTotal}</span>
-                  </div>
-                )}
-
-                {/* Coupon */}
-                {!appliedCoupon ? (
-                  <div className="cart-coupon-wrap">
-                    <div className="cart-coupon-row">
-                      <input
-                        className={`cart-coupon-input${couponError ? ' error' : ''}`}
-                        type="text"
-                        placeholder="Coupon code"
-                        value={couponInput}
-                        onChange={e => { setCouponInput(e.target.value); setCouponError(''); }}
-                        onKeyDown={e => e.key === 'Enter' && applyCoupon()}
-                        aria-label="Coupon code"
-                      />
-                      <button className="cart-coupon-btn" onClick={applyCoupon}>Apply</button>
-                    </div>
-                    {couponError && <p className="cart-coupon-error">{couponError}</p>}
-                  </div>
-                ) : (
-                  <div className="cart-coupon-applied">
-                    <span className="cart-coupon-tag">🏷️ {appliedCoupon.code} — {appliedCoupon.label}</span>
-                    <button className="cart-coupon-remove" onClick={removeCoupon} aria-label="Remove coupon">✕</button>
                   </div>
                 )}
 
