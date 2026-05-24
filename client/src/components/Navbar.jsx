@@ -257,19 +257,18 @@ export default function Navbar({ searchQuery = '', onSearch }) {
 
         {/* RIGHT: Icons */}
         <div className="navbar-right-group">
-          {/* Desktop search icon */}
-          <button onClick={searchOpen ? closeSearch : openSearch} aria-label={searchOpen ? 'Close search' : 'Search'} className="navbar-icon-btn navbar-desktop-only">
-            {searchOpen ? <CloseIcon size={18} /> : <SearchIcon />}
+          {/* Desktop search icon — always a magnifying glass */}
+          <button onClick={openSearch} aria-label="Search" className="navbar-icon-btn navbar-desktop-only">
+            <SearchIcon />
           </button>
 
           <div className="navbar-mobile-icons">
             <button
-              className={`navbar-icon-btn navbar-search-toggle${searchOpen ? ' active' : ''}`}
-              onClick={searchOpen ? closeSearch : openSearch}
-              aria-label={searchOpen ? 'Close search' : 'Open search'}
-              aria-expanded={searchOpen}
+              className="navbar-icon-btn navbar-search-toggle"
+              onClick={openSearch}
+              aria-label="Open search"
             >
-              {searchOpen ? <CloseIcon size={18} /> : <SearchIcon size={18} />}
+              <SearchIcon size={18} />
             </button>
             <button
               className="navbar-icon-btn navbar-cart-btn"
@@ -322,8 +321,8 @@ export default function Navbar({ searchQuery = '', onSearch }) {
             {localQuery ? (
               <button
                 className="msp-clear"
-                onMouseDown={() => clearTimeout(blurTimeout.current)}
-                onClick={() => { setLocalQuery(''); onSearch?.(''); inputRef.current?.focus(); }}
+                onMouseDown={(e) => { e.preventDefault(); /* keep input focused, no blur fires */ }}
+                onClick={() => { setLocalQuery(''); onSearch?.(''); }}
                 aria-label="Clear search"
               >
                 <CloseIcon size={11} />
