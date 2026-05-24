@@ -71,11 +71,12 @@ export default function Navbar({ searchQuery = '', onSearch }) {
   const showNewArrivals = searchOpen && !hasQuery && newArrivals.length > 0;
   const showDropdown    = showSuggestions || showNewArrivals;
 
-  // Lock body scroll when search or drawer is open
+  // Lock body scroll when search or drawer is open.
+  // Only set overflow-Y so the CSS overflow-x:clip is never disturbed.
   useEffect(() => {
     const locked = drawerOpen || searchOpen;
-    document.body.style.overflow = locked ? 'hidden' : '';
-    return () => { document.body.style.overflow = ''; };
+    document.body.style.overflowY = locked ? 'hidden' : '';
+    return () => { document.body.style.overflowY = ''; };
   }, [drawerOpen, searchOpen]);
 
   // Close search when page scrolls (e.g. rubber-band on iOS) — swipe-to-close removed
@@ -188,7 +189,7 @@ export default function Navbar({ searchQuery = '', onSearch }) {
 
   function openSearch() {
     // Snap to top first so the fixed panel is visible no matter where the user scrolled
-    window.scrollTo({ top: 0, behavior: 'instant' });
+    window.scrollTo(0, 0);
     scrollAtOpen.current = 0;
     setSearchOpen(true);
     setTimeout(() => inputRef.current?.focus(), 80);
