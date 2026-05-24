@@ -57,6 +57,11 @@ function ShopCard({ product }) {
         ) : (product.bestseller || product.featured) ? (
           <span className="product-badge bestseller-badge">Bestseller</span>
         ) : null}
+        {product.price && product.originalPrice && product.originalPrice > product.price && (
+          <span className="product-badge discount-badge">
+            {Math.round((1 - product.price / product.originalPrice) * 100)}% off
+          </span>
+        )}
         {!product.inStock && <div className="out-of-stock-overlay">Made to Order</div>}
         {product.inStock && (
           qty === 0 ? (

@@ -930,6 +930,18 @@ body {
   letter-spacing: 0.3px;
 }
 
+.discount-badge {
+  top: auto !important;
+  left: auto !important;
+  bottom: 10px !important;
+  right: 10px !important;
+  background: #e53935 !important;
+  color: #fff !important;
+  font-size: 9px !important;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
 .out-of-stock-overlay {
   position: absolute;
   inset: 0;
