@@ -24,7 +24,7 @@ export default function Footer() {
 
         {/* Column 1 — Brand */}
         <div className="footer-brand">
-          <img src="/logo-new.png" alt="Marvikala" className="footer-logo-img" />
+          <img src="/marvikala-logo.png" alt="Marvikala" className="footer-logo-img" style={{ borderRadius: '10px', padding: '6px 12px', background: '#fff' }} />
           <p className="footer-tagline">
             Handmade with love, just for you.<br />
             From Mumbai.
