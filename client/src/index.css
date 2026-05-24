@@ -8680,16 +8680,14 @@ body {
 }
 
 /* ── No results state ── */
-.msp-no-results {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 20px 10px;
-  font-size: 14px;
-  color: var(--text-mid);
+/* Small italic hint above the new-arrivals fallback */
+.msp-no-results-hint {
+  padding: 12px 10px 4px;
+  font-size: 12px;
+  color: var(--text-light);
+  font-style: italic;
 }
-.msp-no-results-emoji { font-size: 20px; }
-.msp-no-results strong { color: var(--text); }
+.msp-no-results-hint strong { color: var(--text-mid); font-style: normal; }
 
 /* ── Mobile search toggle button active state ── */
 .navbar-search-toggle {

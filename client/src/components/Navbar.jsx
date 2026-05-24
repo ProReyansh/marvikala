@@ -428,17 +428,52 @@ export default function Navbar({ searchQuery = '', onSearch }) {
           </div>
         )}
 
-        {/* No results state */}
+        {/* No results — show new arrivals as fallback */}
         {searchOpen && hasQuery && suggestions.length === 0 && (
           <div
             className="msp-suggestions"
             onMouseDown={() => clearTimeout(blurTimeout.current)}
             onTouchStart={() => clearTimeout(blurTimeout.current)}
           >
-            <div className="msp-no-results">
-              <span className="msp-no-results-emoji">🔍</span>
-              <span>No results for "<strong>{localQuery}</strong>"</span>
+            <div className="msp-no-results-hint">
+              No results for "<strong>{localQuery}</strong>"
             </div>
+            {newArrivals.length > 0 && (
+              <>
+                <div className="msp-section-label">✨ Check out our New Arrivals</div>
+                {newArrivals.map((p, i) => {
+                  const imgs = p.images?.length > 0 ? p.images : (p.image ? [p.image] : []);
+                  const src = imgs[0] ? imgUrl(imgs[0]) : null;
+                  return (
+                    <button
+                      key={p._id}
+                      className="msp-suggestion-item"
+                      onClick={() => handleSuggestionClick(p)}
+                      role="option"
+                      style={{ animationDelay: `${i * 30}ms` }}
+                    >
+                      <div className="msp-suggestion-img">
+                        {src
+                          ? <img src={src} alt={p.name} loading="lazy" />
+                          : <span className="msp-suggestion-placeholder">🧶</span>
+                        }
+                      </div>
+                      <div className="msp-suggestion-info">
+                        <span className="msp-suggestion-cat">{CAT_LABEL[p.category] || p.category}</span>
+                        <span className="msp-suggestion-name">{p.name}</span>
+                        {p.price && (
+                          <span className="msp-suggestion-price">
+                            ₹{p.price}
+                            {p.originalPrice && <span className="msp-suggestion-orig">₹{p.originalPrice}</span>}
+                          </span>
+                        )}
+                      </div>
+                      <span className="msp-suggestion-arrow" aria-hidden="true">→</span>
+                    </button>
+                  );
+                })}
+              </>
+            )}
           </div>
         )}
       </div>
