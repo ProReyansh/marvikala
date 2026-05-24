@@ -187,7 +187,9 @@ export default function Navbar({ searchQuery = '', onSearch }) {
   function handleSearchSubmit(e) { e.preventDefault(); }
 
   function openSearch() {
-    scrollAtOpen.current = window.scrollY;
+    // Snap to top first so the fixed panel is visible no matter where the user scrolled
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    scrollAtOpen.current = 0;
     setSearchOpen(true);
     setTimeout(() => inputRef.current?.focus(), 80);
   }
