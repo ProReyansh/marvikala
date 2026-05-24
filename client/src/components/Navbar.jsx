@@ -23,11 +23,11 @@ function getCachedProducts() {
   catch { return []; }
 }
 
-export default function Navbar({ searchQuery, onSearch }) {
+export default function Navbar({ searchQuery = '', onSearch }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(() => {
-    try { return !!sessionStorage.getItem('mk_search'); } catch { return false; }
-  });
+  const [searchOpen, setSearchOpen] = useState(false);
+  // localQuery drives the input — independent of parent so search works on every page
+  const [localQuery, setLocalQuery] = useState(searchQuery);
 
   const panelRef     = useRef();
   const inputRef     = useRef();
@@ -52,16 +52,21 @@ export default function Navbar({ searchQuery, onSearch }) {
     return allProducts.filter(p => p.newArrival).slice(0, 5);
   }, [allProducts]);
 
+  // Sync: when parent clears search (e.g. Home "Clear search" btn), clear local too
+  useEffect(() => {
+    if (!searchQuery && localQuery) setLocalQuery('');
+  }, [searchQuery]); // eslint-disable-line
+
   // Filtered suggestions shown when typing
   const suggestions = useMemo(() => {
-    const q = searchQuery.trim().toLowerCase();
+    const q = localQuery.trim().toLowerCase();
     if (!q || q.length < 2) return [];
     return allProducts
       .filter(p => p.name.toLowerCase().includes(q) || (p.description || '').toLowerCase().includes(q) || CAT_LABEL[p.category]?.toLowerCase().includes(q))
       .slice(0, 6);
-  }, [searchQuery, allProducts]);
+  }, [localQuery, allProducts]);
 
-  const hasQuery        = searchQuery.trim().length >= 2;
+  const hasQuery        = localQuery.trim().length >= 2;
   const showSuggestions = searchOpen && hasQuery && suggestions.length > 0;
   const showNewArrivals = searchOpen && !hasQuery && newArrivals.length > 0;
   const showDropdown    = showSuggestions || showNewArrivals;
@@ -186,6 +191,7 @@ export default function Navbar({ searchQuery, onSearch }) {
 
   function closeSearch() {
     setSearchOpen(false);
+    setLocalQuery('');
     onSearch?.('');
   }
 
@@ -196,6 +202,7 @@ export default function Navbar({ searchQuery, onSearch }) {
   function handleSuggestionClick(product) {
     clearTimeout(blurTimeout.current);
     setSearchOpen(false);
+    setLocalQuery('');
     onSearch?.(''); // clear query so panel doesn't reopen
     navigate(`/product/${slugify(product.name)}`, { state: { product } });
   }
@@ -313,8 +320,8 @@ export default function Navbar({ searchQuery, onSearch }) {
               ref={inputRef}
               type="text"
               placeholder="Search products..."
-              value={searchQuery}
-              onChange={(e) => onSearch?.(e.target.value)}
+              value={localQuery}
+              onChange={(e) => { setLocalQuery(e.target.value); onSearch?.(e.target.value); }}
               onKeyDown={(e) => e.key === 'Enter' && e.currentTarget.blur()}
               onBlur={() => {
                 blurTimeout.current = setTimeout(() => setSearchOpen(false), 150);
@@ -324,10 +331,10 @@ export default function Navbar({ searchQuery, onSearch }) {
               autoComplete="off"
               autoCorrect="off"
             />
-            {searchQuery ? (
+            {localQuery ? (
               <button
                 className="msp-clear"
-                onClick={() => { onSearch?.(''); inputRef.current?.focus(); }}
+                onClick={() => { setLocalQuery(''); onSearch?.(''); inputRef.current?.focus(); }}
                 aria-label="Clear search"
               >
                 <CloseIcon size={11} />
@@ -428,7 +435,7 @@ export default function Navbar({ searchQuery, onSearch }) {
               onMouseDown={() => clearTimeout(blurTimeout.current)}
               onClick={() => { hideSearch(); }}
             >
-              See all results for "<strong>{searchQuery}</strong>"
+              See all results for "<strong>{localQuery}</strong>"
             </button>
           </div>
         )}
@@ -442,7 +449,7 @@ export default function Navbar({ searchQuery, onSearch }) {
           >
             <div className="msp-no-results">
               <span className="msp-no-results-emoji">🔍</span>
-              <span>No results for "<strong>{searchQuery}</strong>"</span>
+              <span>No results for "<strong>{localQuery}</strong>"</span>
             </div>
           </div>
         )}

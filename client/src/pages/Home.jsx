@@ -118,6 +118,8 @@ export default function Home() {
   function handleSearch(q) {
     setSearchQuery(q);
     saveSearch(q);
+    // When clearing search, scroll to top so the user sees the home page, not the footer
+    if (!q) window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   useEffect(() => {
@@ -215,7 +217,24 @@ export default function Home() {
 
   function SwipeCarousel({ items, sectionId, title }) {
     const trackRef = useRef(null);
-    const [activeIdx, setActiveIdx] = useState(0);
+    const storageKey = `mk_carousel_${sectionId}`;
+    const [activeIdx, setActiveIdx] = useState(() => {
+      try { return parseInt(sessionStorage.getItem(storageKey) || '0', 10); } catch { return 0; }
+    });
+
+    // Restore scroll position on mount (without animation)
+    useEffect(() => {
+      const el = trackRef.current;
+      if (!el || activeIdx === 0) return;
+      requestAnimationFrame(() => {
+        el.scrollLeft = activeIdx * el.offsetWidth;
+      });
+    }, []); // eslint-disable-line
+
+    // Save position whenever it changes
+    useEffect(() => {
+      try { sessionStorage.setItem(storageKey, String(activeIdx)); } catch {}
+    }, [activeIdx, storageKey]);
 
     const onScroll = useCallback(() => {
       const el = trackRef.current;
@@ -360,12 +379,7 @@ export default function Home() {
             <div className="search-empty">
               <h3>No results found</h3>
               <p>We couldn't find anything matching "<strong>{searchQuery}</strong>". Try a different word!</p>
-              <button className="btn-primary" style={{ marginTop: 24 }} onClick={() => {
-                handleSearch('');
-                setTimeout(() => {
-                  document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' });
-                }, 80);
-              }}>
+              <button className="btn-primary" style={{ marginTop: 24 }} onClick={() => handleSearch('')}>
                 Browse all products
               </button>
             </div>
