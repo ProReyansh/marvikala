@@ -3351,7 +3351,7 @@ body {
 }
 /* Very small mobile */
 @media (max-width: 390px) {
-  .hero-img-top  { height: 200px; }
+  .hero-img-top  { height: 420px; }
   .hero h1       { font-size: 26px; }
 
 }
