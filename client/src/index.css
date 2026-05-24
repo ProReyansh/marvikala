@@ -3729,7 +3729,7 @@ body {
 }
 .sa-header-row .sa-back-btn {
   order: -1;
-  margin-bottom: 4px;
+  margin-bottom: 0;
 }
 @media (max-width: 600px) {
   .sa-header-row { margin-bottom: 20px; }
