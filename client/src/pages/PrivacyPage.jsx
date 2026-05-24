@@ -30,7 +30,7 @@ export default function PrivacyPage() {
 
         <div className="sa-header-row">
           <h1 className="sa-title">Privacy Policy</h1>
-          <button className="sa-back-btn" onClick={() => navigate(-1)}>← Back</button>
+          <button className="sa-back-btn" onClick={() => navigate(-1)}>← Back / Privacy Policy</button>
         </div>
 
         <div className="policy-doc">

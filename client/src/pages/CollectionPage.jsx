@@ -141,9 +141,7 @@ export default function CollectionPage() {
         {/* ── Header Row ── */}
         <div className="sa-header-row">
           <h1 className="sa-title">{catLabel}</h1>
-          <button className="sa-back-btn" onClick={() => navigate(-1)}>
-            ← Back
-          </button>
+          <button className="sa-back-btn" onClick={() => navigate(-1)}>← Back / {catLabel}</button>
         </div>
 
         {/* ── Product count ── */}

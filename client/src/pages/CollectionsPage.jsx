@@ -253,7 +253,7 @@ export default function CollectionsPage() {
         {/* ══ HEADER ROW ═════════════════════════════════════════════════════ */}
         <div className="sa-header-row coll-back-row">
           <h1 className="sa-title">Our Collections</h1>
-          <button className="sa-back-btn" onClick={() => navigate(-1)}>← Back</button>
+          <button className="sa-back-btn" onClick={() => navigate(-1)}>← Back / Our Collections</button>
         </div>
 
         {/* ══ INTRO ══════════════════════════════════════════════════════════ */}

@@ -28,7 +28,7 @@ export default function HowToOrderPage() {
       <div className="sa-page hto-page">
         <div className="sa-header-row">
           <h1 className="sa-title">How to Order</h1>
-          <button className="sa-back-btn" onClick={() => navigate(-1)}>← Back</button>
+          <button className="sa-back-btn" onClick={() => navigate(-1)}>← Back / How to Order</button>
         </div>
         <p className="hto-sub">Ordering from Marvikala is simple and personal — here's how it works</p>
         <div className="hto-steps">

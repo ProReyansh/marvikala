@@ -117,7 +117,7 @@ export default function FAQPage() {
       <div className="sa-page">
         <div className="sa-header-row">
           <h1 className="sa-title">FAQs</h1>
-          <button className="sa-back-btn" onClick={() => navigate(-1)}>← Back</button>
+          <button className="sa-back-btn" onClick={() => navigate(-1)}>← Back / FAQs</button>
         </div>
 
         <p className="faq-subtitle">Everything you need to know about Marvikala</p>

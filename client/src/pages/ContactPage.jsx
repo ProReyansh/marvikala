@@ -100,7 +100,7 @@ export default function ContactPage() {
 
         <div className="sa-header-row">
           <h1 className="sa-title">Contact Us</h1>
-          <button className="sa-back-btn" onClick={() => navigate(-1)}>← Back</button>
+          <button className="sa-back-btn" onClick={() => navigate(-1)}>← Back / Contact Us</button>
         </div>
 
         <div className="contact-page-body">

@@ -30,7 +30,7 @@ export default function ShippingPage() {
 
         <div className="sa-header-row">
           <h1 className="sa-title">Shipping &amp; Returns</h1>
-          <button className="sa-back-btn" onClick={() => navigate(-1)}>← Back</button>
+          <button className="sa-back-btn" onClick={() => navigate(-1)}>← Back / Shipping &amp; Returns</button>
         </div>
 
         <div className="policy-doc">

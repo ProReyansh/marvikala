@@ -35,7 +35,7 @@ export default function OurStoryPage() {
 
         <div className="sa-header-row">
           <h1 className="sa-title">Our Story</h1>
-          <button className="sa-back-btn" onClick={() => navigate(-1)}>← Back</button>
+          <button className="sa-back-btn" onClick={() => navigate(-1)}>← Back / Our Story</button>
         </div>
 
         <div className="story-page">

@@ -121,7 +121,7 @@ export default function AllBestsellersPage() {
       <div className="sa-page">
         <div className="sa-header-row">
           <h1 className="sa-title">Bestsellers</h1>
-          <button className="sa-back-btn" onClick={() => navigate(-1)}>← Back</button>
+          <button className="sa-back-btn" onClick={() => navigate(-1)}>← Back / Bestsellers</button>
         </div>
 
         {loading ? (

@@ -246,7 +246,7 @@ export default function WorkshopsPage() {
 
         <div className="sa-header-row">
           <h1 className="sa-title">Workshops</h1>
-          <button className="sa-back-btn" onClick={() => navigate(-1)}>← Back</button>
+          <button className="sa-back-btn" onClick={() => navigate(-1)}>← Back / Workshops</button>
         </div>
 
         {/* Hero blurb */}
