@@ -122,6 +122,21 @@ export default function Navbar({ searchQuery = '', onSearch }) {
     if (searchQuery) setSearchOpen(true);
   }, [searchQuery]);
 
+  // Restore search panel when user navigates back to the page they searched from
+  useEffect(() => {
+    try {
+      const saved = JSON.parse(sessionStorage.getItem('mk_return_search') || 'null');
+      if (saved && saved.fromPath === location.pathname && saved.query) {
+        sessionStorage.removeItem('mk_return_search');
+        setLocalQuery(saved.query);
+        onSearch?.(saved.query);
+        scrollAtOpen.current = window.scrollY;
+        setSearchOpen(true);
+        setTimeout(() => inputRef.current?.focus(), 100);
+      }
+    } catch {}
+  }, [location.pathname]); // eslint-disable-line
+
   function goToSection(id) {
     setDrawerOpen(false);
     if (isHome) {
@@ -189,9 +204,18 @@ export default function Navbar({ searchQuery = '', onSearch }) {
 
   function handleSuggestionClick(product) {
     clearTimeout(blurTimeout.current);
+    // Save search context so back-navigation restores the panel on the same page
+    try {
+      if (localQuery) {
+        sessionStorage.setItem('mk_return_search', JSON.stringify({
+          query: localQuery,
+          fromPath: location.pathname,
+        }));
+      }
+    } catch {}
     setSearchOpen(false);
     setLocalQuery('');
-    onSearch?.(''); // clear query so panel doesn't reopen
+    onSearch?.('');
     navigate(`/product/${slugify(product.name)}`, { state: { product } });
   }
 
