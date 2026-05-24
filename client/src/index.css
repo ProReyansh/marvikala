@@ -561,7 +561,7 @@ body {
 /* Image area — top portion */
 .hero-img-top {
   width: 100%;
-  height: 560px;
+  height: 380px;
   background-image: url('/hero-bg.jpg');
   background-size: cover;
   background-position: center center;
@@ -2708,7 +2708,7 @@ body {
   .navbar-search    { max-width: 480px; }
   .navbar-links     { gap: 44px; }
   .navbar-links a   { font-size: 16px; }
-  .hero-img-top     { height: 700px; }
+  .hero-img-top     { height: 520px; }
 
   .hero h1          { font-size: 56px; }
   .section          { padding: 90px 120px; }
@@ -2726,7 +2726,7 @@ body {
 /* Large desktop (1600px-2399px) */
 @media (min-width: 1600px) and (max-width: 2399px) {
   .navbar           { padding: 0 80px; }
-  .hero-img-top     { height: 640px; }
+  .hero-img-top     { height: 460px; }
 
   .section          { padding: 80px 80px; max-width: none; }
   .contact-section  { padding: 0 80px 80px; max-width: none; }
@@ -2805,7 +2805,7 @@ body {
   }
 
   /* Hero */
-  .hero-img-top     { height: 580px; }
+  .hero-img-top     { height: 340px; }
 
   .hero h1          { font-size: 42px; }
 
@@ -3020,7 +3020,7 @@ body {
 
 /* Very small mobile (up to 360px) */
 @media (max-width: 360px) {
-  .hero-img-top     { height: 340px; }
+  .hero-img-top     { height: 240px; }
   .hero h1          { font-size: 24px; }
   .categories-grid  { grid-template-columns: repeat(2, 1fr); }
   .search-input     { font-size: 11px; padding: 8px 8px; }
@@ -3334,14 +3334,14 @@ body {
 /* ═══ HERO RESPONSIVE ═══ */
 /* Tablet */
 @media (max-width: 900px) {
-  .hero-img-top     { height: 480px; }
+  .hero-img-top     { height: 320px; }
 
   .hero h1          { font-size: 36px; }
   .hero-desc        { font-size: 14px; margin-bottom: 28px; }
 }
 /* Mobile */
 @media (max-width: 600px) {
-  .hero-img-top     { height: 420px; }
+  .hero-img-top     { height: 280px; }
 
   .hero h1          { font-size: 28px; line-height: 1.18; margin-bottom: 10px; }
   .hero-br          { display: none; }
@@ -3351,7 +3351,7 @@ body {
 }
 /* Very small mobile */
 @media (max-width: 390px) {
-  .hero-img-top  { height: 420px; }
+  .hero-img-top  { height: 260px; }
   .hero h1       { font-size: 26px; }
 
 }
