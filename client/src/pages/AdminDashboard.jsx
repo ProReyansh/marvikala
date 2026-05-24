@@ -393,7 +393,7 @@ export default function AdminDashboard() {
       data.append('bestseller', form.bestseller);
       if (form.price !== '' && form.price !== null) data.append('price', form.price);
       if (form.originalPrice !== '' && form.originalPrice !== null) data.append('originalPrice', form.originalPrice);
-      form.colors.forEach(c => data.append('colors[]', c));
+      data.append('colors', JSON.stringify(form.colors));
 
       if (editing) {
         data.append('existingImages', JSON.stringify(form.existingImages));
@@ -576,6 +576,13 @@ export default function AdminDashboard() {
                             <div className="admin-product-price">
                               {product.price && <span className="admin-price-current">₹{product.price}</span>}
                               {product.originalPrice && <span className="admin-price-original">₹{product.originalPrice}</span>}
+                            </div>
+                          )}
+                          {product.colors?.length > 0 && (
+                            <div style={{ display: 'flex', gap: 4, margin: '6px 0 2px', flexWrap: 'wrap' }}>
+                              {product.colors.map((c, i) => (
+                                <span key={i} style={{ width: 14, height: 14, borderRadius: '50%', background: c, border: '1.5px solid rgba(0,0,0,0.15)', display: 'inline-block', flexShrink: 0 }} />
+                              ))}
                             </div>
                           )}
                           {product.description && (
