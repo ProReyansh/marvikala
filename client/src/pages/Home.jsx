@@ -522,7 +522,7 @@ export default function Home() {
               </div>
             </section>
           </div>
-          <div style={{ display: 'flex', justifyContent: 'center', marginTop: -20, paddingBottom: 32, background: 'var(--cream)' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', marginTop: -32, paddingBottom: 32, background: 'var(--cream)' }}>
             <button className="view-all-btn" onClick={() => navigate('/collections')}>
               Shop All Collections →
             </button>
