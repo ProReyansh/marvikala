@@ -2180,6 +2180,8 @@ body {
   cursor: pointer;
   text-decoration: none;
   transition: color 0.15s;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 .product-page-breadcrumb a:hover,
 .product-page-breadcrumb button:hover { color: var(--olive); }
@@ -2187,6 +2189,7 @@ body {
 .product-page-breadcrumb-sep {
   color: var(--border);
   font-size: 12px;
+  flex-shrink: 0;
 }
 
 .product-page-breadcrumb-current {
