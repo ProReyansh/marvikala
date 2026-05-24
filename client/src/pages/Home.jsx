@@ -392,16 +392,13 @@ export default function Home() {
         <>
           {/* HERO */}
           <section className="hero">
-            {/* Image — top portion */}
+            {/* Image with button overlaid at bottom */}
             <div
               className="hero-img-top"
               style={heroImageUrl ? { backgroundImage: `url('${heroImageUrl}')` } : undefined}
             >
               <div className="hero-overlay" />
-            </div>
-            {/* CTA — below the image */}
-            <div className="hero-content">
-              <div className="hero-btns">
+              <div className="hero-content">
                 <button
                   className="btn-primary btn-animated"
                   onClick={() => navigate(heroButtonLink)}

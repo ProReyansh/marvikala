@@ -6,7 +6,6 @@ const DELAY_MS  = 1000;
 export default function WelcomePopup({ forceShow = false, onClose }) {
   const [visible, setVisible] = useState(false);
   const [animate, setAnimate] = useState(false);
-  const [phone, setPhone]     = useState('');
 
   // Auto-show on first visit only
   useEffect(() => {
@@ -69,31 +68,11 @@ export default function WelcomePopup({ forceShow = false, onClose }) {
           <p className="mk-popup-eyebrow">✦ Handmade with love ✦</p>
           <h2 className="mk-popup-heading">Welcome to Marvikala!</h2>
 
-          <div className="mk-popup-offer-badge">
-            <span className="mk-popup-offer-pct">10% OFF</span>
-            <span className="mk-popup-offer-label">your first order</span>
-          </div>
-
           <p className="mk-popup-sub">
             Join our WhatsApp community for exclusive discounts, early access to new crochet drops, festive launches &amp; workshop updates.
           </p>
 
           <div className="mk-popup-divider" />
-
-          <div className="mk-popup-input-row">
-            <div className="mk-popup-flag-prefix">
-              <span className="mk-popup-country-code">+91</span>
-            </div>
-            <input
-              type="tel"
-              className="mk-popup-phone-input"
-              placeholder="Enter your WhatsApp number"
-              value={phone}
-              onChange={e => setPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
-              maxLength={10}
-              inputMode="numeric"
-            />
-          </div>
 
           <button className="mk-popup-cta" onClick={handleJoin}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style={{ flexShrink: 0 }}>
@@ -103,7 +82,7 @@ export default function WelcomePopup({ forceShow = false, onClose }) {
           </button>
 
           <button className="mk-popup-dismiss" onClick={dismiss}>
-            I will pay full price
+            Maybe later
           </button>
         </div>
       </div>
