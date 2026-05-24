@@ -77,12 +77,11 @@ export default function AdminDashboard() {
   const [heroSaved, setHeroSaved]       = useState(false);
   const [heroError, setHeroError]       = useState('');
 
-  // Hero Text tab state
-  const [heroHeading, setHeroHeading]   = useState('');
-  const [heroSubtitle, setHeroSubtitle] = useState('');
-  const [heroTextSaving, setHeroTextSaving] = useState(false);
-  const [heroTextSaved, setHeroTextSaved]   = useState(false);
-  const [heroTextError, setHeroTextError]   = useState('');
+  // Hero Button Link state
+  const [heroButtonLink, setHeroButtonLink]     = useState('/shop');
+  const [heroBtnSaving, setHeroBtnSaving]       = useState(false);
+  const [heroBtnSaved, setHeroBtnSaved]         = useState(false);
+  const [heroBtnError, setHeroBtnError]         = useState('');
 
   // Workshops tab state
   const EMPTY_WS = { title: '', description: '', duration: '', level: 'All Levels', date: '', time: '11:00', seatsLeft: 10, totalSeats: 10, price: '', emoji: '🧶', color: '#F5F0E8', badge: '', upcoming: true, includes: '' };
@@ -144,31 +143,17 @@ export default function AdminDashboard() {
     }
   }
 
-  async function handleHeroTextSave() {
-    setHeroTextSaving(true);
-    setHeroTextError('');
+  async function handleHeroBtnSave() {
+    setHeroBtnSaving(true);
+    setHeroBtnError('');
     try {
-      await axios.post('/api/settings/hero-text',
-        { heading: heroHeading, subtitle: heroSubtitle },
-        { headers: authHeader() }
-      );
-      setHeroTextSaved(true);
-      setTimeout(() => setHeroTextSaved(false), 3000);
+      await axios.post('/api/settings/hero-button', { link: heroButtonLink }, { headers: authHeader() });
+      setHeroBtnSaved(true);
+      setTimeout(() => setHeroBtnSaved(false), 3000);
     } catch (err) {
-      setHeroTextError(err.response?.data?.message || 'Save failed');
+      setHeroBtnError(err.response?.data?.message || 'Save failed');
     } finally {
-      setHeroTextSaving(false);
-    }
-  }
-
-  async function handleHeroTextReset() {
-    if (!window.confirm('Revert hero text to the default? This will clear your custom heading and subtitle.')) return;
-    try {
-      await axios.delete('/api/settings/hero-text', { headers: authHeader() });
-      setHeroHeading('');
-      setHeroSubtitle('');
-    } catch {
-      alert('Could not reset hero text.');
+      setHeroBtnSaving(false);
     }
   }
 
@@ -337,12 +322,9 @@ export default function AdminDashboard() {
     axios.get('/api/settings/hero-image')
       .then(res => { if (res.data.url) setHeroCurrentUrl(res.data.url); })
       .catch(() => {});
-    // Fetch current hero text
-    axios.get('/api/settings/hero-text')
-      .then(res => {
-        if (res.data.heading)  setHeroHeading(res.data.heading);
-        if (res.data.subtitle) setHeroSubtitle(res.data.subtitle);
-      })
+    // Fetch current hero button link
+    axios.get('/api/settings/hero-button')
+      .then(res => { if (res.data.link) setHeroButtonLink(res.data.link); })
       .catch(() => {});
   }, []);
 
@@ -770,64 +752,53 @@ export default function AdminDashboard() {
         {activeTab === 'hero' && (
           <div className="admin-collections-panel">
 
-            {/* ── Section: Hero Text ── */}
-            <h3 className="admin-coll-section-title">✍️ Hero Text</h3>
+            {/* ── Section: Explore Now Button ── */}
+            <h3 className="admin-coll-section-title">🔗 "Explore Now" Button</h3>
             <p style={{ color: 'var(--text-mid)', fontSize: 13, marginBottom: 20 }}>
-              Customise the heading and subtitle shown on the home page hero. Leave blank to use the default text.
+              Choose which page the "Explore Now" button on the hero takes visitors to.
             </p>
 
-            {heroTextSaved && <div className="admin-coll-saved">✓ Hero text saved!</div>}
-            {heroTextError && <div className="error-msg" style={{ marginBottom: 16 }}>{heroTextError}</div>}
+            {heroBtnSaved && <div className="admin-coll-saved">✓ Button link saved!</div>}
+            {heroBtnError && <div className="error-msg" style={{ marginBottom: 16 }}>{heroBtnError}</div>}
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 14, marginBottom: 20 }}>
               <div>
                 <label style={{ display: 'block', fontSize: 12, fontWeight: 700, color: 'var(--text-mid)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                  Heading
+                  Link to
                 </label>
-                <textarea
-                  rows={3}
-                  placeholder={`Handmade with love,\ncrafted for your\neveryday joy ♡`}
-                  value={heroHeading}
-                  onChange={e => setHeroHeading(e.target.value)}
-                  style={{ width: '100%', padding: '10px 14px', borderRadius: 10, border: '1.5px solid var(--border)', fontFamily: 'var(--sans)', fontSize: 14, color: 'var(--text)', background: 'var(--cream)', resize: 'vertical', outline: 'none', lineHeight: 1.5 }}
-                />
-                <p style={{ fontSize: 11, color: 'var(--text-light)', marginTop: 4 }}>
-                  Use line breaks to control where text wraps on desktop.
-                </p>
+                <select
+                  value={heroButtonLink}
+                  onChange={e => setHeroButtonLink(e.target.value)}
+                  style={{ width: '100%', padding: '10px 14px', borderRadius: 10, border: '1.5px solid var(--border)', fontFamily: 'var(--sans)', fontSize: 14, color: 'var(--text)', background: 'var(--cream)', outline: 'none', cursor: 'pointer' }}
+                >
+                  <option value="/shop">🛍️ Shop All</option>
+                  <option value="/collections">🗂️ All Collections</option>
+                  <option value="/collection/flowers">🌸 Flowers</option>
+                  <option value="/collection/keychains">🔑 Keychains</option>
+                  <option value="/collection/bookmarks">🔖 Bookmarks</option>
+                  <option value="/collection/laddugopaldress">🕉️ Laddu Gopal</option>
+                  <option value="/collection/homedecor">🏠 Home Decor</option>
+                  <option value="/collection/hairaccessories">🎀 Hair Accessories</option>
+                  <option value="/collection/jewellery">💍 Jewellery</option>
+                  <option value="/collection/rakhi">🪢 Rakhi</option>
+                  <option value="/collection/custom">🎨 Custom Orders</option>
+                  <option value="/bestsellers">⭐ Bestsellers</option>
+                  <option value="/workshops">📅 Workshops</option>
+                  <option value="/our-story">📖 Our Story</option>
+                  <option value="/contact">📞 Contact</option>
+                </select>
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 700, color: 'var(--text-mid)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                  Subtitle
-                </label>
-                <textarea
-                  rows={2}
-                  placeholder="Thoughtfully handmade creations that bring warmth, charm and happiness into your life."
-                  value={heroSubtitle}
-                  onChange={e => setHeroSubtitle(e.target.value)}
-                  style={{ width: '100%', padding: '10px 14px', borderRadius: 10, border: '1.5px solid var(--border)', fontFamily: 'var(--sans)', fontSize: 14, color: 'var(--text)', background: 'var(--cream)', resize: 'vertical', outline: 'none', lineHeight: 1.5 }}
-                />
-              </div>
-
-              <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
                 <button
                   type="button"
                   className="btn-save"
-                  onClick={handleHeroTextSave}
-                  disabled={heroTextSaving}
+                  onClick={handleHeroBtnSave}
+                  disabled={heroBtnSaving}
                   style={{ flex: 'none' }}
                 >
-                  {heroTextSaving ? 'Saving…' : '✓ Save Text'}
+                  {heroBtnSaving ? 'Saving…' : '✓ Save'}
                 </button>
-                {(heroHeading || heroSubtitle) && (
-                  <button
-                    type="button"
-                    onClick={handleHeroTextReset}
-                    style={{ fontSize: 12, color: '#c0392b', background: 'none', border: 'none', cursor: 'pointer', padding: 0, textDecoration: 'underline' }}
-                  >
-                    Revert to default text
-                  </button>
-                )}
               </div>
             </div>
 

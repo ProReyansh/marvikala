@@ -99,8 +99,7 @@ export default function Home() {
   const [bouncingCat, setBouncingCat]       = useState(null);
   const [showPopup, setShowPopup]           = useState(false);
   const [heroImageUrl, setHeroImageUrl]     = useState('');
-  const [heroHeading, setHeroHeading]       = useState('');
-  const [heroSubtitle, setHeroSubtitle]     = useState('');
+  const [heroButtonLink, setHeroButtonLink] = useState('/shop');
   const [naIndex, setNaIndex]               = useState(0);
   const [reviewIndex, setReviewIndex]       = useState(0);
   const reviewTrackRef = useRef(null);
@@ -141,11 +140,8 @@ export default function Home() {
     axios.get('/api/settings/hero-image')
       .then((res) => { if (res.data.url) setHeroImageUrl(res.data.url); })
       .catch(() => {});
-    axios.get('/api/settings/hero-text')
-      .then((res) => {
-        if (res.data.heading)  setHeroHeading(res.data.heading);
-        if (res.data.subtitle) setHeroSubtitle(res.data.subtitle);
-      })
+    axios.get('/api/settings/hero-button')
+      .then((res) => { if (res.data.link) setHeroButtonLink(res.data.link); })
       .catch(() => {});
   }, []);
 
@@ -395,32 +391,22 @@ export default function Home() {
         /* ── NORMAL MODE ── */
         <>
           {/* HERO */}
-          <section
-            className="hero"
-            style={heroImageUrl ? { backgroundImage: `url('${heroImageUrl}')` } : undefined}
-          >
-            {/* Full-bleed background image overlay */}
-            <div className="hero-overlay" />
-            {/* Text content — positioned over the image */}
+          <section className="hero">
+            {/* Image — top portion */}
+            <div
+              className="hero-img-top"
+              style={heroImageUrl ? { backgroundImage: `url('${heroImageUrl}')` } : undefined}
+            >
+              <div className="hero-overlay" />
+            </div>
+            {/* CTA — below the image */}
             <div className="hero-content">
-              <h1>
-                {heroHeading || <>Handmade with love,<br />crafted for your<br />everyday joy</>}
-              </h1>
-              <p className="hero-desc">
-                {heroSubtitle || <>Thoughtfully handmade creations that bring warmth,<br className="hero-br" />charm and happiness into your life.</>}
-              </p>
               <div className="hero-btns">
                 <button
                   className="btn-primary btn-animated"
-                  onClick={() => navigate('/shop')}
+                  onClick={() => navigate(heroButtonLink)}
                 >
-                  Shop Now
-                </button>
-                <button
-                  className="btn-outline btn-animated hero-btn-story"
-                  onClick={() => navigate('/our-story')}
-                >
-                  Our Story
+                  Explore Now
                 </button>
               </div>
             </div>

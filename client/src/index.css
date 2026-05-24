@@ -549,45 +549,48 @@ body {
    HERO
    ═══════════════════════════════════════════ */
 
-/* ── Split hero: pink/cream left, image right ── */
-/* ── HERO — full-bleed image background ── */
+/* ── HERO — image top, text below ── */
 .hero {
   position: relative;
   width: 100%;
-  min-height: 440px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Image area — top portion */
+.hero-img-top {
+  width: 100%;
+  height: 300px;
   background-image: url('/hero-bg.jpg');
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
-  display: flex;
-  align-items: flex-start;
+  position: relative;
+  flex-shrink: 0;
   overflow: hidden;
 }
 
-/* Soft left-side gradient so text stays readable without hiding the bag */
+/* Subtle dim on image for polish */
 .hero-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    105deg,
-    rgba(255, 255, 255, 0.88) 0%,
-    rgba(255, 255, 255, 0.65) 38%,
-    rgba(255, 255, 255, 0.15) 62%,
-    transparent 100%
-  );
+  background: rgba(0, 0, 0, 0.10);
   pointer-events: none;
-  z-index: 1;
 }
 
+/* CTA area — below image */
 .hero-content {
   position: relative;
   z-index: 2;
-  padding: 70px 80px 60px 100px;
-  max-width: 560px;
+  padding: 24px 24px 28px;
+  background: var(--cream);
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  align-items: center;
+  text-align: center;
   gap: 0;
+  max-width: 100%;
 }
 
 .hero-eyebrow {
@@ -610,12 +613,13 @@ body {
 
 .hero h1 {
   font-family: var(--serif);
-  font-size: 62px;
+  font-size: 40px;
   font-weight: 700;
   color: var(--text);
-  line-height: 1.1;
+  line-height: 1.12;
   letter-spacing: -0.5px;
-  margin-bottom: 24px;
+  margin-bottom: 16px;
+  text-align: center;
 }
 
 .hero h1 em {
@@ -624,11 +628,12 @@ body {
 }
 
 .hero-desc {
-  font-size: 17px;
+  font-size: 15px;
   color: var(--text-mid);
   line-height: 1.7;
-  margin-bottom: 44px;
-  max-width: 420px;
+  margin-bottom: 32px;
+  max-width: 500px;
+  text-align: center;
 }
 
 .hero-br { display: inline; }
@@ -638,6 +643,7 @@ body {
   gap: 14px;
   align-items: center;
   flex-wrap: wrap;
+  justify-content: center;
 }
 
 /* ── Feature Badges ── */
@@ -2703,9 +2709,9 @@ body {
   .navbar-search    { max-width: 480px; }
   .navbar-links     { gap: 44px; }
   .navbar-links a   { font-size: 16px; }
-  .hero             { min-height: 620px; }
-  .hero-content     { padding: 90px 80px 60px 140px; max-width: 620px; }
-  .hero h1          { font-size: 72px; }
+  .hero-img-top     { height: 420px; }
+  .hero-content     { padding: 48px 80px 56px; }
+  .hero h1          { font-size: 56px; }
   .section          { padding: 90px 120px; }
   .contact-section  { padding: 0 120px 90px; }
   .custom-banner    { margin: 0 120px 90px; padding: 80px 80px; }
@@ -2721,8 +2727,8 @@ body {
 /* Large desktop (1600px-2399px) */
 @media (min-width: 1600px) and (max-width: 2399px) {
   .navbar           { padding: 0 80px; }
-  .hero             { min-height: 580px; }
-  .hero-content     { padding: 70px 60px 60px 100px; }
+  .hero-img-top     { height: 380px; }
+  .hero-content     { padding: 44px 60px 52px; }
   .section          { padding: 80px 80px; max-width: none; }
   .contact-section  { padding: 0 80px 80px; max-width: none; }
   .custom-banner    { margin: 0 80px 80px; }
@@ -2800,8 +2806,8 @@ body {
   }
 
   /* Hero */
-  .hero             { min-height: 480px; background-position: 72% center; }
-  .hero-content     { padding: 60px 36px 60px 52px; max-width: 460px; }
+  .hero-img-top     { height: 340px; }
+  .hero-content     { padding: 36px 36px 44px; }
   .hero h1          { font-size: 42px; }
 
   /* Sections */
@@ -3015,6 +3021,7 @@ body {
 
 /* Very small mobile (up to 360px) */
 @media (max-width: 360px) {
+  .hero-img-top     { height: 190px; }
   .hero h1          { font-size: 24px; }
   .categories-grid  { grid-template-columns: repeat(2, 1fr); }
   .search-input     { font-size: 11px; padding: 8px 8px; }
@@ -3328,49 +3335,26 @@ body {
 /* ═══ HERO RESPONSIVE ═══ */
 /* Tablet */
 @media (max-width: 900px) {
-  .hero {
-    min-height: 420px;
-    background-position: 70% center;
-  }
-  .hero-content {
-    padding: 70px 48px 60px 52px;
-    max-width: 480px;
-  }
-  .hero h1 { font-size: 46px; }
-  .hero-desc { font-size: 15px; margin-bottom: 36px; }
+  .hero-img-top     { height: 280px; }
+  .hero-content     { padding: 28px 32px 36px; }
+  .hero h1          { font-size: 36px; }
+  .hero-desc        { font-size: 14px; margin-bottom: 28px; }
 }
 /* Mobile */
 @media (max-width: 600px) {
-  .hero {
-    min-height: 340px;
-    background-position: 68% center;
-    align-items: flex-end;
-  }
-  /* On mobile: gradient covers bottom so text sits at bottom over lighter area */
-  .hero-overlay {
-    background: linear-gradient(
-      to top,
-      rgba(255, 255, 255, 0.95) 0%,
-      rgba(255, 255, 255, 0.80) 38%,
-      rgba(255, 255, 255, 0.30) 65%,
-      transparent 100%
-    );
-  }
-  .hero-content {
-    padding: 0 20px 24px;
-    max-width: 100%;
-  }
-  .hero-eyebrow { font-size: 10px; padding: 5px 12px; margin-bottom: 14px; }
-  .hero h1 { font-size: 30px; line-height: 1.15; margin-bottom: 12px; }
-  .hero-br { display: none; }
-  .hero-desc { font-size: 13px; line-height: 1.65; margin-bottom: 24px; max-width: 100%; }
-  .hero-btns { flex-direction: row; gap: 10px; }
-  .hero-btn-story { display: none !important; }
+  .hero-img-top     { height: 220px; }
+  .hero-content     { padding: 24px 20px 32px; }
+  .hero h1          { font-size: 28px; line-height: 1.18; margin-bottom: 10px; }
+  .hero-br          { display: none; }
+  .hero-desc        { font-size: 13px; line-height: 1.65; margin-bottom: 22px; }
+  .hero-btns        { gap: 10px; }
+  .hero-btn-story   { display: none !important; }
 }
 /* Very small mobile */
 @media (max-width: 390px) {
-  .hero h1 { font-size: 26px; }
-  .hero-content { padding: 0 18px 40px; }
+  .hero-img-top  { height: 200px; }
+  .hero h1       { font-size: 26px; }
+  .hero-content  { padding: 20px 18px 28px; }
 }
 
 /* ═══ FEATURE BADGES (mobile override) ═══ */
@@ -9064,30 +9048,9 @@ body {
   background: linear-gradient(135deg, #F5EDE0 0%, #EEF4E0 100%);
 }
 
-/* ── TASK 9: Hero — better readability, line-height, contrast ── */
-.hero-overlay {
-  background: linear-gradient(
-    105deg,
-    rgba(255, 255, 255, 0.92) 0%,
-    rgba(255, 255, 255, 0.70) 40%,
-    rgba(255, 255, 255, 0.18) 64%,
-    transparent 100%
-  );
-}
+/* ── TASK 9: Hero — image top, text bottom layout ── */
 .hero h1 {
-  line-height: 1.08;
-}
-.hero {
-  filter: none;
-}
-/* Slightly dim the background image for text contrast */
-.hero::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: rgba(0,0,0,0.06);
-  pointer-events: none;
-  z-index: 0;
+  line-height: 1.12;
 }
 
 /* ── TASK 10: Global animations & transitions ── */

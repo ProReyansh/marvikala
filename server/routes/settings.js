@@ -115,4 +115,29 @@ router.delete('/hero-image', authMiddleware, async (req, res) => {
   }
 });
 
+// GET /api/settings/hero-button — public
+router.get('/hero-button', async (req, res) => {
+  try {
+    const setting = await Settings.findOne({ key: 'heroButtonLink' });
+    res.json({ link: setting?.value || '/shop' });
+  } catch {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// POST /api/settings/hero-button — admin only
+router.post('/hero-button', authMiddleware, async (req, res) => {
+  try {
+    const { link } = req.body;
+    await Settings.findOneAndUpdate(
+      { key: 'heroButtonLink' },
+      { value: (link || '/shop').trim() },
+      { upsert: true, new: true }
+    );
+    res.json({ link: (link || '/shop').trim() });
+  } catch {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 module.exports = router;
