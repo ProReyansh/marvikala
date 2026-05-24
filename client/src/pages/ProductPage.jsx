@@ -339,7 +339,7 @@ export default function ProductPage() {
         <nav className="product-page-breadcrumb" aria-label="Breadcrumb">
           <button onClick={handleBack}>← Back</button>
           <span className="product-page-breadcrumb-sep">/</span>
-          <span>{catLabel}</span>
+          <button onClick={() => navigate(`/collection/${product.category}`)}>{catLabel}</button>
           <span className="product-page-breadcrumb-sep">/</span>
           <span className="product-page-breadcrumb-current">{product.name}</span>
         </nav>
