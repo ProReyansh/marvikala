@@ -1,4 +1,4 @@
-﻿import { useState, useEffect, useRef, useCallback } from 'react';
+﻿import { useState, useEffect, useLayoutEffect, useRef, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
@@ -170,6 +170,14 @@ export default function Home() {
   useEffect(() => {
     if (isFirstVisit) document.body.classList.add('home-intro-active');
     return () => document.body.classList.remove('home-intro-active');
+  }, [isFirstVisit]);
+
+  // On returning visits: add a body class BEFORE paint so .fade-section elements
+  // are never briefly invisible. useLayoutEffect runs synchronously before the browser renders.
+  useLayoutEffect(() => {
+    if (isFirstVisit) return;
+    document.body.classList.add('home-no-anim');
+    return () => document.body.classList.remove('home-no-anim');
   }, [isFirstVisit]);
 
   // Scroll-triggered fade-up — only animates on first-ever website visit.

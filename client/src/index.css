@@ -4237,6 +4237,13 @@ body {
   opacity: 1;
   transform: translateY(0);
 }
+/* Returning visits: suppress all fade-section animations instantly, including
+   conditionally-rendered sections (New Arrivals) that aren't in the DOM on mount */
+.home-no-anim .fade-section {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+}
 
 /* ═══════════════════════════════════════════
    MOBILE SPACING & TYPOGRAPHY REFINEMENTS
