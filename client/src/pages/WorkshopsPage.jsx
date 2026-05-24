@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import BackButton from '../components/BackButton';
 
 // Dates relative to current month (May 2026)
 const WORKSHOPS = [
@@ -245,8 +246,8 @@ export default function WorkshopsPage() {
       <div className="sa-page">
 
         <div className="sa-header-row">
+          <BackButton pageName="Workshops" />
           <h1 className="sa-title">Workshops</h1>
-          <button className="sa-back-btn" onClick={() => navigate(-1)}>← Back / Workshops</button>
         </div>
 
         {/* Hero blurb */}

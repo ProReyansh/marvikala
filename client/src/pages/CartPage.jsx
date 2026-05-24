@@ -246,8 +246,12 @@ export default function CartPage() {
 
       <div className="sa-page">
         <div className="sa-header-row cart-header-row">
+          <div className="sa-back-nav">
+            <button className="sa-back-btn" onClick={() => navigate(-1)}>← Back</button>
+            <span className="sa-back-sep">/</span>
+            <span className="sa-back-page">Your Cart</span>
+          </div>
           <h1 className="sa-title">Your Cart {!isEmpty && <span className="cart-title-count">({itemCount})</span>}</h1>
-          <button className="sa-back-btn" onClick={() => navigate(-1)}>← Continue Shopping</button>
         </div>
 
         {isEmpty ? (

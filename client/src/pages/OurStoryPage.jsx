@@ -2,6 +2,7 @@
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import BackButton from '../components/BackButton';
 
 export default function OurStoryPage() {
   const navigate = useNavigate();
@@ -34,8 +35,8 @@ export default function OurStoryPage() {
       <div className="sa-page">
 
         <div className="sa-header-row">
+          <BackButton pageName="Our Story" />
           <h1 className="sa-title">Our Story</h1>
-          <button className="sa-back-btn" onClick={() => navigate(-1)}>← Back / Our Story</button>
         </div>
 
         <div className="story-page">

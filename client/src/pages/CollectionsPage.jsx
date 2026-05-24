@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import BackButton from '../components/BackButton';
 
 // ── Default collection catalogue (no featured flag) ──────────────────────────
 const DEFAULT_COLLECTIONS = [
@@ -252,8 +253,8 @@ export default function CollectionsPage() {
 
         {/* ══ HEADER ROW ═════════════════════════════════════════════════════ */}
         <div className="sa-header-row coll-back-row">
+          <BackButton pageName="Our Collections" />
           <h1 className="sa-title">Our Collections</h1>
-          <button className="sa-back-btn" onClick={() => navigate(-1)}>← Back / Our Collections</button>
         </div>
 
         {/* ══ INTRO ══════════════════════════════════════════════════════════ */}

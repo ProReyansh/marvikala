@@ -2,6 +2,7 @@
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import BackButton from '../components/BackButton';
 import { useToast } from '../context/ToastContext';
 
 function WaIcon() {
@@ -99,8 +100,8 @@ export default function ContactPage() {
       <div className="sa-page">
 
         <div className="sa-header-row">
+          <BackButton pageName="Contact Us" />
           <h1 className="sa-title">Contact Us</h1>
-          <button className="sa-back-btn" onClick={() => navigate(-1)}>← Back / Contact Us</button>
         </div>
 
         <div className="contact-page-body">

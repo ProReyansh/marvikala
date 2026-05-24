@@ -2,6 +2,7 @@
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
+import BackButton from '../components/BackButton';
 import Footer from '../components/Footer';
 import { useCart } from '../context/CartContext';
 
@@ -120,8 +121,8 @@ export default function AllBestsellersPage() {
 
       <div className="sa-page">
         <div className="sa-header-row">
+          <BackButton pageName="Bestsellers" />
           <h1 className="sa-title">Bestsellers</h1>
-          <button className="sa-back-btn" onClick={() => navigate(-1)}>← Back / Bestsellers</button>
         </div>
 
         {loading ? (

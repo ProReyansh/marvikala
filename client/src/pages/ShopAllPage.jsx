@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import BackButton from '../components/BackButton';
 import { useCart } from '../context/CartContext';
 
 const CAT_LABEL = {
@@ -246,8 +247,8 @@ export default function ShopAllPage() {
 
         {/* ── Header Row ── */}
         <div className="sa-header-row">
+          <BackButton pageName="Shop All" />
           <h1 className="sa-title">Shop All</h1>
-          <button className="sa-back-btn" onClick={() => navigate(-1)}>← Back / Shop All</button>
         </div>
 
         {/* ── Controls Row ── */}

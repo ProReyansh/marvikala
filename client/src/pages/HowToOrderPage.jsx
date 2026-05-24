@@ -1,6 +1,7 @@
 ﻿import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import BackButton from '../components/BackButton';
 
 const STEPS = [
   { step: '01', icon: '🛍️', title: 'Browse & Choose', desc: 'Browse our collections and find the product you love. You can filter by category or search for something specific.' },
@@ -27,8 +28,8 @@ export default function HowToOrderPage() {
       <Navbar searchQuery="" onSearch={() => {}} />
       <div className="sa-page hto-page">
         <div className="sa-header-row">
+          <BackButton pageName="How to Order" />
           <h1 className="sa-title">How to Order</h1>
-          <button className="sa-back-btn" onClick={() => navigate(-1)}>← Back / How to Order</button>
         </div>
         <p className="hto-sub">Ordering from Marvikala is simple and personal — here's how it works</p>
         <div className="hto-steps">

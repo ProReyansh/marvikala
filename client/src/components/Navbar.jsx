@@ -78,9 +78,9 @@ export default function Navbar({ searchQuery = '', onSearch }) {
     return () => { document.body.style.overflow = ''; };
   }, [drawerOpen, searchOpen]);
 
-  // Scroll tracking: close search on scroll/swipe
+  // Close search when page scrolls (e.g. rubber-band on iOS) — swipe-to-close removed
+  // so the panel can only be dismissed via Cancel or tapping outside.
   const scrollAtOpen = useRef(0);
-  const touchStartY  = useRef(0);
   useEffect(() => {
     function onScroll() {
       setScrolled(window.scrollY > 8);
@@ -88,20 +88,8 @@ export default function Navbar({ searchQuery = '', onSearch }) {
       const diff = Math.abs(window.scrollY - scrollAtOpen.current);
       if (diff > 40) setSearchOpen(false);
     }
-    function onTouchStart(e) { touchStartY.current = e.touches[0].clientY; }
-    function onTouchMove(e) {
-      if (!searchOpen) return;
-      const dy = touchStartY.current - e.touches[0].clientY;
-      if (Math.abs(dy) > 30) setSearchOpen(false);
-    }
-    window.addEventListener('scroll',     onScroll,     { passive: true });
-    window.addEventListener('touchstart', onTouchStart, { passive: true });
-    window.addEventListener('touchmove',  onTouchMove,  { passive: true });
-    return () => {
-      window.removeEventListener('scroll',     onScroll);
-      window.removeEventListener('touchstart', onTouchStart);
-      window.removeEventListener('touchmove',  onTouchMove);
-    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, [searchOpen]);
 
   // Hide panel on outside click
@@ -334,6 +322,7 @@ export default function Navbar({ searchQuery = '', onSearch }) {
             {localQuery ? (
               <button
                 className="msp-clear"
+                onMouseDown={() => clearTimeout(blurTimeout.current)}
                 onClick={() => { setLocalQuery(''); onSearch?.(''); inputRef.current?.focus(); }}
                 aria-label="Clear search"
               >

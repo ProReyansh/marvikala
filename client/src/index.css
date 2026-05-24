@@ -3727,9 +3727,23 @@ body {
   margin-bottom: 28px;
   animation: saHeaderIn 0.38s cubic-bezier(0.22,1,0.36,1) 0.05s both;
 }
-.sa-header-row .sa-back-btn {
-  order: -1;
-  margin-bottom: 0;
+.sa-back-nav {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 6px;
+}
+.sa-back-sep {
+  color: var(--text-light);
+  font-size: 12px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.sa-back-page {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-mid);
+  white-space: nowrap;
 }
 @media (max-width: 600px) {
   .sa-header-row { margin-bottom: 20px; }

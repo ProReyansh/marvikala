@@ -1,6 +1,7 @@
 ﻿import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import BackButton from '../components/BackButton';
 
 export default function ShippingPage() {
   const navigate = useNavigate();
@@ -29,8 +30,8 @@ export default function ShippingPage() {
       <div className="sa-page">
 
         <div className="sa-header-row">
+          <BackButton pageName="Shipping & Returns" />
           <h1 className="sa-title">Shipping &amp; Returns</h1>
-          <button className="sa-back-btn" onClick={() => navigate(-1)}>← Back / Shipping &amp; Returns</button>
         </div>
 
         <div className="policy-doc">

@@ -2,6 +2,7 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
+import BackButton from '../components/BackButton';
 import Footer from '../components/Footer';
 import { useCart } from '../context/CartContext';
 
@@ -140,8 +141,8 @@ export default function CollectionPage() {
 
         {/* ── Header Row ── */}
         <div className="sa-header-row">
+          <BackButton pageName={catLabel} />
           <h1 className="sa-title">{catLabel}</h1>
-          <button className="sa-back-btn" onClick={() => navigate(-1)}>← Back / {catLabel}</button>
         </div>
 
         {/* ── Product count ── */}

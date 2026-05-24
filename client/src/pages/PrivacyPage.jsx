@@ -1,6 +1,7 @@
 ﻿import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import BackButton from '../components/BackButton';
 
 export default function PrivacyPage() {
   const navigate = useNavigate();
@@ -29,8 +30,8 @@ export default function PrivacyPage() {
       <div className="sa-page">
 
         <div className="sa-header-row">
+          <BackButton pageName="Privacy Policy" />
           <h1 className="sa-title">Privacy Policy</h1>
-          <button className="sa-back-btn" onClick={() => navigate(-1)}>← Back / Privacy Policy</button>
         </div>
 
         <div className="policy-doc">

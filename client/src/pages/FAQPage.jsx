@@ -2,6 +2,7 @@
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import BackButton from '../components/BackButton';
 
 const FAQ_DATA = [
   {
@@ -116,8 +117,8 @@ export default function FAQPage() {
 
       <div className="sa-page">
         <div className="sa-header-row">
+          <BackButton pageName="FAQs" />
           <h1 className="sa-title">FAQs</h1>
-          <button className="sa-back-btn" onClick={() => navigate(-1)}>← Back / FAQs</button>
         </div>
 
         <p className="faq-subtitle">Everything you need to know about Marvikala</p>
