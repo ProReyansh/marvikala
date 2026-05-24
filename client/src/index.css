@@ -3721,7 +3721,7 @@ body {
 }
 .sa-header-row .sa-back-btn {
   order: -1;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
 }
 @media (max-width: 600px) {
   .sa-header-row { margin-bottom: 20px; }
@@ -3734,6 +3734,7 @@ body {
   font-weight: 700;
   color: var(--text);
   letter-spacing: -0.4px;
+  margin: 0;
 }
 
 /* Back button */
