@@ -9836,6 +9836,22 @@ body {
   #bestsellers { padding-top: 16px !important; }
 }
 
+/* ── Product card — color swatches ── */
+.product-colors {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  margin: 6px 0 4px;
+}
+.product-color-dot {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(0,0,0,0.12);
+  flex-shrink: 0;
+  display: inline-block;
+}
+
 /* ── Product card — stock status label (pill tag) ── */
 .pc-stock-status {
   display: inline-block;

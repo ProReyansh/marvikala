@@ -73,6 +73,7 @@ router.post('/', authMiddleware, upload.array('images', 5), async (req, res) => 
       newArrival: req.body.newArrival === 'true' || req.body.newArrival === true,
       price:         req.body.price         ? Number(req.body.price)         : null,
       originalPrice: req.body.originalPrice ? Number(req.body.originalPrice) : null,
+      colors: [].concat(req.body['colors[]'] || []),
     });
     await product.save();
     res.status(201).json(product);
@@ -111,6 +112,7 @@ router.put('/:id', authMiddleware, upload.array('images', 5), async (req, res) =
       newArrival: req.body.newArrival === 'true' || req.body.newArrival === true,
       price:         req.body.price         ? Number(req.body.price)         : null,
       originalPrice: req.body.originalPrice ? Number(req.body.originalPrice) : null,
+      colors: [].concat(req.body['colors[]'] || []),
     };
 
     const product = await Product.findByIdAndUpdate(req.params.id, update, { new: true });

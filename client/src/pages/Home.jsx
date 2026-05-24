@@ -339,6 +339,13 @@ export default function Home() {
               )}
             </div>
           )}
+          {product.colors?.length > 0 && (
+            <div className="product-colors">
+              {product.colors.slice(0, 4).map((c, i) => (
+                <span key={i} className="product-color-dot" style={{ background: c }} />
+              ))}
+            </div>
+          )}
           <div className={`pc-stock-status ${product.inStock ? 'pc-stock-in' : 'pc-stock-mto'}`}>
             {product.inStock ? 'READY TO SHIP' : 'MADE TO ORDER'}
           </div>

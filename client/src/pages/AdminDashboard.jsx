@@ -35,10 +35,13 @@ function getStoredCollections() {
 }
 
 
+const PRESET_COLORS = ['#FF6B6B','#FF9F43','#F9CA24','#6AB04C','#22A6B3','#686DE0','#FDA7DF','#FFFFFF','#C4C4C4','#2C2C2C'];
+
 const EMPTY_FORM = {
   name: '', description: '', category: 'flowers',
   inStock: true, bestseller: false,
   price: '', originalPrice: '',
+  colors: [],
   existingImages: [],
   newImageFiles: [],
 };
@@ -351,6 +354,7 @@ export default function AdminDashboard() {
       bestseller: product.bestseller || product.featured || false,
       price: product.price || '',
       originalPrice: product.originalPrice || '',
+      colors: product.colors || [],
       existingImages: imgs,
       newImageFiles: [],
     });
@@ -389,6 +393,7 @@ export default function AdminDashboard() {
       data.append('bestseller', form.bestseller);
       if (form.price !== '' && form.price !== null) data.append('price', form.price);
       if (form.originalPrice !== '' && form.originalPrice !== null) data.append('originalPrice', form.originalPrice);
+      form.colors.forEach(c => data.append('colors[]', c));
 
       if (editing) {
         data.append('existingImages', JSON.stringify(form.existingImages));
@@ -1122,6 +1127,43 @@ export default function AdminDashboard() {
                     className="form-input"
                     min="0"
                   />
+                </div>
+
+                <div className="form-group">
+                  <label>Available Colors <small style={{ color: '#999' }}>(click to toggle, max 6)</small></label>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 6 }}>
+                    {PRESET_COLORS.map(color => {
+                      const selected = form.colors.includes(color);
+                      return (
+                        <button
+                          key={color}
+                          type="button"
+                          onClick={() => {
+                            setForm(f => ({
+                              ...f,
+                              colors: selected
+                                ? f.colors.filter(c => c !== color)
+                                : f.colors.length < 6 ? [...f.colors, color] : f.colors,
+                            }));
+                          }}
+                          style={{
+                            width: 28, height: 28, borderRadius: '50%',
+                            background: color,
+                            border: selected ? '3px solid var(--olive)' : '2px solid #ccc',
+                            cursor: 'pointer', padding: 0, flexShrink: 0,
+                            boxShadow: selected ? '0 0 0 2px white inset' : 'none',
+                          }}
+                          title={color}
+                        />
+                      );
+                    })}
+                  </div>
+                  {form.colors.length > 0 && (
+                    <button type="button" onClick={() => setForm(f => ({ ...f, colors: [] }))}
+                      style={{ marginTop: 6, fontSize: 11, color: '#c0392b', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
+                      Clear all colors
+                    </button>
+                  )}
                 </div>
 
                 <div className="form-group">
