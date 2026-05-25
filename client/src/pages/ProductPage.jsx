@@ -393,12 +393,17 @@ export default function ProductPage() {
           {/* ── Image Gallery ── */}
           <div className="product-page-gallery">
             {/* Horizontal scroll strip */}
-            <div className="pp-img-strip-wrap pp-main-zoomable">
+            <div
+              className="pp-img-strip-wrap pp-main-zoomable"
+              onClick={() => images.length > 0 && setZoomOpen(true)}
+              role="button"
+              tabIndex={0}
+              aria-label="View images — click to zoom"
+            >
               <div
                 className="pp-img-strip"
                 ref={galleryRef}
                 onScroll={handleGalleryScroll}
-                onClick={() => images.length > 0 && setZoomOpen(true)}
                 role="region"
                 aria-label="Product images"
               >
