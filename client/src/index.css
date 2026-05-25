@@ -9999,7 +9999,7 @@ body {
 .na-swipe-track::-webkit-scrollbar { display: none; }
 
 .na-swipe-item {
-  flex: 0 0 76%;
+  flex: 0 0 62%;
   scroll-snap-align: center;
   display: flex;
 }
