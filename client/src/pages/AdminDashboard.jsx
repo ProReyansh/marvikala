@@ -47,6 +47,7 @@ const EMPTY_FORM = {
   existingImages: [],
   newImageFiles: [],
   primaryImageIndex: 0,
+  primaryImageIndices: [],
 };
 
 function authHeader() {
@@ -366,6 +367,12 @@ export default function AdminDashboard() {
       existingImages: imgs,
       newImageFiles: [],
       primaryImageIndex: product.primaryImageIndex ?? 0,
+      primaryImageIndices: (() => {
+        const arr = product.primaryImageIndices;
+        if (arr?.length > 0) return arr;
+        const idx = product.primaryImageIndex ?? 0;
+        return idx !== 0 ? [idx] : [];
+      })(),
     });
     setExpandedVariants({});
     setError('');
@@ -405,7 +412,8 @@ export default function AdminDashboard() {
       if (form.price !== '' && form.price !== null) data.append('price', form.price);
       if (form.originalPrice !== '' && form.originalPrice !== null) data.append('originalPrice', form.originalPrice);
       data.append('colors', JSON.stringify(form.colors));
-      data.append('primaryImageIndex', form.primaryImageIndex ?? 0);
+      data.append('primaryImageIndex', form.primaryImageIndices?.[0] ?? form.primaryImageIndex ?? 0);
+      data.append('primaryImageIndices', JSON.stringify(form.primaryImageIndices || []));
 
       if (editing) {
         data.append('existingImages', JSON.stringify(form.existingImages));
@@ -1212,26 +1220,49 @@ export default function AdminDashboard() {
                     <p style={{ fontSize: 12, color: '#888', marginTop: 6 }}>Maximum 10 images reached</p>
                   )}
 
-                  {/* Primary image picker — shown when product has multiple images */}
+                  {/* Primary image picker — multi-select, shown when product has multiple images */}
                   {totalImages > 1 && (() => {
                     const allImgUrls = [
                       ...form.existingImages.map(u => u.startsWith('http') ? u : `/uploads/${u}`),
                       ...form.newImageFiles.map(f => URL.createObjectURL(f)),
                     ];
+                    const indices = form.primaryImageIndices || [];
+                    const toggleCover = (imgIdx) => {
+                      const next = indices.includes(imgIdx)
+                        ? indices.filter(i => i !== imgIdx)
+                        : [...indices, imgIdx];
+                      setForm(f => ({
+                        ...f,
+                        primaryImageIndices: next,
+                        primaryImageIndex: next[0] ?? 0,
+                      }));
+                    };
                     return (
                       <div style={{ marginTop: 10 }}>
-                        <div className="cv-img-picker-label">Cover image (shown on product cards):</div>
+                        <div className="cv-img-picker-label">
+                          Product images (shown in gallery)
+                          {indices.length > 0 && (
+                            <span style={{ fontWeight: 400, color: 'var(--olive)', marginLeft: 6 }}>
+                              ({indices.length} selected)
+                            </span>
+                          )}
+                          <span style={{ fontWeight: 400, color: '#aaa', marginLeft: 6, textTransform: 'none', letterSpacing: 0 }}>— tap to select · first = card thumbnail</span>
+                        </div>
                         <div className="cv-img-picker">
-                          {allImgUrls.map((src, imgIdx) => (
-                            <div
-                              key={imgIdx}
-                              className={`cv-img-option${(form.primaryImageIndex ?? 0) === imgIdx ? ' selected' : ''}`}
-                              onClick={() => setForm(f => ({ ...f, primaryImageIndex: imgIdx }))}
-                            >
-                              <img src={src} alt={`Image ${imgIdx + 1}`} />
-                              {(form.primaryImageIndex ?? 0) === imgIdx && <span className="cv-img-check">✓</span>}
-                            </div>
-                          ))}
+                          {allImgUrls.map((src, imgIdx) => {
+                            const sel = indices.includes(imgIdx);
+                            const order = indices.indexOf(imgIdx);
+                            return (
+                              <div
+                                key={imgIdx}
+                                className={`cv-img-option${sel ? ' selected' : ''}`}
+                                onClick={() => toggleCover(imgIdx)}
+                              >
+                                <img src={src} alt={`Image ${imgIdx + 1}`} />
+                                {sel && <span className="cv-img-check">{order + 1}</span>}
+                              </div>
+                            );
+                          })}
                         </div>
                       </div>
                     );

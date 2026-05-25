@@ -160,18 +160,22 @@ export default function ProductPage() {
     : (product?.image ? [product.image] : []);
   const allVariants = (product?.colors || []).filter(c => typeof c === 'object' && c?.color);
   const activeVariantObj = activeVariant !== null ? allVariants[activeVariant] : null;
-  // Base product: cover image only. Variant: all images selected for that variant.
+  // Base product: primaryImageIndices gallery (falls back to [primaryImageIndex]).
+  // Variant: its imageIndices gallery (falls back to [imageIndex]).
   const displayImages = (() => {
     if (activeVariantObj) {
-      // imageIndices (multi) takes priority; fall back to legacy imageIndex (single)
       const indices = activeVariantObj.imageIndices?.length > 0
         ? activeVariantObj.imageIndices
         : [activeVariantObj.imageIndex ?? (product?.primaryImageIndex ?? 0)];
       const imgs = indices.map(i => allProductImages[i]).filter(Boolean);
       return imgs.length > 0 ? imgs : [allProductImages[0]].filter(Boolean);
     }
-    const coverIdx = product?.primaryImageIndex ?? 0;
-    return [allProductImages[coverIdx] || allProductImages[0]].filter(Boolean);
+    // Base product
+    const baseIndices = product?.primaryImageIndices?.length > 0
+      ? product.primaryImageIndices
+      : [product?.primaryImageIndex ?? 0];
+    const imgs = baseIndices.map(i => allProductImages[i]).filter(Boolean);
+    return imgs.length > 0 ? imgs : [allProductImages[0]].filter(Boolean);
   })();
 
   // Keep locationRef in sync so the persist effect doesn't need location as a dep

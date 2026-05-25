@@ -73,8 +73,9 @@ router.post('/', authMiddleware, upload.array('images', 10), async (req, res) =>
       newArrival: req.body.newArrival === 'true' || req.body.newArrival === true,
       price:             req.body.price         ? Number(req.body.price)         : null,
       originalPrice:     req.body.originalPrice ? Number(req.body.originalPrice) : null,
-      colors:            (() => { try { return JSON.parse(req.body.colors || '[]'); } catch { return []; } })(),
-      primaryImageIndex: req.body.primaryImageIndex != null ? Number(req.body.primaryImageIndex) : 0,
+      colors:              (() => { try { return JSON.parse(req.body.colors || '[]'); } catch { return []; } })(),
+      primaryImageIndex:   req.body.primaryImageIndex != null ? Number(req.body.primaryImageIndex) : 0,
+      primaryImageIndices: (() => { try { return JSON.parse(req.body.primaryImageIndices || '[]'); } catch { return []; } })(),
     });
     await product.save();
     res.status(201).json(product);
@@ -113,8 +114,9 @@ router.put('/:id', authMiddleware, upload.array('images', 10), async (req, res) 
       newArrival: req.body.newArrival === 'true' || req.body.newArrival === true,
       price:             req.body.price         ? Number(req.body.price)         : null,
       originalPrice:     req.body.originalPrice ? Number(req.body.originalPrice) : null,
-      colors:            (() => { try { return JSON.parse(req.body.colors || '[]'); } catch { return []; } })(),
-      primaryImageIndex: req.body.primaryImageIndex != null ? Number(req.body.primaryImageIndex) : 0,
+      colors:              (() => { try { return JSON.parse(req.body.colors || '[]'); } catch { return []; } })(),
+      primaryImageIndex:   req.body.primaryImageIndex != null ? Number(req.body.primaryImageIndex) : 0,
+      primaryImageIndices: (() => { try { return JSON.parse(req.body.primaryImageIndices || '[]'); } catch { return []; } })(),
     };
 
     const product = await Product.findByIdAndUpdate(req.params.id, update, { new: true });
