@@ -102,6 +102,11 @@ function CartItem({ item, onSaveForLater }) {
       <div className="cart-item-top">
         <div className="cart-item-img" onClick={goToProduct} style={{ cursor: 'pointer' }}>
           {src ? <img src={src} alt={item.name} loading="lazy" /> : <span className="cart-item-placeholder"></span>}
+          {item.price && item.originalPrice && item.originalPrice > item.price && (
+            <span className="cart-discount-badge">
+              {Math.round((1 - item.price / item.originalPrice) * 100)}% off
+            </span>
+          )}
         </div>
         <div className="cart-item-info">
           <div className="cart-item-cat">{CAT_LABEL[item.category] || item.category}</div>
