@@ -157,7 +157,7 @@ export default function ProductPage() {
     setPageAnim('pp-enter');
     setExiting(false);
     setActiveImg(0);
-    setActiveVariant(null);
+    setActiveVariant(location.state?.activeVariant ?? null);
     setImgAnimKey(0);
     setSimilar([]);
     setQty(1);
@@ -168,6 +168,13 @@ export default function ProductPage() {
       const pool = all || getCachedProducts();
       setSimilar(pool.filter(p => p.category === prod.category && p._id !== prod._id).slice(0, 6));
       setLoading(false);
+      // Jump to the variant's image if one was pre-selected from the card
+      const variantIdx = location.state?.activeVariant;
+      if (variantIdx != null) {
+        const vs = (prod.colors || []).filter(c => typeof c === 'object' && c?.color);
+        const cv = vs[variantIdx];
+        if (cv) setTimeout(() => changeImage(cv.imageIndex ?? 0), 60);
+      }
     }
 
     if (location.state?.product && slugify(location.state.product.name) === slug) {
@@ -228,8 +235,24 @@ export default function ProductPage() {
   }
 
   function handleAddToCart() {
-    addToCart(product, qty);
-    // button text stays as "Add to Cart" always
+    const variants = (product.colors || []).filter(c => typeof c === 'object' && c?.color);
+    const cv = activeVariant !== null ? variants[activeVariant] : null;
+    if (cv) {
+      const cartKey = `${product._id}_v${activeVariant}`;
+      const imgs = product.images?.length > 0 ? product.images : (product.image ? [product.image] : []);
+      addToCart({
+        ...product,
+        _id: cartKey,
+        name: cv.name || product.name,
+        price: cv.price || product.price,
+        originalPrice: cv.originalPrice || product.originalPrice,
+        images: [imgs[cv.imageIndex ?? 0] || imgs[0]].filter(Boolean),
+        variantIndex: activeVariant,
+        parentId: product._id,
+      }, qty);
+    } else {
+      addToCart(product, qty);
+    }
   }
 
   function handleShare() {
@@ -474,6 +497,10 @@ export default function ProductPage() {
               const cv = activeVariant !== null ? variants[activeVariant] : null;
               const displayName = cv?.name || product.name;
               const displayDesc = cv?.description || product.description;
+              const displayPrice = (cv?.price) || product.price;
+              const displayOriginalPrice = (cv?.originalPrice) || product.originalPrice;
+              const displayDiscount = displayPrice && displayOriginalPrice
+                ? Math.round((1 - displayPrice / displayOriginalPrice) * 100) : 0;
 
               // When a variant is selected, jump to its image
               function handleVariantClick(idx) {
@@ -498,11 +525,11 @@ export default function ProductPage() {
                   </div>
 
                   {/* Price */}
-                  {(product.price || product.originalPrice) && (
+                  {(displayPrice || displayOriginalPrice) && (
                     <div className="pp-price-row">
-                      {product.price && <span className="pp-price-sale">₹{product.price}</span>}
-                      {product.originalPrice && <span className="pp-price-orig">₹{product.originalPrice}</span>}
-                      {discount > 0 && <span className="pp-discount-badge">{discount}% off</span>}
+                      {displayPrice         && <span className="pp-price-sale">₹{displayPrice}</span>}
+                      {displayOriginalPrice && <span className="pp-price-orig">₹{displayOriginalPrice}</span>}
+                      {displayDiscount > 0  && <span className="pp-discount-badge">{displayDiscount}% off</span>}
                     </div>
                   )}
 

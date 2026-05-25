@@ -359,8 +359,8 @@ export default function AdminDashboard() {
       originalPrice: product.originalPrice || '',
       colors: (product.colors || []).map(c =>
         typeof c === 'string'
-          ? { color: c, name: '', description: '', imageIndex: 0 }
-          : c
+          ? { color: c, name: '', description: '', imageIndex: 0, price: '', originalPrice: '' }
+          : { price: '', originalPrice: '', ...c }
       ),
       existingImages: imgs,
       newImageFiles: [],
@@ -1216,7 +1216,7 @@ export default function AdminDashboard() {
                           if (form.colors.length >= 8) return;
                           const already = form.colors.some(c => getColorHex(c) === color);
                           if (already) return;
-                          setForm(f => ({ ...f, colors: [...f.colors, { color, name: '', description: '', imageIndex: 0 }] }));
+                          setForm(f => ({ ...f, colors: [...f.colors, { color, name: '', description: '', imageIndex: 0, price: '', originalPrice: '' }] }));
                         }}
                       />
                     ))}
@@ -1230,7 +1230,7 @@ export default function AdminDashboard() {
                           if (form.colors.length >= 8) return;
                           const already = form.colors.some(c => getColorHex(c) === customColor);
                           if (already) return;
-                          setForm(f => ({ ...f, colors: [...f.colors, { color: customColor, name: '', description: '', imageIndex: 0 }] }));
+                          setForm(f => ({ ...f, colors: [...f.colors, { color: customColor, name: '', description: '', imageIndex: 0, price: '', originalPrice: '' }] }));
                         }}>
                         + Add
                       </button>
@@ -1247,7 +1247,7 @@ export default function AdminDashboard() {
                       <div className="cv-variant-list">
                         {form.colors.map((variant, idx) => {
                           const vColor = getColorHex(variant);
-                          const vObj   = typeof variant === 'string' ? { color: variant, name: '', description: '', imageIndex: 0 } : variant;
+                          const vObj   = typeof variant === 'string' ? { color: variant, name: '', description: '', imageIndex: 0, price: '', originalPrice: '' } : { price: '', originalPrice: '', ...variant };
                           const update = (field, val) =>
                             setForm(f => ({ ...f, colors: f.colors.map((c, i) => i === idx ? { ...vObj, [field]: val } : c) }));
                           return (
@@ -1268,6 +1268,18 @@ export default function AdminDashboard() {
                                   rows={2}
                                   value={vObj.description}
                                   onChange={e => update('description', e.target.value)} />
+                                <div style={{ display: 'flex', gap: 8 }}>
+                                  <input type="number" placeholder="Variant price ₹ (leave blank to use product price)"
+                                    min="0"
+                                    value={vObj.price || ''}
+                                    onChange={e => update('price', e.target.value)}
+                                    style={{ flex: 1 }} />
+                                  <input type="number" placeholder="Slashed price ₹ (optional)"
+                                    min="0"
+                                    value={vObj.originalPrice || ''}
+                                    onChange={e => update('originalPrice', e.target.value)}
+                                    style={{ flex: 1 }} />
+                                </div>
                                 {allImgUrls.length > 0 && (
                                   <div>
                                     <div className="cv-img-picker-label">Image for this variant:</div>

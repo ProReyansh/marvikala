@@ -112,12 +112,17 @@ function BottomSheet({ open, onClose, title, children }) {
 function ShopCard({ product }) {
   const navigate = useNavigate();
   const { items, addToCart, updateQty, removeFromCart } = useCart();
-  const cartItem = items.find(i => i._id === product._id);
-  const qty = cartItem?.qty || 0;
   const [activeVariant, setActiveVariant] = useState(null);
 
   const variants = (product.colors || []).filter(c => typeof c === 'object' && c?.color);
   const cv = activeVariant !== null ? variants[activeVariant] : null;
+
+  const cartKey = cv ? `${product._id}_v${activeVariant}` : product._id;
+  const cartItem = items.find(i => i._id === cartKey);
+  const qty = cartItem?.qty || 0;
+
+  const displayPrice         = (cv?.price)         || product.price;
+  const displayOriginalPrice = (cv?.originalPrice) || product.originalPrice;
 
   const imgSrc = (() => {
     const imgs = product.images?.length > 0 ? product.images : (product.image ? [product.image] : []);
@@ -126,10 +131,16 @@ function ShopCard({ product }) {
     return src.startsWith('http') ? src : `/uploads/${src}`;
   })();
 
+  const getCartProduct = () => {
+    if (!cv) return product;
+    const imgs = product.images?.length > 0 ? product.images : (product.image ? [product.image] : []);
+    return { ...product, _id: cartKey, name: cv.name || product.name, price: cv.price || product.price, originalPrice: cv.originalPrice || product.originalPrice, images: [imgs[cv.imageIndex ?? 0] || imgs[0]].filter(Boolean), variantIndex: activeVariant, parentId: product._id };
+  };
+
   return (
     <div
       className="product-card"
-      onClick={() => navigate(`/product/${slugify(product.name)}`, { state: { product } })}
+      onClick={() => navigate(`/product/${slugify(product.name)}`, { state: { product, activeVariant } })}
     >
       <div className="product-img">
         {imgSrc && <img src={imgSrc} alt={cv?.name || product.name} />}
@@ -138,15 +149,15 @@ function ShopCard({ product }) {
         ) : (product.bestseller || product.featured) ? (
           <span className="product-badge bestseller-badge">Bestseller</span>
         ) : null}
-        {product.price && product.originalPrice && product.originalPrice > product.price && (
+        {displayPrice && displayOriginalPrice && displayOriginalPrice > displayPrice && (
           <span className="product-badge discount-badge">
-            {Math.round((1 - product.price / product.originalPrice) * 100)}% off
+            {Math.round((1 - displayPrice / displayOriginalPrice) * 100)}% off
           </span>
         )}
         {!product.inStock && <div className="out-of-stock-overlay">Made to Order</div>}
         {product.inStock && (
           qty === 0 ? (
-            <button className="pc-cart-icon-btn" onClick={e => { e.stopPropagation(); addToCart(product); }} aria-label="Add to cart">
+            <button className="pc-cart-icon-btn" onClick={e => { e.stopPropagation(); addToCart(getCartProduct()); }} aria-label="Add to cart">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
                 <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
@@ -154,9 +165,9 @@ function ShopCard({ product }) {
             </button>
           ) : (
             <div className="pc-cart-icon-ctrl" onClick={e => e.stopPropagation()}>
-              <button onClick={() => qty <= 1 ? removeFromCart(product._id) : updateQty(product._id, qty - 1)}>−</button>
+              <button onClick={() => qty <= 1 ? removeFromCart(cartKey) : updateQty(cartKey, qty - 1)}>−</button>
               <span>{qty}</span>
-              <button onClick={() => updateQty(product._id, qty + 1)}>+</button>
+              <button onClick={() => updateQty(cartKey, qty + 1)}>+</button>
             </div>
           )
         )}
@@ -164,10 +175,10 @@ function ShopCard({ product }) {
       <div className="product-info">
         <div className="product-name">{cv?.name || product.name}</div>
         <div className="product-cat">{CAT_LABEL[product.category] || product.category}</div>
-        {(product.price || product.originalPrice) && (
+        {(displayPrice || displayOriginalPrice) && (
           <div className="product-price-row">
-            {product.price && <span className="price-sale">₹{product.price}</span>}
-            {product.originalPrice && <span className="price-original">₹{product.originalPrice}</span>}
+            {displayPrice         && <span className="price-sale">₹{displayPrice}</span>}
+            {displayOriginalPrice && <span className="price-original">₹{displayOriginalPrice}</span>}
           </div>
         )}
         {product.colors?.length > 0 && (

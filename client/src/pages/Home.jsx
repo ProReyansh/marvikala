@@ -281,12 +281,19 @@ export default function Home() {
 
   function ProductCard({ product, noCart = false }) {
     const { items, addToCart, updateQty, removeFromCart } = useCart();
-    const cartItem = items.find(i => i._id === product._id);
-    const qty = cartItem?.qty || 0;
     const [activeVariant, setActiveVariant] = useState(null);
 
     const variants = (product.colors || []).filter(c => typeof c === 'object' && c?.color);
     const cv = activeVariant !== null ? variants[activeVariant] : null;
+
+    // Unique cart key — variant-specific when a colour is chosen
+    const cartKey = cv ? `${product._id}_v${activeVariant}` : product._id;
+    const cartItem = items.find(i => i._id === cartKey);
+    const qty = cartItem?.qty || 0;
+
+    // Effective prices — variant overrides base when set
+    const displayPrice         = (cv?.price)         || product.price;
+    const displayOriginalPrice = (cv?.originalPrice) || product.originalPrice;
 
     const imgSrc = (() => {
       const imgs = product.images?.length > 0 ? product.images : (product.image ? [product.image] : []);
@@ -295,10 +302,26 @@ export default function Home() {
       return src.startsWith('http') ? src : `/uploads/${src}`;
     })();
 
+    // Build a variant-specific product object for the cart
+    const getCartProduct = () => {
+      if (!cv) return product;
+      const imgs = product.images?.length > 0 ? product.images : (product.image ? [product.image] : []);
+      return {
+        ...product,
+        _id: cartKey,
+        name: cv.name || product.name,
+        price: cv.price || product.price,
+        originalPrice: cv.originalPrice || product.originalPrice,
+        images: [imgs[cv.imageIndex ?? 0] || imgs[0]].filter(Boolean),
+        variantIndex: activeVariant,
+        parentId: product._id,
+      };
+    };
+
     return (
       <div
         className="product-card"
-        onClick={() => navigate(productUrl(product), { state: { product } })}
+        onClick={() => navigate(productUrl(product), { state: { product, activeVariant } })}
       >
         <div className="product-img">
           {imgSrc && <img src={imgSrc} alt={cv?.name || product.name} />}
@@ -307,9 +330,9 @@ export default function Home() {
           ) : (product.bestseller || product.featured) ? (
             <span className="product-badge bestseller-badge">Bestseller</span>
           ) : null}
-          {product.price && product.originalPrice && product.originalPrice > product.price && (
+          {displayPrice && displayOriginalPrice && displayOriginalPrice > displayPrice && (
             <span className="product-badge discount-badge">
-              {Math.round((1 - product.price / product.originalPrice) * 100)}% off
+              {Math.round((1 - displayPrice / displayOriginalPrice) * 100)}% off
             </span>
           )}
           {!product.inStock && <div className="out-of-stock-overlay">Made to Order</div>}
@@ -319,7 +342,7 @@ export default function Home() {
             qty === 0 ? (
               <button
                 className="pc-cart-icon-btn"
-                onClick={e => { e.stopPropagation(); addToCart(product); }}
+                onClick={e => { e.stopPropagation(); addToCart(getCartProduct()); }}
                 aria-label="Add to cart"
               >
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
@@ -329,9 +352,9 @@ export default function Home() {
               </button>
             ) : (
               <div className="pc-cart-icon-ctrl" onClick={e => e.stopPropagation()}>
-                <button onClick={() => qty <= 1 ? removeFromCart(product._id) : updateQty(product._id, qty - 1)}>−</button>
+                <button onClick={() => qty <= 1 ? removeFromCart(cartKey) : updateQty(cartKey, qty - 1)}>−</button>
                 <span>{qty}</span>
-                <button onClick={() => updateQty(product._id, qty + 1)}>+</button>
+                <button onClick={() => updateQty(cartKey, qty + 1)}>+</button>
               </div>
             )
           )}
@@ -339,14 +362,10 @@ export default function Home() {
         <div className="product-info">
           <div className="product-name">{cv?.name || product.name}</div>
           <div className="product-cat">{CAT_LABEL[product.category] || product.category}</div>
-          {(product.price || product.originalPrice) && (
+          {(displayPrice || displayOriginalPrice) && (
             <div className="product-price-row">
-              {product.price && (
-                <span className="price-sale">₹{product.price}</span>
-              )}
-              {product.originalPrice && (
-                <span className="price-original">₹{product.originalPrice}</span>
-              )}
+              {displayPrice         && <span className="price-sale">₹{displayPrice}</span>}
+              {displayOriginalPrice && <span className="price-original">₹{displayOriginalPrice}</span>}
             </div>
           )}
           {product.colors?.length > 0 && (
