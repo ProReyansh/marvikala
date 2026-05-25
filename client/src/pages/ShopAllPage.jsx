@@ -168,7 +168,7 @@ function ShopCard({ product }) {
         {product.colors?.length > 0 && (
           <div className="product-colors">
             {product.colors.slice(0, 4).map((c, i) => (
-              <span key={i} className="product-color-dot" style={{ background: c }} />
+              <span key={i} className="product-color-dot" style={{ background: typeof c === 'string' ? c : c?.color }} />
             ))}
           </div>
         )}

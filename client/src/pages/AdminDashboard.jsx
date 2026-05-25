@@ -37,6 +37,8 @@ function getStoredCollections() {
 
 const PRESET_COLORS = ['#FF6B6B','#FF9F43','#F9CA24','#6AB04C','#22A6B3','#686DE0','#FDA7DF','#FFFFFF','#C4C4C4','#2C2C2C'];
 
+function getColorHex(c) { return typeof c === 'string' ? c : (c?.color || '#000'); }
+
 const EMPTY_FORM = {
   name: '', description: '', category: 'flowers',
   inStock: true, bestseller: false,
@@ -53,6 +55,7 @@ function authHeader() {
 export default function AdminDashboard() {
   const navigate    = useNavigate();
   const fileRef     = useRef();
+  const [customColor, setCustomColor] = useState('#FF6B6B');
 
   // Products tab state
   const [products, setProducts]     = useState([]);
@@ -354,7 +357,11 @@ export default function AdminDashboard() {
       bestseller: product.bestseller || product.featured || false,
       price: product.price || '',
       originalPrice: product.originalPrice || '',
-      colors: product.colors || [],
+      colors: (product.colors || []).map(c =>
+        typeof c === 'string'
+          ? { color: c, name: '', description: '', imageIndex: 0 }
+          : c
+      ),
       existingImages: imgs,
       newImageFiles: [],
     });
@@ -581,7 +588,7 @@ export default function AdminDashboard() {
                           {product.colors?.length > 0 && (
                             <div style={{ display: 'flex', gap: 4, margin: '6px 0 2px', flexWrap: 'wrap' }}>
                               {product.colors.map((c, i) => (
-                                <span key={i} style={{ width: 14, height: 14, borderRadius: '50%', background: c, border: '1.5px solid rgba(0,0,0,0.15)', display: 'inline-block', flexShrink: 0 }} />
+                                <span key={i} style={{ width: 14, height: 14, borderRadius: '50%', background: getColorHex(c), border: '1.5px solid rgba(0,0,0,0.15)', display: 'inline-block', flexShrink: 0 }} />
                               ))}
                             </div>
                           )}
@@ -1136,41 +1143,101 @@ export default function AdminDashboard() {
                   />
                 </div>
 
+                {/* ── Color Variants ── */}
                 <div className="form-group">
-                  <label>Available Colors <small style={{ color: '#999' }}>(click to toggle, max 6)</small></label>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 6 }}>
-                    {PRESET_COLORS.map(color => {
-                      const selected = form.colors.includes(color);
-                      return (
-                        <button
-                          key={color}
-                          type="button"
-                          onClick={() => {
-                            setForm(f => ({
-                              ...f,
-                              colors: selected
-                                ? f.colors.filter(c => c !== color)
-                                : f.colors.length < 6 ? [...f.colors, color] : f.colors,
-                            }));
-                          }}
-                          style={{
-                            width: 28, height: 28, borderRadius: '50%',
-                            background: color,
-                            border: selected ? '3px solid var(--olive)' : '2px solid #ccc',
-                            cursor: 'pointer', padding: 0, flexShrink: 0,
-                            boxShadow: selected ? '0 0 0 2px white inset' : 'none',
-                          }}
-                          title={color}
-                        />
-                      );
-                    })}
+                  <label>Color Variants <small style={{ color: '#999' }}>(each color can have its own name, description & image)</small></label>
+
+                  {/* Preset palette */}
+                  <div className="cv-preset-row">
+                    {PRESET_COLORS.map(color => (
+                      <button key={color} type="button"
+                        className="cv-preset-dot"
+                        style={{ background: color }}
+                        title={`Add ${color}`}
+                        onClick={() => {
+                          if (form.colors.length >= 8) return;
+                          const already = form.colors.some(c => getColorHex(c) === color);
+                          if (already) return;
+                          setForm(f => ({ ...f, colors: [...f.colors, { color, name: '', description: '', imageIndex: 0 }] }));
+                        }}
+                      />
+                    ))}
+                    {/* Custom colour */}
+                    <div className="cv-custom-color">
+                      <input type="color" value={customColor}
+                        onChange={e => setCustomColor(e.target.value)}
+                        className="cv-color-input" title="Pick custom colour" />
+                      <button type="button" className="cv-add-custom-btn"
+                        onClick={() => {
+                          if (form.colors.length >= 8) return;
+                          const already = form.colors.some(c => getColorHex(c) === customColor);
+                          if (already) return;
+                          setForm(f => ({ ...f, colors: [...f.colors, { color: customColor, name: '', description: '', imageIndex: 0 }] }));
+                        }}>
+                        + Add
+                      </button>
+                    </div>
                   </div>
-                  {form.colors.length > 0 && (
-                    <button type="button" onClick={() => setForm(f => ({ ...f, colors: [] }))}
-                      style={{ marginTop: 6, fontSize: 11, color: '#c0392b', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
-                      Clear all colors
-                    </button>
-                  )}
+
+                  {/* Variant list */}
+                  {form.colors.length > 0 && (() => {
+                    const allImgUrls = [
+                      ...form.existingImages.map(u => u.startsWith('http') ? u : `/uploads/${u}`),
+                      ...form.newImageFiles.map(f => URL.createObjectURL(f)),
+                    ];
+                    return (
+                      <div className="cv-variant-list">
+                        {form.colors.map((variant, idx) => {
+                          const vColor = getColorHex(variant);
+                          const vObj   = typeof variant === 'string' ? { color: variant, name: '', description: '', imageIndex: 0 } : variant;
+                          const update = (field, val) =>
+                            setForm(f => ({ ...f, colors: f.colors.map((c, i) => i === idx ? { ...vObj, [field]: val } : c) }));
+                          return (
+                            <div key={idx} className="cv-variant-card">
+                              <div className="cv-variant-header">
+                                <span className="cv-variant-dot" style={{ background: vColor }} />
+                                <span className="cv-variant-color-code">{vColor}</span>
+                                <button type="button" className="cv-variant-remove"
+                                  onClick={() => setForm(f => ({ ...f, colors: f.colors.filter((_, i) => i !== idx) }))}>
+                                  ✕
+                                </button>
+                              </div>
+                              <div className="cv-variant-fields">
+                                <input type="text" placeholder="Variant name (e.g. Rose Pink)"
+                                  value={vObj.name}
+                                  onChange={e => update('name', e.target.value)} />
+                                <textarea placeholder="Variant description (optional)…"
+                                  rows={2}
+                                  value={vObj.description}
+                                  onChange={e => update('description', e.target.value)} />
+                                {allImgUrls.length > 0 && (
+                                  <div>
+                                    <div className="cv-img-picker-label">Image for this variant:</div>
+                                    <div className="cv-img-picker">
+                                      {allImgUrls.map((src, imgIdx) => (
+                                        <div key={imgIdx}
+                                          className={`cv-img-option${vObj.imageIndex === imgIdx ? ' selected' : ''}`}
+                                          onClick={() => update('imageIndex', imgIdx)}>
+                                          <img src={src} alt={`Image ${imgIdx + 1}`} />
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
+                                )}
+                                {allImgUrls.length === 0 && (
+                                  <p style={{ fontSize: 11, color: '#999', margin: 0 }}>Upload product images above to assign one to this variant.</p>
+                                )}
+                              </div>
+                            </div>
+                          );
+                        })}
+                        <button type="button" onClick={() => setForm(f => ({ ...f, colors: [] }))}
+                          style={{ fontSize: 11, color: '#c0392b', background: 'none', border: 'none', cursor: 'pointer', padding: 0, textAlign: 'left' }}>
+                          Clear all variants
+                        </button>
+                      </div>
+                    );
+                  })()}
                 </div>
 
                 <div className="form-group">

@@ -148,6 +148,7 @@ export default function ProductPage() {
   const [pageAnim, setPageAnim] = useState('pp-enter');
   const [exiting, setExiting]   = useState(false);
   const [similar, setSimilar]   = useState([]);
+  const [activeVariant, setActiveVariant] = useState(null);
 
   const touchStartX  = useRef(null);
   const galleryRef   = useRef(null);
@@ -156,6 +157,7 @@ export default function ProductPage() {
     setPageAnim('pp-enter');
     setExiting(false);
     setActiveImg(0);
+    setActiveVariant(null);
     setImgAnimKey(0);
     setSimilar([]);
     setQty(1);
@@ -461,30 +463,73 @@ export default function ProductPage() {
           {/* ── Product Info ── */}
           <div className="product-page-info">
 
-            <h1 className="product-page-name">{product.name}</h1>
+            {/* Compute variant values */}
+            {(() => {
+              const variants = (product.colors || []).filter(c => typeof c === 'object' && c.color);
+              const cv = activeVariant !== null ? variants[activeVariant] : null;
+              const displayName = cv?.name || product.name;
+              const displayDesc = cv?.description || product.description;
 
-            {/* Reviews summary row */}
-            <div className="pp-rating-row">
-              <StarRating rating={5} />
-              <span className="pp-rating-count">{REVIEWS.length} reviews</span>
-              <span className="pp-rating-sep">·</span>
-              <span className="pp-verified-badge">✓ Verified</span>
-            </div>
+              // When a variant is selected, jump to its image
+              function handleVariantClick(idx) {
+                const next = activeVariant === idx ? null : idx;
+                setActiveVariant(next);
+                if (next !== null) {
+                  const imgIdx = variants[next]?.imageIndex ?? 0;
+                  changeImage(imgIdx);
+                }
+              }
 
-            {/* Price */}
-            {(product.price || product.originalPrice) && (
-              <div className="pp-price-row">
-                {product.price && <span className="pp-price-sale">₹{product.price}</span>}
-                {product.originalPrice && <span className="pp-price-orig">₹{product.originalPrice}</span>}
-                {discount > 0 && <span className="pp-discount-badge">{discount}% off</span>}
-              </div>
-            )}
+              return (
+                <>
+                  <h1 className="product-page-name">{displayName}</h1>
 
-            <div className={`product-page-stock ${product.inStock ? 'in' : 'out'}`}>
-              {product.inStock ? '● In Stock' : '● Made to Order'}
-            </div>
+                  {/* Reviews summary row */}
+                  <div className="pp-rating-row">
+                    <StarRating rating={5} />
+                    <span className="pp-rating-count">{REVIEWS.length} reviews</span>
+                    <span className="pp-rating-sep">·</span>
+                    <span className="pp-verified-badge">✓ Verified</span>
+                  </div>
 
-            {product.description && <p className="product-page-desc">{product.description}</p>}
+                  {/* Price */}
+                  {(product.price || product.originalPrice) && (
+                    <div className="pp-price-row">
+                      {product.price && <span className="pp-price-sale">₹{product.price}</span>}
+                      {product.originalPrice && <span className="pp-price-orig">₹{product.originalPrice}</span>}
+                      {discount > 0 && <span className="pp-discount-badge">{discount}% off</span>}
+                    </div>
+                  )}
+
+                  {/* Colour variant swatches */}
+                  {variants.length > 0 && (
+                    <div className="pp-color-swatches">
+                      <span className="pp-color-label">
+                        {cv ? (cv.name || 'Selected') : 'Choose colour:'}
+                      </span>
+                      <div className="pp-color-row">
+                        {variants.map((v, i) => (
+                          <button
+                            key={i}
+                            className={`pp-color-swatch${activeVariant === i ? ' active' : ''}`}
+                            style={{ background: v.color }}
+                            onClick={() => handleVariantClick(i)}
+                            title={v.name || v.color}
+                            aria-label={v.name || v.color}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  <div className={`product-page-stock ${product.inStock ? 'in' : 'out'}`}>
+                    {product.inStock ? '● In Stock' : '● Made to Order'}
+                  </div>
+
+                  {displayDesc && <p className="product-page-desc">{displayDesc}</p>}
+                </>
+              );
+            })()}
 
             <div className="product-page-divider" />
 

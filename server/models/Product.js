@@ -17,7 +17,7 @@ const productSchema = new mongoose.Schema(
     newArrival: { type: Boolean, default: false },
     price:         { type: Number, default: null },
     originalPrice: { type: Number, default: null },
-    colors:        { type: [String], default: [] },
+    colors:        { type: [mongoose.Schema.Types.Mixed], default: [] },
   },
   { timestamps: true }
 );
