@@ -2250,6 +2250,49 @@ body {
 /* Gallery */
 .product-page-gallery { position: sticky; top: 84px; }
 
+/* ── Horizontal scroll image strip ── */
+.pp-img-strip-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 18px;
+  overflow: hidden;
+  background: var(--cream-mid);
+  box-shadow: 0 4px 20px rgba(42,32,22,0.08);
+  border: 1px solid var(--border);
+  cursor: zoom-in;
+}
+
+.pp-img-strip {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.pp-img-strip::-webkit-scrollbar { display: none; }
+
+.pp-img-strip-slide {
+  min-width: 100%;
+  flex-shrink: 0;
+  scroll-snap-align: start;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pp-img-strip-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 12px;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Keep legacy class usable just in case */
 .product-page-main-img {
   width: 100%;
   aspect-ratio: 1;
@@ -2281,7 +2324,6 @@ body {
   padding: 12px;
 }
 
-
 .product-page-badge {
   position: absolute;
   top: 14px;
@@ -2312,8 +2354,12 @@ body {
   display: flex;
   gap: 10px;
   margin-top: 14px;
-  flex-wrap: wrap;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding-bottom: 4px;
 }
+.product-page-thumbs::-webkit-scrollbar { display: none; }
 
 .product-page-thumb {
   width: 68px;
@@ -3008,6 +3054,7 @@ body {
   .product-page-contact-btn { font-size: 12px; padding: 9px 12px; }
   .product-page-enquire    { font-size: 13px; padding: 12px; }
   .product-page-main-img   { aspect-ratio: 4/3; }
+  .pp-img-strip-wrap       { aspect-ratio: 4/3; }
   .product-page-trust      { grid-template-columns: 1fr 1fr; }
 
   /* Similar section */
@@ -5352,15 +5399,16 @@ body {
 }
 .pp-main-zoomable:hover .pp-zoom-hint-badge { opacity: 0.8; }
 
-/* Swipe dots (mobile gallery) */
+/* Swipe dots — always visible with scroll strip */
 .pp-swipe-dots {
   position: absolute;
   bottom: 12px;
   left: 50%;
   transform: translateX(-50%);
-  display: none;
+  display: flex;
   gap: 5px;
   z-index: 2;
+  pointer-events: none;
 }
 .pp-swipe-dot {
   width: 6px;
@@ -5372,9 +5420,6 @@ body {
 .pp-swipe-dot.active {
   background: #fff;
   transform: scale(1.3);
-}
-@media (max-width: 768px) {
-  .pp-swipe-dots { display: flex; }
 }
 
 /* ── Zoom Lightbox ── */
@@ -9946,11 +9991,15 @@ body {
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   align-items: stretch;
+  padding: 0 12%;
+  scroll-padding-inline: 12%;
+  gap: 12px;
+  box-sizing: border-box;
 }
 .na-swipe-track::-webkit-scrollbar { display: none; }
 
 .na-swipe-item {
-  flex: 0 0 100%;
+  flex: 0 0 76%;
   scroll-snap-align: center;
   display: flex;
 }

@@ -150,6 +150,7 @@ export default function ProductPage() {
   const [similar, setSimilar]   = useState([]);
 
   const touchStartX  = useRef(null);
+  const galleryRef   = useRef(null);
 
   useEffect(() => {
     setPageAnim('pp-enter');
@@ -198,6 +199,15 @@ export default function ProductPage() {
     if (i === activeImg) return;
     setActiveImg(i);
     setImgAnimKey(k => k + 1);
+    if (galleryRef.current) {
+      galleryRef.current.scrollTo({ left: galleryRef.current.offsetWidth * i, behavior: 'smooth' });
+    }
+  }
+
+  function handleGalleryScroll(e) {
+    const el = e.currentTarget;
+    const newIndex = Math.round(el.scrollLeft / el.offsetWidth);
+    if (newIndex !== activeImg) setActiveImg(newIndex);
   }
 
   function handleBack() {
@@ -343,18 +353,27 @@ export default function ProductPage() {
 
           {/* ── Image Gallery ── */}
           <div className="product-page-gallery">
-            <div
-              className="product-page-main-img pp-main-zoomable"
-              onTouchStart={handleTouchStart}
-              onTouchEnd={handleTouchEnd}
-              onClick={() => images.length > 0 && setZoomOpen(true)}
-              role="button"
-              tabIndex={0}
-              aria-label="Zoom image"
-            >
-              {images.length > 0
-                ? <img key={imgAnimKey} src={imgUrl(images[activeImg])} alt={product.name} className="product-page-img-anim" />
-                : null}
+            {/* Horizontal scroll strip */}
+            <div className="pp-img-strip-wrap pp-main-zoomable">
+              <div
+                className="pp-img-strip"
+                ref={galleryRef}
+                onScroll={handleGalleryScroll}
+                onClick={() => images.length > 0 && setZoomOpen(true)}
+                role="region"
+                aria-label="Product images"
+              >
+                {images.length > 0
+                  ? images.map((img, i) => (
+                      <div key={i} className="pp-img-strip-slide">
+                        <img src={imgUrl(img)} alt={`${product.name} ${i + 1}`} />
+                      </div>
+                    ))
+                  : <div className="pp-img-strip-slide" />
+                }
+              </div>
+
+              {/* Overlays */}
               {isBestseller && <span className="product-page-badge bestseller-badge">Bestseller</span>}
               {!product.inStock && <div className="product-page-oos-overlay">Made to Order</div>}
               {images.length > 0 && (
@@ -376,6 +395,7 @@ export default function ProductPage() {
               )}
             </div>
 
+            {/* Thumbnail strip */}
             {images.length > 1 && (
               <div className="product-page-thumbs">
                 {images.map((img, i) => (
