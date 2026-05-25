@@ -2254,7 +2254,7 @@ body {
 .pp-img-strip-wrap {
   position: relative;
   width: 100%;
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 1 / 1;
   border-radius: 18px;
   overflow: hidden;
   background: var(--cream-mid);
@@ -2278,15 +2278,11 @@ body {
   min-width: 100%;
   flex-shrink: 0;
   scroll-snap-align: start;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 .pp-img-strip-slide img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  padding: 8px;
+  object-fit: cover;
   pointer-events: none;
   user-select: none;
   -webkit-user-select: none;
@@ -3053,8 +3049,8 @@ body {
   .product-page-thumb      { width: 52px; height: 52px; }
   .product-page-contact-btn { font-size: 12px; padding: 9px 12px; }
   .product-page-enquire    { font-size: 13px; padding: 12px; }
-  .product-page-main-img   { aspect-ratio: 4/5; }
-  .pp-img-strip-wrap       { aspect-ratio: 4/5; }
+  .product-page-main-img   { aspect-ratio: 1/1; }
+  .pp-img-strip-wrap       { aspect-ratio: 1/1; }
   .product-page-trust      { grid-template-columns: 1fr 1fr; }
 
   /* Similar section */
