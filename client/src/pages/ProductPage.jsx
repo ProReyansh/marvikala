@@ -251,17 +251,47 @@ export default function ProductPage() {
   }
 
   function SimilarCard({ p }) {
+    const { items, addToCart, updateQty, removeFromCart } = useCart();
+    const cartItem = items.find(i => i._id === p._id);
+    const qty = cartItem?.qty || 0;
+
     const imgSrc = (() => {
       const imgs = p.images?.length > 0 ? p.images : (p.image ? [p.image] : []);
       if (!imgs[0]) return null;
       return imgs[0].startsWith('http') ? imgs[0] : `/uploads/${imgs[0]}`;
     })();
+
     return (
       <div className="product-card" onClick={() => navigate(`/product/${slugify(p.name)}`, { state: { product: p }, replace: true })}>
         <div className="product-img">
           {imgSrc && <img src={imgSrc} alt={p.name} />}
-          {(p.bestseller || p.featured) && <span className="product-badge bestseller-badge">Bestseller</span>}
+          {p.newArrival ? (
+            <span className="product-badge new-arrival-badge">New</span>
+          ) : (p.bestseller || p.featured) ? (
+            <span className="product-badge bestseller-badge">Bestseller</span>
+          ) : null}
+          {p.price && p.originalPrice && p.originalPrice > p.price && (
+            <span className="product-badge discount-badge">
+              {Math.round((1 - p.price / p.originalPrice) * 100)}% off
+            </span>
+          )}
           {!p.inStock && <div className="out-of-stock-overlay">Made to Order</div>}
+          {p.inStock && (
+            qty === 0 ? (
+              <button className="pc-cart-icon-btn" onClick={e => { e.stopPropagation(); addToCart(p); }} aria-label="Add to cart">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+                  <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                </svg>
+              </button>
+            ) : (
+              <div className="pc-cart-icon-ctrl" onClick={e => e.stopPropagation()}>
+                <button onClick={() => qty <= 1 ? removeFromCart(p._id) : updateQty(p._id, qty - 1)}>−</button>
+                <span>{qty}</span>
+                <button onClick={() => updateQty(p._id, qty + 1)}>+</button>
+              </div>
+            )
+          )}
         </div>
         <div className="product-info">
           <div className="product-name">{p.name}</div>
@@ -272,7 +302,16 @@ export default function ProductPage() {
               {p.originalPrice && <span className="price-original">₹{p.originalPrice}</span>}
             </div>
           )}
-          <CartQtyBtn product={p} addClassName="enquire-btn" />
+          {p.colors?.length > 0 && (
+            <div className="product-colors">
+              {p.colors.slice(0, 4).map((c, i) => (
+                <span key={i} className="product-color-dot" style={{ background: typeof c === 'string' ? c : c?.color }} />
+              ))}
+            </div>
+          )}
+          <div className={`pc-stock-status ${p.inStock ? 'pc-stock-in' : 'pc-stock-mto'}`}>
+            {p.inStock ? 'READY TO SHIP' : 'MADE TO ORDER'}
+          </div>
         </div>
       </div>
     );
