@@ -10037,6 +10037,17 @@ body {
   flex-shrink: 0;
   display: inline-block;
 }
+.pc-dot-clickable {
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.pc-dot-clickable:hover {
+  transform: scale(1.2);
+}
+.pc-dot-active {
+  box-shadow: 0 0 0 2px #fff, 0 0 0 3.5px var(--olive, #7a8c5a);
+  transform: scale(1.1);
+}
 
 /* ── Product card — stock status label (pill tag) ── */
 .pc-stock-status {

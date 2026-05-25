@@ -32,11 +32,16 @@ function ShopCard({ product }) {
   const { items, addToCart, updateQty, removeFromCart } = useCart();
   const cartItem = items.find(i => i._id === product._id);
   const qty = cartItem?.qty || 0;
+  const [activeVariant, setActiveVariant] = useState(null);
+
+  const variants = (product.colors || []).filter(c => typeof c === 'object' && c?.color);
+  const cv = activeVariant !== null ? variants[activeVariant] : null;
 
   const imgSrc = (() => {
     const imgs = product.images?.length > 0 ? product.images : (product.image ? [product.image] : []);
-    if (!imgs[0]) return null;
-    return imgs[0].startsWith('http') ? imgs[0] : `/uploads/${imgs[0]}`;
+    const src = cv ? (imgs[cv.imageIndex ?? 0] || imgs[0]) : imgs[0];
+    if (!src) return null;
+    return src.startsWith('http') ? src : `/uploads/${src}`;
   })();
 
   return (
@@ -45,7 +50,7 @@ function ShopCard({ product }) {
       onClick={() => navigate(`/product/${slugify(product.name)}`, { state: { product } })}
     >
       <div className="product-img">
-        {imgSrc && <img src={imgSrc} alt={product.name} />}
+        {imgSrc && <img src={imgSrc} alt={cv?.name || product.name} />}
         {product.newArrival ? (
           <span className="product-badge new-arrival-badge">New</span>
         ) : (product.bestseller || product.featured) ? (
@@ -75,7 +80,7 @@ function ShopCard({ product }) {
         )}
       </div>
       <div className="product-info">
-        <div className="product-name">{product.name}</div>
+        <div className="product-name">{cv?.name || product.name}</div>
         <div className="product-cat">{CAT_LABEL[product.category] || product.category}</div>
         {(product.price || product.originalPrice) && (
           <div className="product-price-row">
@@ -84,10 +89,21 @@ function ShopCard({ product }) {
           </div>
         )}
         {product.colors?.length > 0 && (
-          <div className="product-colors">
-            {product.colors.slice(0, 4).map((c, i) => (
-              <span key={i} className="product-color-dot" style={{ background: typeof c === 'string' ? c : c?.color }} />
-            ))}
+          <div className="product-colors" onClick={e => e.stopPropagation()}>
+            {product.colors.slice(0, 4).map((c, i) => {
+              const isObj = typeof c === 'object' && c?.color;
+              const hex = isObj ? c.color : c;
+              const isActive = activeVariant === i;
+              return (
+                <span
+                  key={i}
+                  className={`product-color-dot${isObj ? ' pc-dot-clickable' : ''}${isActive ? ' pc-dot-active' : ''}`}
+                  style={{ background: hex }}
+                  onClick={isObj ? () => setActiveVariant(isActive ? null : i) : undefined}
+                  title={isObj && c.name ? c.name : hex}
+                />
+              );
+            })}
           </div>
         )}
         <div className={`pc-stock-status ${product.inStock ? 'pc-stock-in' : 'pc-stock-mto'}`}>
