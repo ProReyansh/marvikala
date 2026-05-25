@@ -67,6 +67,10 @@ export default function AdminDashboard() {
   const [modalClosing, setModalClosing] = useState(false);
   const [editing, setEditing]       = useState(null);
   const [form, setForm]             = useState(EMPTY_FORM);
+  // Tracks which variant cards in the add/edit modal are expanded: { 0: true, 2: true, … }
+  const [expandedVariants, setExpandedVariants] = useState({});
+  // Tracks which color dot in the product grid is showing a preview: "productId_variantIdx"
+  const [gridVariantPreview, setGridVariantPreview] = useState(null);
   const [saving, setSaving]         = useState(false);
   const [error, setError]           = useState('');
 
@@ -332,6 +336,7 @@ export default function AdminDashboard() {
   function openAdd() {
     setEditing(null);
     setForm(EMPTY_FORM);
+    setExpandedVariants({});
     setError('');
     setModalOpen(true);
   }
@@ -357,6 +362,7 @@ export default function AdminDashboard() {
       newImageFiles: [],
       primaryImageIndex: product.primaryImageIndex ?? 0,
     });
+    setExpandedVariants({});
     setError('');
     setModalOpen(true);
   }
@@ -595,13 +601,56 @@ export default function AdminDashboard() {
                               {product.originalPrice && <span className="admin-price-original">₹{product.originalPrice}</span>}
                             </div>
                           )}
-                          {product.colors?.length > 0 && (
-                            <div style={{ display: 'flex', gap: 4, margin: '6px 0 2px', flexWrap: 'wrap' }}>
-                              {product.colors.map((c, i) => (
-                                <span key={i} style={{ width: 14, height: 14, borderRadius: '50%', background: getColorHex(c), border: '1.5px solid rgba(0,0,0,0.15)', display: 'inline-block', flexShrink: 0 }} />
-                              ))}
-                            </div>
-                          )}
+                          {product.colors?.length > 0 && (() => {
+                            const productImgs = product.images?.length > 0 ? product.images : (product.image ? [product.image] : []);
+                            const previewKey = gridVariantPreview?.startsWith(product._id + '_') ? gridVariantPreview : null;
+                            const previewIdx = previewKey != null ? Number(previewKey.slice(product._id.length + 1)) : null;
+                            const previewVariant = previewIdx != null ? product.colors[previewIdx] : null;
+                            const pvObj = previewVariant && typeof previewVariant === 'object' ? previewVariant : (previewVariant ? { color: previewVariant } : null);
+                            return (
+                              <>
+                                <div style={{ display: 'flex', gap: 5, margin: '6px 0 2px', flexWrap: 'wrap', alignItems: 'center' }}>
+                                  {product.colors.map((c, i) => {
+                                    const isActive = previewKey === `${product._id}_${i}`;
+                                    return (
+                                      <span
+                                        key={i}
+                                        className={`admin-grid-color-dot${isActive ? ' active' : ''}`}
+                                        style={{ background: getColorHex(c) }}
+                                        title={typeof c === 'object' && c.name ? c.name : getColorHex(c)}
+                                        onClick={e => { e.stopPropagation(); setGridVariantPreview(isActive ? null : `${product._id}_${i}`); }}
+                                      />
+                                    );
+                                  })}
+                                  <span style={{ fontSize: 10, color: '#aaa', marginLeft: 2 }}>{product.colors.length} colour{product.colors.length !== 1 ? 's' : ''}</span>
+                                </div>
+                                {pvObj && (
+                                  <div className="admin-variant-preview">
+                                    {pvObj.imageIndex != null && productImgs[pvObj.imageIndex] && (
+                                      <img
+                                        src={productImgs[pvObj.imageIndex].startsWith('http') ? productImgs[pvObj.imageIndex] : `/uploads/${productImgs[pvObj.imageIndex]}`}
+                                        alt={pvObj.name || 'variant'}
+                                        className="admin-vp-img"
+                                      />
+                                    )}
+                                    <div className="admin-vp-info">
+                                      {pvObj.name && <div className="admin-vp-name">{pvObj.name}</div>}
+                                      {pvObj.description && <div className="admin-vp-desc">{pvObj.description}</div>}
+                                      {(pvObj.price || pvObj.originalPrice) && (
+                                        <div className="admin-vp-price">
+                                          {pvObj.price && <span className="admin-vp-sale">₹{pvObj.price}</span>}
+                                          {pvObj.originalPrice && <span className="admin-vp-orig">₹{pvObj.originalPrice}</span>}
+                                        </div>
+                                      )}
+                                      {!pvObj.name && !pvObj.description && !pvObj.price && (
+                                        <span style={{ fontSize: 11, color: '#aaa' }}>No details added yet</span>
+                                      )}
+                                    </div>
+                                  </div>
+                                )}
+                              </>
+                            );
+                          })()}
                           {product.description && (
                             <div className="admin-product-desc">{product.description}</div>
                           )}
@@ -1150,7 +1199,7 @@ export default function AdminDashboard() {
                         className="btn-upload-img"
                         onClick={() => fileRef.current.click()}
                       >
-                        + Add Images {totalImages > 0 ? `(${totalImages}/5)` : ''}
+                        + Add Images {totalImages > 0 ? `(${totalImages}/10)` : ''}
                       </button>
                     </>
                   )}
@@ -1171,10 +1220,11 @@ export default function AdminDashboard() {
                           {allImgUrls.map((src, imgIdx) => (
                             <div
                               key={imgIdx}
-                              className={`cv-img-option${(form.primaryImageIndex || 0) === imgIdx ? ' selected' : ''}`}
+                              className={`cv-img-option${(form.primaryImageIndex ?? 0) === imgIdx ? ' selected' : ''}`}
                               onClick={() => setForm(f => ({ ...f, primaryImageIndex: imgIdx }))}
                             >
                               <img src={src} alt={`Image ${imgIdx + 1}`} />
+                              {(form.primaryImageIndex ?? 0) === imgIdx && <span className="cv-img-check">✓</span>}
                             </div>
                           ))}
                         </div>
@@ -1198,7 +1248,9 @@ export default function AdminDashboard() {
                           if (form.colors.length >= 20) return;
                           const already = form.colors.some(c => getColorHex(c) === color);
                           if (already) return;
+                          const newIdx = form.colors.length;
                           setForm(f => ({ ...f, colors: [...f.colors, { color, name: '', description: '', imageIndex: 0, price: '', originalPrice: '' }] }));
+                          setExpandedVariants(prev => ({ ...prev, [newIdx]: true }));
                         }}
                       />
                     ))}
@@ -1212,7 +1264,9 @@ export default function AdminDashboard() {
                           if (form.colors.length >= 20) return;
                           const already = form.colors.some(c => getColorHex(c) === customColor);
                           if (already) return;
+                          const newIdx = form.colors.length;
                           setForm(f => ({ ...f, colors: [...f.colors, { color: customColor, name: '', description: '', imageIndex: 0, price: '', originalPrice: '' }] }));
+                          setExpandedVariants(prev => ({ ...prev, [newIdx]: true }));
                         }}>
                         + Add
                       </button>
@@ -1232,14 +1286,18 @@ export default function AdminDashboard() {
                           const vObj   = typeof variant === 'string' ? { color: variant, name: '', description: '', imageIndex: 0, price: '', originalPrice: '' } : { price: '', originalPrice: '', ...variant };
                           const update = (field, val) =>
                             setForm(f => ({ ...f, colors: f.colors.map((c, i) => i === idx ? { ...vObj, [field]: val } : c) }));
+                          const isExpanded = !!expandedVariants[idx];
+                          const toggleExpand = () => setExpandedVariants(prev => ({ ...prev, [idx]: !prev[idx] }));
                           return (
-                            <div key={idx} className="cv-variant-card">
-                              <div className="cv-variant-header">
+                            <div key={idx} className={`cv-variant-card${isExpanded ? ' cv-expanded' : ''}`}>
+                              {/* Header: click to expand/collapse */}
+                              <div className="cv-variant-header" onClick={toggleExpand} style={{ cursor: 'pointer' }}>
+                                {/* Color dot — click changes color, stops propagation so it doesn't toggle expand */}
                                 <span
                                   className="cv-variant-dot cv-variant-dot-clickable"
                                   style={{ background: vColor }}
                                   title="Click to change colour"
-                                  onClick={() => document.getElementById(`cv-color-input-${idx}`)?.click()}
+                                  onClick={e => { e.stopPropagation(); document.getElementById(`cv-color-input-${idx}`)?.click(); }}
                                 />
                                 <input
                                   id={`cv-color-input-${idx}`}
@@ -1248,50 +1306,59 @@ export default function AdminDashboard() {
                                   style={{ display: 'none' }}
                                   onChange={e => update('color', e.target.value)}
                                 />
-                                <span className="cv-variant-color-code">{vColor}</span>
+                                <span className="cv-variant-title">
+                                  {vObj.name || <span style={{ color: '#aaa', fontStyle: 'italic' }}>Unnamed variant</span>}
+                                </span>
+                                {vObj.price && <span className="cv-variant-price-chip">₹{vObj.price}</span>}
+                                <span className="cv-variant-chevron">{isExpanded ? '▾' : '▸'}</span>
                                 <button type="button" className="cv-variant-remove"
-                                  onClick={() => setForm(f => ({ ...f, colors: f.colors.filter((_, i) => i !== idx) }))}>
+                                  onClick={e => { e.stopPropagation(); setForm(f => ({ ...f, colors: f.colors.filter((_, i) => i !== idx) })); }}>
                                   ✕
                                 </button>
                               </div>
-                              <div className="cv-variant-fields">
-                                <input type="text" placeholder="Variant name (e.g. Rose Pink)"
-                                  value={vObj.name}
-                                  onChange={e => update('name', e.target.value)} />
-                                <textarea placeholder="Variant description (optional)…"
-                                  rows={2}
-                                  value={vObj.description}
-                                  onChange={e => update('description', e.target.value)} />
-                                <div style={{ display: 'flex', gap: 8 }}>
-                                  <input type="number" placeholder="Variant price ₹ (leave blank to use product price)"
-                                    min="0"
-                                    value={vObj.price || ''}
-                                    onChange={e => update('price', e.target.value)}
-                                    style={{ flex: 1 }} />
-                                  <input type="number" placeholder="Slashed price ₹ (optional)"
-                                    min="0"
-                                    value={vObj.originalPrice || ''}
-                                    onChange={e => update('originalPrice', e.target.value)}
-                                    style={{ flex: 1 }} />
-                                </div>
-                                {allImgUrls.length > 0 && (
-                                  <div>
-                                    <div className="cv-img-picker-label">Image for this variant:</div>
-                                    <div className="cv-img-picker">
-                                      {allImgUrls.map((src, imgIdx) => (
-                                        <div key={imgIdx}
-                                          className={`cv-img-option${vObj.imageIndex === imgIdx ? ' selected' : ''}`}
-                                          onClick={() => update('imageIndex', imgIdx)}>
-                                          <img src={src} alt={`Image ${imgIdx + 1}`} />
-                                        </div>
-                                      ))}
-                                    </div>
+
+                              {/* Collapsible body */}
+                              {isExpanded && (
+                                <div className="cv-variant-fields">
+                                  <input type="text" placeholder="Variant name (e.g. Rose Pink)"
+                                    value={vObj.name}
+                                    onChange={e => update('name', e.target.value)} />
+                                  <textarea placeholder="Variant description (optional)…"
+                                    rows={2}
+                                    value={vObj.description}
+                                    onChange={e => update('description', e.target.value)} />
+                                  <div style={{ display: 'flex', gap: 8 }}>
+                                    <input type="number" placeholder="Variant price ₹"
+                                      min="0"
+                                      value={vObj.price || ''}
+                                      onChange={e => update('price', e.target.value)}
+                                      style={{ flex: 1 }} />
+                                    <input type="number" placeholder="Slashed price ₹ (optional)"
+                                      min="0"
+                                      value={vObj.originalPrice || ''}
+                                      onChange={e => update('originalPrice', e.target.value)}
+                                      style={{ flex: 1 }} />
                                   </div>
-                                )}
-                                {allImgUrls.length === 0 && (
-                                  <p style={{ fontSize: 11, color: '#999', margin: 0 }}>Upload product images above to assign one to this variant.</p>
-                                )}
-                              </div>
+                                  {allImgUrls.length > 0 && (
+                                    <div>
+                                      <div className="cv-img-picker-label">Image for this variant:</div>
+                                      <div className="cv-img-picker">
+                                        {allImgUrls.map((src, imgIdx) => (
+                                          <div key={imgIdx}
+                                            className={`cv-img-option${vObj.imageIndex === imgIdx ? ' selected' : ''}`}
+                                            onClick={() => update('imageIndex', imgIdx)}>
+                                            <img src={src} alt={`Image ${imgIdx + 1}`} />
+                                            {vObj.imageIndex === imgIdx && <span className="cv-img-check">✓</span>}
+                                          </div>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  )}
+                                  {allImgUrls.length === 0 && (
+                                    <p style={{ fontSize: 11, color: '#999', margin: 0 }}>Upload product images above to assign one to this variant.</p>
+                                  )}
+                                </div>
+                              )}
                             </div>
                           );
                         })}
