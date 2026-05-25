@@ -152,6 +152,20 @@ export default function ProductPage() {
 
   const touchStartX  = useRef(null);
   const galleryRef   = useRef(null);
+  const locationRef  = useRef(location);
+
+  // Keep locationRef in sync so the persist effect doesn't need location as a dep
+  useEffect(() => { locationRef.current = location; });
+
+  // Whenever the user changes the active variant, write it back into the
+  // current history entry so that pressing Back restores the same selection.
+  useEffect(() => {
+    if (!product) return;
+    navigate(locationRef.current.pathname, {
+      state: { ...locationRef.current.state, activeVariant },
+      replace: true,
+    });
+  }, [activeVariant, product, navigate]);
 
   useEffect(() => {
     setPageAnim('pp-enter');
@@ -287,8 +301,10 @@ export default function ProductPage() {
 
     const imgSrc = (() => {
       const imgs = p.images?.length > 0 ? p.images : (p.image ? [p.image] : []);
-      if (!imgs[0]) return null;
-      return imgs[0].startsWith('http') ? imgs[0] : `/uploads/${imgs[0]}`;
+      const baseIdx = p.primaryImageIndex || 0;
+      const src = imgs[baseIdx] || imgs[0];
+      if (!src) return null;
+      return src.startsWith('http') ? src : `/uploads/${src}`;
     })();
 
     return (

@@ -297,7 +297,8 @@ export default function Home() {
 
     const imgSrc = (() => {
       const imgs = product.images?.length > 0 ? product.images : (product.image ? [product.image] : []);
-      const src = cv ? (imgs[cv.imageIndex ?? 0] || imgs[0]) : imgs[0];
+      const baseIdx = product.primaryImageIndex || 0;
+      const src = cv ? (imgs[cv.imageIndex ?? baseIdx] || imgs[baseIdx]) : (imgs[baseIdx] || imgs[0]);
       if (!src) return null;
       return src.startsWith('http') ? src : `/uploads/${src}`;
     })();
@@ -306,13 +307,14 @@ export default function Home() {
     const getCartProduct = () => {
       if (!cv) return product;
       const imgs = product.images?.length > 0 ? product.images : (product.image ? [product.image] : []);
+      const baseIdx = product.primaryImageIndex || 0;
       return {
         ...product,
         _id: cartKey,
         name: cv.name || product.name,
         price: cv.price || product.price,
         originalPrice: cv.originalPrice || product.originalPrice,
-        images: [imgs[cv.imageIndex ?? 0] || imgs[0]].filter(Boolean),
+        images: [imgs[cv.imageIndex ?? baseIdx] || imgs[baseIdx]].filter(Boolean),
         variantIndex: activeVariant,
         parentId: product._id,
       };

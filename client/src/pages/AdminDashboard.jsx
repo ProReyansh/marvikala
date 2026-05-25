@@ -46,6 +46,7 @@ const EMPTY_FORM = {
   colors: [],
   existingImages: [],
   newImageFiles: [],
+  primaryImageIndex: 0,
 };
 
 function authHeader() {
@@ -364,6 +365,7 @@ export default function AdminDashboard() {
       ),
       existingImages: imgs,
       newImageFiles: [],
+      primaryImageIndex: product.primaryImageIndex || 0,
     });
     setError('');
     setModalOpen(true);
@@ -401,6 +403,7 @@ export default function AdminDashboard() {
       if (form.price !== '' && form.price !== null) data.append('price', form.price);
       if (form.originalPrice !== '' && form.originalPrice !== null) data.append('originalPrice', form.originalPrice);
       data.append('colors', JSON.stringify(form.colors));
+      data.append('primaryImageIndex', form.primaryImageIndex || 0);
 
       if (editing) {
         data.append('existingImages', JSON.stringify(form.existingImages));
@@ -1199,6 +1202,30 @@ export default function AdminDashboard() {
                   {totalImages >= 5 && (
                     <p style={{ fontSize: 12, color: '#888', marginTop: 6 }}>Maximum 5 images reached</p>
                   )}
+
+                  {/* Primary image picker — shown when product has multiple images */}
+                  {totalImages > 1 && (() => {
+                    const allImgUrls = [
+                      ...form.existingImages.map(u => u.startsWith('http') ? u : `/uploads/${u}`),
+                      ...form.newImageFiles.map(f => URL.createObjectURL(f)),
+                    ];
+                    return (
+                      <div style={{ marginTop: 10 }}>
+                        <div className="cv-img-picker-label">Cover image (shown on product cards):</div>
+                        <div className="cv-img-picker">
+                          {allImgUrls.map((src, imgIdx) => (
+                            <div
+                              key={imgIdx}
+                              className={`cv-img-option${(form.primaryImageIndex || 0) === imgIdx ? ' selected' : ''}`}
+                              onClick={() => setForm(f => ({ ...f, primaryImageIndex: imgIdx }))}
+                            >
+                              <img src={src} alt={`Image ${imgIdx + 1}`} />
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })()}
                 </div>
 
                 {/* ── Color Variants ── */}

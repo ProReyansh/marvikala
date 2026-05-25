@@ -71,9 +71,10 @@ router.post('/', authMiddleware, upload.array('images', 5), async (req, res) => 
       bestseller: bestseller === 'true' || bestseller === true,
       featured:   bestseller === 'true' || bestseller === true,
       newArrival: req.body.newArrival === 'true' || req.body.newArrival === true,
-      price:         req.body.price         ? Number(req.body.price)         : null,
-      originalPrice: req.body.originalPrice ? Number(req.body.originalPrice) : null,
-      colors: (() => { try { return JSON.parse(req.body.colors || '[]'); } catch { return []; } })(),
+      price:             req.body.price         ? Number(req.body.price)         : null,
+      originalPrice:     req.body.originalPrice ? Number(req.body.originalPrice) : null,
+      colors:            (() => { try { return JSON.parse(req.body.colors || '[]'); } catch { return []; } })(),
+      primaryImageIndex: req.body.primaryImageIndex != null ? Number(req.body.primaryImageIndex) : 0,
     });
     await product.save();
     res.status(201).json(product);
@@ -110,9 +111,10 @@ router.put('/:id', authMiddleware, upload.array('images', 5), async (req, res) =
       bestseller: bestseller === 'true' || bestseller === true,
       featured:   bestseller === 'true' || bestseller === true,
       newArrival: req.body.newArrival === 'true' || req.body.newArrival === true,
-      price:         req.body.price         ? Number(req.body.price)         : null,
-      originalPrice: req.body.originalPrice ? Number(req.body.originalPrice) : null,
-      colors: (() => { try { return JSON.parse(req.body.colors || '[]'); } catch { return []; } })(),
+      price:             req.body.price         ? Number(req.body.price)         : null,
+      originalPrice:     req.body.originalPrice ? Number(req.body.originalPrice) : null,
+      colors:            (() => { try { return JSON.parse(req.body.colors || '[]'); } catch { return []; } })(),
+      primaryImageIndex: req.body.primaryImageIndex != null ? Number(req.body.primaryImageIndex) : 0,
     };
 
     const product = await Product.findByIdAndUpdate(req.params.id, update, { new: true });
