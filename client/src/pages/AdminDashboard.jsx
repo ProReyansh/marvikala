@@ -1143,6 +1143,64 @@ export default function AdminDashboard() {
                   />
                 </div>
 
+                {/* Multi-image upload — placed ABOVE color variants so images are ready to assign */}
+                <div className="form-group">
+                  <label>Product Images (up to 5)</label>
+
+                  {totalImages > 0 ? (
+                    <div className="multi-img-grid">
+                      {form.existingImages.map((url, i) => (
+                        <div key={`ex-${i}`} className="multi-img-item">
+                          <img
+                            src={url.startsWith('http') ? url : `/uploads/${url}`}
+                            alt={`Image ${i + 1}`}
+                          />
+                          <button
+                            type="button"
+                            className="multi-img-remove"
+                            onClick={() => removeExistingImage(i)}
+                          >✕</button>
+                        </div>
+                      ))}
+                      {form.newImageFiles.map((file, i) => (
+                        <div key={`new-${i}`} className="multi-img-item">
+                          <img src={URL.createObjectURL(file)} alt={`New ${i + 1}`} />
+                          <button
+                            type="button"
+                            className="multi-img-remove"
+                            onClick={() => removeNewImage(i)}
+                          >✕</button>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="image-placeholder">No images selected</div>
+                  )}
+
+                  {totalImages < 5 && (
+                    <>
+                      <input
+                        ref={fileRef}
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        style={{ display: 'none' }}
+                        onChange={handleFileChange}
+                      />
+                      <button
+                        type="button"
+                        className="btn-upload-img"
+                        onClick={() => fileRef.current.click()}
+                      >
+                        + Add Images {totalImages > 0 ? `(${totalImages}/5)` : ''}
+                      </button>
+                    </>
+                  )}
+                  {totalImages >= 5 && (
+                    <p style={{ fontSize: 12, color: '#888', marginTop: 6 }}>Maximum 5 images reached</p>
+                  )}
+                </div>
+
                 {/* ── Color Variants ── */}
                 <div className="form-group">
                   <label>Color Variants <small style={{ color: '#999' }}>(each color can have its own name, description & image)</small></label>
@@ -1250,64 +1308,6 @@ export default function AdminDashboard() {
                       <option key={c.key} value={c.key}>{c.label}</option>
                     ))}
                   </select>
-                </div>
-
-                {/* Multi-image upload */}
-                <div className="form-group">
-                  <label>Product Images (up to 5)</label>
-
-                  {totalImages > 0 ? (
-                    <div className="multi-img-grid">
-                      {form.existingImages.map((url, i) => (
-                        <div key={`ex-${i}`} className="multi-img-item">
-                          <img
-                            src={url.startsWith('http') ? url : `/uploads/${url}`}
-                            alt={`Image ${i + 1}`}
-                          />
-                          <button
-                            type="button"
-                            className="multi-img-remove"
-                            onClick={() => removeExistingImage(i)}
-                          >✕</button>
-                        </div>
-                      ))}
-                      {form.newImageFiles.map((file, i) => (
-                        <div key={`new-${i}`} className="multi-img-item">
-                          <img src={URL.createObjectURL(file)} alt={`New ${i + 1}`} />
-                          <button
-                            type="button"
-                            className="multi-img-remove"
-                            onClick={() => removeNewImage(i)}
-                          >✕</button>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="image-placeholder">No images selected</div>
-                  )}
-
-                  {totalImages < 5 && (
-                    <>
-                      <input
-                        ref={fileRef}
-                        type="file"
-                        accept="image/*"
-                        multiple
-                        style={{ display: 'none' }}
-                        onChange={handleFileChange}
-                      />
-                      <button
-                        type="button"
-                        className="btn-upload-img"
-                        onClick={() => fileRef.current.click()}
-                      >
-                        + Add Images {totalImages > 0 ? `(${totalImages}/5)` : ''}
-                      </button>
-                    </>
-                  )}
-                  {totalImages >= 5 && (
-                    <p style={{ fontSize: 12, color: '#888', marginTop: 6 }}>Maximum 5 images reached</p>
-                  )}
                 </div>
 
                 <div className="checkbox-row">

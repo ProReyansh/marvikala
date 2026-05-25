@@ -202,7 +202,12 @@ export default function ProductPage() {
     setActiveImg(i);
     setImgAnimKey(k => k + 1);
     if (galleryRef.current) {
-      galleryRef.current.scrollTo({ left: galleryRef.current.offsetWidth * i, behavior: 'smooth' });
+      const slide = galleryRef.current.children[i];
+      if (slide) {
+        slide.scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
+      } else {
+        galleryRef.current.scrollLeft = galleryRef.current.clientWidth * i;
+      }
     }
   }
 
@@ -264,7 +269,7 @@ export default function ProductPage() {
     })();
 
     return (
-      <div className="product-card" onClick={() => navigate(`/product/${slugify(p.name)}`, { state: { product: p }, replace: true })}>
+      <div className="product-card" onClick={() => navigate(`/product/${slugify(p.name)}`, { state: { product: p } })}>
         <div className="product-img">
           {imgSrc && <img src={imgSrc} alt={p.name} />}
           {p.newArrival ? (
