@@ -59,7 +59,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // Admin: add product (up to 5 images)
-router.post('/', authMiddleware, upload.array('images', 5), async (req, res) => {
+router.post('/', authMiddleware, upload.array('images', 10), async (req, res) => {
   try {
     const { name, description, category, inStock, bestseller } = req.body;
     const images = req.files ? req.files.map(f => f.path) : [];
@@ -84,7 +84,7 @@ router.post('/', authMiddleware, upload.array('images', 5), async (req, res) => 
 });
 
 // Admin: update product
-router.put('/:id', authMiddleware, upload.array('images', 5), async (req, res) => {
+router.put('/:id', authMiddleware, upload.array('images', 10), async (req, res) => {
   try {
     const { name, description, category, inStock, bestseller, existingImages } = req.body;
     let keptImages = [];

@@ -154,6 +154,17 @@ export default function ProductPage() {
   const galleryRef   = useRef(null);
   const locationRef  = useRef(location);
 
+  // ── Derived values (recomputed each render; product may be null) ──────────
+  const allProductImages = product?.images?.length > 0
+    ? product.images
+    : (product?.image ? [product.image] : []);
+  const allVariants = (product?.colors || []).filter(c => typeof c === 'object' && c?.color);
+  const activeVariantObj = activeVariant !== null ? allVariants[activeVariant] : null;
+  // Base product: show ALL images. Selected variant: show ONLY that variant's image.
+  const displayImages = activeVariantObj
+    ? [allProductImages[activeVariantObj.imageIndex ?? (product?.primaryImageIndex || 0)] || allProductImages[0]].filter(Boolean)
+    : allProductImages;
+
   // Keep locationRef in sync so the persist effect doesn't need location as a dep
   useEffect(() => { locationRef.current = location; });
 
@@ -166,6 +177,12 @@ export default function ProductPage() {
       replace: true,
     });
   }, [activeVariant, product, navigate]);
+
+  // Reset the gallery scroll position whenever the variant changes
+  useEffect(() => {
+    if (galleryRef.current) galleryRef.current.scrollLeft = 0;
+    setActiveImg(0);
+  }, [activeVariant]);
 
   useEffect(() => {
     setPageAnim('pp-enter');
@@ -182,13 +199,6 @@ export default function ProductPage() {
       const pool = all || getCachedProducts();
       setSimilar(pool.filter(p => p.category === prod.category && p._id !== prod._id).slice(0, 6));
       setLoading(false);
-      // Jump to the variant's image if one was pre-selected from the card
-      const variantIdx = location.state?.activeVariant;
-      if (variantIdx != null) {
-        const vs = (prod.colors || []).filter(c => typeof c === 'object' && c?.color);
-        const cv = vs[variantIdx];
-        if (cv) setTimeout(() => changeImage(cv.imageIndex ?? 0), 60);
-      }
     }
 
     if (location.state?.product && slugify(location.state.product.name) === slug) {
@@ -249,11 +259,10 @@ export default function ProductPage() {
   }
 
   function handleAddToCart() {
-    const variants = (product.colors || []).filter(c => typeof c === 'object' && c?.color);
-    const cv = activeVariant !== null ? variants[activeVariant] : null;
+    const cv = activeVariantObj;
     if (cv) {
       const cartKey = `${product._id}_v${activeVariant}`;
-      const imgs = product.images?.length > 0 ? product.images : (product.image ? [product.image] : []);
+      const imgs = allProductImages;
       addToCart({
         ...product,
         _id: cartKey,
@@ -289,8 +298,7 @@ export default function ProductPage() {
     const dx = e.changedTouches[0].clientX - touchStartX.current;
     touchStartX.current = null;
     if (Math.abs(dx) < 40) return;
-    const imgs = product?.images?.length > 0 ? product.images : (product?.image ? [product.image] : []);
-    if (dx < 0 && activeImg < imgs.length - 1) changeImage(activeImg + 1);
+    if (dx < 0 && activeImg < displayImages.length - 1) changeImage(activeImg + 1);
     else if (dx > 0 && activeImg > 0) changeImage(activeImg - 1);
   }
 
@@ -383,7 +391,6 @@ export default function ProductPage() {
 
   if (!product) return null;
 
-  const images      = product.images?.length > 0 ? product.images : (product.image ? [product.image] : []);
   const isBestseller = product.bestseller || product.featured;
   const catLabel    = CAT_LABEL[product.category] || product.category;
   const discount    = product.price && product.originalPrice
@@ -404,20 +411,20 @@ export default function ProductPage() {
       <Navbar searchQuery={searchQuery} onSearch={handleSearch} />
 
       {/* ── Zoom Lightbox ── */}
-      {zoomOpen && images.length > 0 && (
+      {zoomOpen && displayImages.length > 0 && (
         <div className="pp-zoom-overlay" onClick={() => setZoomOpen(false)}>
           <button className="pp-zoom-close" aria-label="Close zoom">✕</button>
           <img
-            src={imgUrl(images[activeImg])}
+            src={imgUrl(displayImages[activeImg])}
             alt={product.name}
             className="pp-zoom-img"
             onClick={e => e.stopPropagation()}
           />
-          {images.length > 1 && (
+          {displayImages.length > 1 && (
             <div className="pp-zoom-nav" onClick={e => e.stopPropagation()}>
               <button className="pp-zoom-arrow" onClick={() => activeImg > 0 && changeImage(activeImg - 1)} disabled={activeImg === 0}>‹</button>
-              <span className="pp-zoom-counter">{activeImg + 1} / {images.length}</span>
-              <button className="pp-zoom-arrow" onClick={() => activeImg < images.length - 1 && changeImage(activeImg + 1)} disabled={activeImg === images.length - 1}>›</button>
+              <span className="pp-zoom-counter">{activeImg + 1} / {displayImages.length}</span>
+              <button className="pp-zoom-arrow" onClick={() => activeImg < displayImages.length - 1 && changeImage(activeImg + 1)} disabled={activeImg === displayImages.length - 1}>›</button>
             </div>
           )}
         </div>
@@ -441,7 +448,7 @@ export default function ProductPage() {
             {/* Horizontal scroll strip */}
             <div
               className="pp-img-strip-wrap pp-main-zoomable"
-              onClick={() => images.length > 0 && setZoomOpen(true)}
+              onClick={() => displayImages.length > 0 && setZoomOpen(true)}
               role="button"
               tabIndex={0}
               aria-label="View images — click to zoom"
@@ -453,8 +460,8 @@ export default function ProductPage() {
                 role="region"
                 aria-label="Product images"
               >
-                {images.length > 0
-                  ? images.map((img, i) => (
+                {displayImages.length > 0
+                  ? displayImages.map((img, i) => (
                       <div key={i} className="pp-img-strip-slide">
                         <img src={imgUrl(img)} alt={`${product.name} ${i + 1}`} />
                       </div>
@@ -466,7 +473,7 @@ export default function ProductPage() {
               {/* Overlays */}
               {isBestseller && <span className="product-page-badge bestseller-badge">Bestseller</span>}
               {!product.inStock && <div className="product-page-oos-overlay">Made to Order</div>}
-              {images.length > 0 && (
+              {displayImages.length > 0 && (
                 <div className="pp-zoom-hint-badge">
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                     <circle cx="11" cy="11" r="8"/>
@@ -476,19 +483,19 @@ export default function ProductPage() {
                   </svg>
                 </div>
               )}
-              {images.length > 1 && (
+              {displayImages.length > 1 && (
                 <div className="pp-swipe-dots" aria-hidden="true">
-                  {images.map((_, i) => (
+                  {displayImages.map((_, i) => (
                     <span key={i} className={`pp-swipe-dot${activeImg === i ? ' active' : ''}`} />
                   ))}
                 </div>
               )}
             </div>
 
-            {/* Thumbnail strip */}
-            {images.length > 1 && (
+            {/* Thumbnail strip — only shown for base product (multiple images) */}
+            {displayImages.length > 1 && (
               <div className="product-page-thumbs">
-                {images.map((img, i) => (
+                {displayImages.map((img, i) => (
                   <div
                     key={i}
                     className={`product-page-thumb${activeImg === i ? ' active' : ''}`}
@@ -507,10 +514,10 @@ export default function ProductPage() {
           {/* ── Product Info ── */}
           <div className="product-page-info">
 
-            {/* Compute variant values */}
+            {/* Compute variant values — reuse component-level allVariants/activeVariantObj */}
             {(() => {
-              const variants = (product.colors || []).filter(c => typeof c === 'object' && c.color);
-              const cv = activeVariant !== null ? variants[activeVariant] : null;
+              const variants = allVariants;
+              const cv = activeVariantObj;
               const displayName = cv?.name || product.name;
               const displayDesc = cv?.description || product.description;
               const displayPrice = (cv?.price) || product.price;
@@ -518,14 +525,9 @@ export default function ProductPage() {
               const displayDiscount = displayPrice && displayOriginalPrice
                 ? Math.round((1 - displayPrice / displayOriginalPrice) * 100) : 0;
 
-              // When a variant is selected, jump to its image
+              // Toggle the selected variant; gallery resets automatically via useEffect
               function handleVariantClick(idx) {
-                const next = activeVariant === idx ? null : idx;
-                setActiveVariant(next);
-                if (next !== null) {
-                  const imgIdx = variants[next]?.imageIndex ?? 0;
-                  changeImage(imgIdx);
-                }
+                setActiveVariant(prev => prev === idx ? null : idx);
               }
 
               return (

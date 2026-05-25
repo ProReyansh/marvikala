@@ -1148,7 +1148,7 @@ export default function AdminDashboard() {
 
                 {/* Multi-image upload — placed ABOVE color variants so images are ready to assign */}
                 <div className="form-group">
-                  <label>Product Images (up to 5)</label>
+                  <label>Product Images (up to 10)</label>
 
                   {totalImages > 0 ? (
                     <div className="multi-img-grid">
@@ -1180,7 +1180,7 @@ export default function AdminDashboard() {
                     <div className="image-placeholder">No images selected</div>
                   )}
 
-                  {totalImages < 5 && (
+                  {totalImages < 10 && (
                     <>
                       <input
                         ref={fileRef}
@@ -1199,8 +1199,8 @@ export default function AdminDashboard() {
                       </button>
                     </>
                   )}
-                  {totalImages >= 5 && (
-                    <p style={{ fontSize: 12, color: '#888', marginTop: 6 }}>Maximum 5 images reached</p>
+                  {totalImages >= 10 && (
+                    <p style={{ fontSize: 12, color: '#888', marginTop: 6 }}>Maximum 10 images reached</p>
                   )}
 
                   {/* Primary image picker — shown when product has multiple images */}
@@ -1240,7 +1240,7 @@ export default function AdminDashboard() {
                         style={{ background: color }}
                         title={`Add ${color}`}
                         onClick={() => {
-                          if (form.colors.length >= 8) return;
+                          if (form.colors.length >= 20) return;
                           const already = form.colors.some(c => getColorHex(c) === color);
                           if (already) return;
                           setForm(f => ({ ...f, colors: [...f.colors, { color, name: '', description: '', imageIndex: 0, price: '', originalPrice: '' }] }));
@@ -1254,7 +1254,7 @@ export default function AdminDashboard() {
                         className="cv-color-input" title="Pick custom colour" />
                       <button type="button" className="cv-add-custom-btn"
                         onClick={() => {
-                          if (form.colors.length >= 8) return;
+                          if (form.colors.length >= 20) return;
                           const already = form.colors.some(c => getColorHex(c) === customColor);
                           if (already) return;
                           setForm(f => ({ ...f, colors: [...f.colors, { color: customColor, name: '', description: '', imageIndex: 0, price: '', originalPrice: '' }] }));
