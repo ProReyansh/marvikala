@@ -62,6 +62,7 @@ export default function AdminDashboard() {
   const [products, setProducts]     = useState([]);
   const [loading, setLoading]       = useState(true);
   const [filterCat, setFilterCat]   = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
   const [modalOpen, setModalOpen]   = useState(false);
   const [modalClosing, setModalClosing] = useState(false);
   const [editing, setEditing]       = useState(null);
@@ -365,7 +366,7 @@ export default function AdminDashboard() {
       ),
       existingImages: imgs,
       newImageFiles: [],
-      primaryImageIndex: product.primaryImageIndex || 0,
+      primaryImageIndex: product.primaryImageIndex ?? 0,
     });
     setError('');
     setModalOpen(true);
@@ -375,7 +376,7 @@ export default function AdminDashboard() {
     const files = Array.from(e.target.files);
     if (!files.length) return;
     const currentCount = form.existingImages.length + form.newImageFiles.length;
-    const remaining = Math.max(0, 5 - currentCount);
+    const remaining = Math.max(0, 10 - currentCount);
     const toAdd = files.slice(0, remaining);
     setForm(f => ({ ...f, newImageFiles: [...f.newImageFiles, ...toAdd] }));
     e.target.value = '';
@@ -403,7 +404,7 @@ export default function AdminDashboard() {
       if (form.price !== '' && form.price !== null) data.append('price', form.price);
       if (form.originalPrice !== '' && form.originalPrice !== null) data.append('originalPrice', form.originalPrice);
       data.append('colors', JSON.stringify(form.colors));
-      data.append('primaryImageIndex', form.primaryImageIndex || 0);
+      data.append('primaryImageIndex', form.primaryImageIndex ?? 0);
 
       if (editing) {
         data.append('existingImages', JSON.stringify(form.existingImages));
@@ -438,8 +439,9 @@ export default function AdminDashboard() {
     }
   }
 
-  const filtered =
-    filterCat === 'all' ? products : products.filter((p) => p.category === filterCat);
+  const filtered = products
+    .filter(p => filterCat === 'all' || p.category === filterCat)
+    .filter(p => !searchQuery.trim() || p.name.toLowerCase().includes(searchQuery.trim().toLowerCase()));
 
   const inStockCount    = products.filter((p) => p.inStock).length;
   const bestsellerCount = products.filter((p) => p.bestseller || p.featured).length;
@@ -455,6 +457,23 @@ export default function AdminDashboard() {
           <h1>Admin</h1>
         </div>
         <div className="admin-navbar-right">
+          {activeTab === 'products' && (
+            <div className="admin-search-wrap">
+              <svg className="admin-search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+              <input
+                className="admin-search-input"
+                type="text"
+                placeholder="Search products…"
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+              />
+              {searchQuery && (
+                <button className="admin-search-clear" onClick={() => setSearchQuery('')} aria-label="Clear search">✕</button>
+              )}
+            </div>
+          )}
           <a href="/" target="_blank" rel="noreferrer" className="admin-view-site">
             View Site →
           </a>
@@ -1280,7 +1299,19 @@ export default function AdminDashboard() {
                           return (
                             <div key={idx} className="cv-variant-card">
                               <div className="cv-variant-header">
-                                <span className="cv-variant-dot" style={{ background: vColor }} />
+                                <span
+                                  className="cv-variant-dot cv-variant-dot-clickable"
+                                  style={{ background: vColor }}
+                                  title="Click to change colour"
+                                  onClick={() => document.getElementById(`cv-color-input-${idx}`)?.click()}
+                                />
+                                <input
+                                  id={`cv-color-input-${idx}`}
+                                  type="color"
+                                  value={vColor}
+                                  style={{ display: 'none' }}
+                                  onChange={e => update('color', e.target.value)}
+                                />
                                 <span className="cv-variant-color-code">{vColor}</span>
                                 <button type="button" className="cv-variant-remove"
                                   onClick={() => setForm(f => ({ ...f, colors: f.colors.filter((_, i) => i !== idx) }))}>

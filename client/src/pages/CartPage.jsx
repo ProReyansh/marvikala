@@ -9,6 +9,11 @@ function slugify(name) {
   return name.toLowerCase().replace(/[^\w\s-]/g, '').replace(/[\s_]+/g, '-').replace(/^-+|-+$/g, '');
 }
 
+function getCachedProducts() {
+  try { const c = sessionStorage.getItem('mk_products'); return c ? JSON.parse(c) : []; }
+  catch { return []; }
+}
+
 const CAT_LABEL = {
   flowers: 'Flowers', keychains: 'Keychains', bookmarks: 'Bookmarks',
   laddugopaldress: 'Laddu Gopal', homedecor: 'Home Decor',
@@ -71,7 +76,20 @@ function CartItem({ item, onSaveForLater }) {
     }, 380);
   }
 
-  const goToProduct = () => navigate(`/product/${slugify(item.name)}`, { state: { product: item } });
+  const goToProduct = () => {
+    // Variant cart items have _id like "abc123_v2" — navigate to base product with variant pre-selected
+    if (item._id && item._id.includes('_v')) {
+      const lastV = item._id.lastIndexOf('_v');
+      const parentId = item._id.slice(0, lastV);
+      const variantIndex = Number(item._id.slice(lastV + 2));
+      const base = getCachedProducts().find(p => p._id === parentId);
+      navigate(`/product/${slugify(base?.name || item.name)}`, {
+        state: { product: base || undefined, activeVariant: variantIndex },
+      });
+    } else {
+      navigate(`/product/${slugify(item.name)}`, { state: { product: item } });
+    }
+  };
 
   return (
     <div className={`cart-item${removing ? ' cart-item--exit' : ''}${saving ? ' cart-item--exit' : ''}`}>

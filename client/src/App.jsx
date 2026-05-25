@@ -28,6 +28,7 @@ import FloatingWhatsApp from './components/FloatingWhatsApp';
 // session if the page was originally loaded via refresh, causing back-nav to wrongly
 // scroll to top.
 let _appNavigated = false;
+let _scrollRetryTimer = null;
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -65,10 +66,18 @@ function ScrollToTop() {
     document.body.style.opacity = '0';
 
     // Scroll while hidden, then fade in smoothly
+    clearTimeout(_scrollRetryTimer);
     requestAnimationFrame(() => {
       if (navType === 'POP') {
         const saved = sessionStorage.getItem(`mk_scroll_${pathname}`);
-        window.scrollTo({ top: saved ? parseInt(saved, 10) : 0, left: 0, behavior: 'instant' });
+        const targetY = saved ? parseInt(saved, 10) : 0;
+        window.scrollTo({ top: targetY, left: 0, behavior: 'instant' });
+        // Re-apply after content finishes rendering (corrects scroll clamping during skeleton phase)
+        if (targetY > 0) {
+          _scrollRetryTimer = setTimeout(() => {
+            window.scrollTo({ top: targetY, left: 0, behavior: 'instant' });
+          }, 400);
+        }
       } else {
         window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
       }
