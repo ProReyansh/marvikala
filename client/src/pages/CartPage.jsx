@@ -77,17 +77,22 @@ function CartItem({ item, onSaveForLater }) {
   }
 
   const goToProduct = () => {
-    // Variant cart items have _id like "abc123_v2" — navigate to base product with variant pre-selected
+    const cached = getCachedProducts();
     if (item._id && item._id.includes('_v')) {
+      // Variant item — navigate to base product with that variant pre-selected
       const lastV = item._id.lastIndexOf('_v');
       const parentId = item._id.slice(0, lastV);
       const variantIndex = Number(item._id.slice(lastV + 2));
-      const base = getCachedProducts().find(p => p._id === parentId);
+      const base = cached.find(p => p._id === parentId);
       navigate(`/product/${slugify(base?.name || item.name)}`, {
         state: { product: base || undefined, activeVariant: variantIndex },
       });
     } else {
-      navigate(`/product/${slugify(item.name)}`, { state: { product: item } });
+      // Base product — look up full product so the page has colors / images / description
+      const full = cached.find(p => p._id === item._id);
+      navigate(`/product/${slugify(full?.name || item.name)}`, {
+        state: { product: full || undefined },
+      });
     }
   };
 

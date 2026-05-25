@@ -33,7 +33,7 @@ export function CartProvider({ children }) {
         price:         product.price,
         originalPrice: product.originalPrice,
         category:      product.category,
-        image:         (product.images?.[0] ?? product.image) || null,
+        image:         (product.images?.[product.primaryImageIndex ?? 0] || product.images?.[0] || product.image) || null,
         inStock:       product.inStock,
         qty,
       }];
