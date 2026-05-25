@@ -9991,17 +9991,17 @@ body {
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   align-items: stretch;
-  padding: 0 12%;
-  scroll-padding-inline: 12%;
-  gap: 12px;
   box-sizing: border-box;
 }
 .na-swipe-track::-webkit-scrollbar { display: none; }
 
 .na-swipe-item {
-  flex: 0 0 62%;
-  scroll-snap-align: center;
+  flex: 0 0 100%;
+  scroll-snap-align: start;
   display: flex;
+  justify-content: center;
+  padding: 0 16%;
+  box-sizing: border-box;
 }
 .reviews-section .na-swipe-item .review-card {
   flex: 1;
