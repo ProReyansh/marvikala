@@ -1943,6 +1943,7 @@ body {
   padding: 3px 9px;
   border-radius: 20px;
 }
+.new-arrival-badge.admin-badge { left: auto; right: 10px; }
 
 .admin-product-info { padding: 14px 16px; display: flex; flex-direction: column; flex: 1; }
 .admin-product-name { font-size: 14px; font-weight: 600; margin-bottom: 3px; color: var(--text); }

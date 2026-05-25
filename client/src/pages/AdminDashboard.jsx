@@ -41,7 +41,7 @@ function getColorHex(c) { return typeof c === 'string' ? c : (c?.color || '#000'
 
 const EMPTY_FORM = {
   name: '', description: '', category: 'flowers',
-  inStock: true, bestseller: false,
+  inStock: true, bestseller: false, newArrival: false,
   price: '', originalPrice: '',
   colors: [],
   existingImages: [],
@@ -73,9 +73,6 @@ export default function AdminDashboard() {
   // Tab state
   const [activeTab, setActiveTab]   = useState('products');
 
-  // New Arrivals tab state
-  const [naToggling, setNaToggling] = useState(null); // product._id being toggled
-
   // Hero Image tab state
   const heroFileRef                     = useRef();
   const [heroCurrentUrl, setHeroCurrentUrl] = useState('');
@@ -100,15 +97,6 @@ export default function AdminDashboard() {
   const [wsForm, setWsForm]                 = useState(EMPTY_WS);
   const [wsSaving, setWsSaving]             = useState(false);
   const [wsError, setWsError]               = useState('');
-
-  async function handleToggleNewArrival(product) {
-    setNaToggling(product._id);
-    try {
-      await axios.patch(`/api/products/${product._id}`, { newArrival: !product.newArrival }, { headers: authHeader() });
-      fetchProducts();
-    } catch { alert('Could not update product.'); }
-    finally { setNaToggling(null); }
-  }
 
   function handleHeroFileChange(e) {
     const file = e.target.files[0];
@@ -357,6 +345,7 @@ export default function AdminDashboard() {
       category: product.category,
       inStock: product.inStock,
       bestseller: product.bestseller || product.featured || false,
+      newArrival: product.newArrival || false,
       price: product.price || '',
       originalPrice: product.originalPrice || '',
       colors: (product.colors || []).map(c =>
@@ -401,6 +390,7 @@ export default function AdminDashboard() {
       data.append('category', form.category);
       data.append('inStock', form.inStock);
       data.append('bestseller', form.bestseller);
+      data.append('newArrival', form.newArrival);
       if (form.price !== '' && form.price !== null) data.append('price', form.price);
       if (form.originalPrice !== '' && form.originalPrice !== null) data.append('originalPrice', form.originalPrice);
       data.append('colors', JSON.stringify(form.colors));
@@ -502,12 +492,6 @@ export default function AdminDashboard() {
           🗂 Collections
         </button>
         <button
-          className={`admin-tab-btn${activeTab === 'newArrivals' ? ' active' : ''}`}
-          onClick={() => setActiveTab('newArrivals')}
-        >
-          ✨ New Arrivals
-        </button>
-        <button
           className={`admin-tab-btn${activeTab === 'hero' ? ' active' : ''}`}
           onClick={() => setActiveTab('hero')}
         >
@@ -579,8 +563,9 @@ export default function AdminDashboard() {
                   filtered.map((product) => {
                     const imgSrc = (() => {
                       const imgs = product.images?.length > 0 ? product.images : (product.image ? [product.image] : []);
-                      if (!imgs[0]) return null;
-                      return imgs[0].startsWith('http') ? imgs[0] : `/uploads/${imgs[0]}`;
+                      const src = imgs[product.primaryImageIndex ?? 0] || imgs[0];
+                      if (!src) return null;
+                      return src.startsWith('http') ? src : `/uploads/${src}`;
                     })();
                     return (
                       <div key={product._id} className="admin-product-card">
@@ -589,6 +574,9 @@ export default function AdminDashboard() {
                             ? <img src={imgSrc} alt={product.name} />
                             : <span>🧶</span>
                           }
+                          {product.newArrival && (
+                            <span className="new-arrival-badge admin-badge">✨ New</span>
+                          )}
                           {(product.bestseller || product.featured) && (
                             <span className="bestseller-badge admin-badge">🏆 Bestseller</span>
                           )}
@@ -915,58 +903,6 @@ export default function AdminDashboard() {
                 </div>
               )}
             </div>
-          </div>
-        )}
-
-        {/* ── NEW ARRIVALS TAB ── */}
-        {activeTab === 'newArrivals' && (
-          <div className="admin-collections-panel">
-            <h3 className="admin-coll-section-title">✨ New Arrivals</h3>
-            <p style={{ color: 'var(--text-mid)', fontSize: 13, marginBottom: 20 }}>
-              Toggle which products appear in the New Arrivals section on the home page. Marked products show a <strong>New</strong> badge on their card.
-            </p>
-            {loading ? (
-              <div className="spinner" />
-            ) : products.length === 0 ? (
-              <p style={{ color: 'var(--text-light)', fontSize: 13 }}>No products yet — add some in the Products tab first.</p>
-            ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                {[...products].sort((a, b) => (b.newArrival ? 1 : 0) - (a.newArrival ? 1 : 0)).map(p => {
-                  const imgs = p.images?.length > 0 ? p.images : (p.image ? [p.image] : []);
-                  const imgSrc = imgs[0] ? (imgs[0].startsWith('http') ? imgs[0] : `/uploads/${imgs[0]}`) : null;
-                  const isToggling = naToggling === p._id;
-                  return (
-                    <div key={p._id} className="admin-sig-option" style={{ opacity: isToggling ? 0.6 : 1 }}>
-                      {imgSrc
-                        ? <img src={imgSrc} alt={p.name} style={{ width: 44, height: 44, objectFit: 'cover', borderRadius: 8, flexShrink: 0 }} />
-                        : <span style={{ fontSize: 28, flexShrink: 0 }}>🧶</span>
-                      }
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ fontWeight: 600, fontSize: 13, color: 'var(--text)' }}>{p.name}</div>
-                        <div style={{ fontSize: 11, color: 'var(--text-light)' }}>{CATEGORIES.find(c => c.key === p.category)?.label || p.category}{p.price ? ` · ₹${p.price}` : ''}</div>
-                      </div>
-                      {p.newArrival && (
-                        <span style={{ fontSize: 10, fontWeight: 700, background: 'rgba(45,191,167,0.13)', color: 'var(--teal)', borderRadius: 99, padding: '2px 8px', flexShrink: 0 }}>✦ New</span>
-                      )}
-                      <button
-                        disabled={isToggling}
-                        onClick={() => handleToggleNewArrival(p)}
-                        style={{
-                          background: p.newArrival ? '#fee2e2' : 'var(--olive)',
-                          color: p.newArrival ? '#dc2626' : '#fff',
-                          border: 'none', borderRadius: 8, padding: '6px 12px',
-                          fontSize: 12, fontWeight: 600, cursor: 'pointer',
-                          fontFamily: 'var(--sans)', flexShrink: 0,
-                          transition: 'background 0.15s',
-                        }}
-                      >
-                        {isToggling ? '…' : p.newArrival ? 'Remove' : '+ Mark as New'}
-                      </button>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
           </div>
         )}
 
@@ -1396,6 +1332,14 @@ export default function AdminDashboard() {
                       onChange={(e) => setForm((f) => ({ ...f, bestseller: e.target.checked }))}
                     />
                     Bestseller
+                  </label>
+                  <label className="checkbox-label">
+                    <input
+                      type="checkbox"
+                      checked={form.newArrival}
+                      onChange={(e) => setForm((f) => ({ ...f, newArrival: e.target.checked }))}
+                    />
+                    ✨ New Arrival
                   </label>
                 </div>
 
