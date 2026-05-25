@@ -353,11 +353,16 @@ export default function AdminDashboard() {
       newArrival: product.newArrival || false,
       price: product.price || '',
       originalPrice: product.originalPrice || '',
-      colors: (product.colors || []).map(c =>
-        typeof c === 'string'
-          ? { color: c, name: '', description: '', imageIndex: 0, price: '', originalPrice: '' }
-          : { price: '', originalPrice: '', ...c }
-      ),
+      colors: (product.colors || []).map(c => {
+        const base = typeof c === 'string'
+          ? { color: c, name: '', description: '', imageIndex: 0, imageIndices: [], price: '', originalPrice: '' }
+          : { price: '', originalPrice: '', imageIndices: [], ...c };
+        // Back-fill imageIndices from legacy imageIndex
+        if (!base.imageIndices?.length && base.imageIndex != null && base.imageIndex !== 0) {
+          base.imageIndices = [base.imageIndex];
+        }
+        return base;
+      }),
       existingImages: imgs,
       newImageFiles: [],
       primaryImageIndex: product.primaryImageIndex ?? 0,
@@ -1249,7 +1254,7 @@ export default function AdminDashboard() {
                           const already = form.colors.some(c => getColorHex(c) === color);
                           if (already) return;
                           const newIdx = form.colors.length;
-                          setForm(f => ({ ...f, colors: [...f.colors, { color, name: '', description: '', imageIndex: 0, price: '', originalPrice: '' }] }));
+                          setForm(f => ({ ...f, colors: [...f.colors, { color, name: '', description: '', imageIndex: 0, imageIndices: [], price: '', originalPrice: '' }] }));
                           setExpandedVariants(prev => ({ ...prev, [newIdx]: true }));
                         }}
                       />
@@ -1265,7 +1270,7 @@ export default function AdminDashboard() {
                           const already = form.colors.some(c => getColorHex(c) === customColor);
                           if (already) return;
                           const newIdx = form.colors.length;
-                          setForm(f => ({ ...f, colors: [...f.colors, { color: customColor, name: '', description: '', imageIndex: 0, price: '', originalPrice: '' }] }));
+                          setForm(f => ({ ...f, colors: [...f.colors, { color: customColor, name: '', description: '', imageIndex: 0, imageIndices: [], price: '', originalPrice: '' }] }));
                           setExpandedVariants(prev => ({ ...prev, [newIdx]: true }));
                         }}>
                         + Add
@@ -1283,9 +1288,30 @@ export default function AdminDashboard() {
                       <div className="cv-variant-list">
                         {form.colors.map((variant, idx) => {
                           const vColor = getColorHex(variant);
-                          const vObj   = typeof variant === 'string' ? { color: variant, name: '', description: '', imageIndex: 0, price: '', originalPrice: '' } : { price: '', originalPrice: '', ...variant };
+                          const vObjRaw = typeof variant === 'string'
+                            ? { color: variant, name: '', description: '', imageIndex: 0, imageIndices: [], price: '', originalPrice: '' }
+                            : { price: '', originalPrice: '', imageIndices: [], ...variant };
+                          // Back-fill imageIndices from legacy imageIndex if needed
+                          const vObj = {
+                            ...vObjRaw,
+                            imageIndices: vObjRaw.imageIndices?.length > 0
+                              ? vObjRaw.imageIndices
+                              : (vObjRaw.imageIndex != null && vObjRaw.imageIndex !== 0 ? [vObjRaw.imageIndex] : []),
+                          };
                           const update = (field, val) =>
                             setForm(f => ({ ...f, colors: f.colors.map((c, i) => i === idx ? { ...vObj, [field]: val } : c) }));
+                          const toggleImage = (imgIdx) => {
+                            const cur = vObj.imageIndices;
+                            const next = cur.includes(imgIdx) ? cur.filter(i => i !== imgIdx) : [...cur, imgIdx];
+                            setForm(f => ({
+                              ...f,
+                              colors: f.colors.map((c, i) => i === idx ? {
+                                ...vObj,
+                                imageIndices: next,
+                                imageIndex: next[0] ?? 0,
+                              } : c),
+                            }));
+                          };
                           const isExpanded = !!expandedVariants[idx];
                           const toggleExpand = () => setExpandedVariants(prev => ({ ...prev, [idx]: !prev[idx] }));
                           return (
@@ -1341,16 +1367,32 @@ export default function AdminDashboard() {
                                   </div>
                                   {allImgUrls.length > 0 && (
                                     <div>
-                                      <div className="cv-img-picker-label">Image for this variant:</div>
+                                      <div className="cv-img-picker-label">
+                                        Images for this variant
+                                        {vObj.imageIndices.length > 0 && (
+                                          <span style={{ fontWeight: 400, color: 'var(--olive)', marginLeft: 6 }}>
+                                            ({vObj.imageIndices.length} selected)
+                                          </span>
+                                        )}
+                                        <span style={{ fontWeight: 400, color: '#aaa', marginLeft: 6, textTransform: 'none', letterSpacing: 0 }}>— tap to select/deselect</span>
+                                      </div>
                                       <div className="cv-img-picker">
-                                        {allImgUrls.map((src, imgIdx) => (
-                                          <div key={imgIdx}
-                                            className={`cv-img-option${vObj.imageIndex === imgIdx ? ' selected' : ''}`}
-                                            onClick={() => update('imageIndex', imgIdx)}>
-                                            <img src={src} alt={`Image ${imgIdx + 1}`} />
-                                            {vObj.imageIndex === imgIdx && <span className="cv-img-check">✓</span>}
-                                          </div>
-                                        ))}
+                                        {allImgUrls.map((src, imgIdx) => {
+                                          const sel = vObj.imageIndices.includes(imgIdx);
+                                          const order = vObj.imageIndices.indexOf(imgIdx);
+                                          return (
+                                            <div key={imgIdx}
+                                              className={`cv-img-option${sel ? ' selected' : ''}`}
+                                              onClick={() => toggleImage(imgIdx)}>
+                                              <img src={src} alt={`Image ${imgIdx + 1}`} />
+                                              {sel && (
+                                                <span className="cv-img-check">
+                                                  {order + 1}
+                                                </span>
+                                              )}
+                                            </div>
+                                          );
+                                        })}
                                       </div>
                                     </div>
                                   )}

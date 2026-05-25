@@ -160,11 +160,15 @@ export default function ProductPage() {
     : (product?.image ? [product.image] : []);
   const allVariants = (product?.colors || []).filter(c => typeof c === 'object' && c?.color);
   const activeVariantObj = activeVariant !== null ? allVariants[activeVariant] : null;
-  // Always show exactly one image: the cover image for the base product, or the variant's image.
+  // Base product: cover image only. Variant: all images selected for that variant.
   const displayImages = (() => {
     if (activeVariantObj) {
-      const idx = activeVariantObj.imageIndex ?? (product?.primaryImageIndex ?? 0);
-      return [allProductImages[idx] || allProductImages[0]].filter(Boolean);
+      // imageIndices (multi) takes priority; fall back to legacy imageIndex (single)
+      const indices = activeVariantObj.imageIndices?.length > 0
+        ? activeVariantObj.imageIndices
+        : [activeVariantObj.imageIndex ?? (product?.primaryImageIndex ?? 0)];
+      const imgs = indices.map(i => allProductImages[i]).filter(Boolean);
+      return imgs.length > 0 ? imgs : [allProductImages[0]].filter(Boolean);
     }
     const coverIdx = product?.primaryImageIndex ?? 0;
     return [allProductImages[coverIdx] || allProductImages[0]].filter(Boolean);

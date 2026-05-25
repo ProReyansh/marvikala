@@ -5709,7 +5709,7 @@ body {
 }
 .cv-variant-color-code { font-size: 11px; color: var(--text-mid); font-family: monospace; flex: 1; }
 
-/* Image option checkmark */
+/* Image option checkmark / order number */
 .cv-img-option { position: relative; cursor: pointer; }
 .cv-img-check {
   position: absolute;
@@ -5717,12 +5717,13 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(107,142,35,0.55);
+  background: rgba(107,142,35,0.6);
   color: #fff;
-  font-size: 20px;
-  font-weight: 700;
+  font-size: 18px;
+  font-weight: 800;
   border-radius: 7px;
   pointer-events: none;
+  letter-spacing: -0.5px;
 }
 
 /* Admin product grid — clickable color dots */
