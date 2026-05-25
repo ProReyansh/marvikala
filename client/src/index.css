@@ -10003,6 +10003,10 @@ body {
   padding: 0 16%;
   box-sizing: border-box;
 }
+.na-swipe-item .product-img {
+  height: auto;
+  aspect-ratio: 3 / 4;
+}
 .reviews-section .na-swipe-item .review-card {
   flex: 1;
   display: flex;
