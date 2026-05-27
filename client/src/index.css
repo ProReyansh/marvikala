@@ -930,16 +930,18 @@ body {
   letter-spacing: 0.3px;
 }
 
-.discount-badge {
-  top: auto !important;
-  left: auto !important;
-  bottom: 10px !important;
-  right: 10px !important;
-  background: #e53935 !important;
-  color: #fff !important;
-  font-size: 9px !important;
-  letter-spacing: 0.3px;
-  text-transform: uppercase;
+.price-discount-pill {
+  display: inline-flex;
+  align-items: center;
+  background: #e53935;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 99px;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .out-of-stock-overlay {

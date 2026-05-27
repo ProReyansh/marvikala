@@ -332,11 +332,6 @@ export default function Home() {
           ) : (product.bestseller || product.featured) ? (
             <span className="product-badge bestseller-badge">Bestseller</span>
           ) : null}
-          {displayPrice && displayOriginalPrice && displayOriginalPrice > displayPrice && (
-            <span className="product-badge discount-badge">
-              {Math.round((1 - displayPrice / displayOriginalPrice) * 100)}% off
-            </span>
-          )}
           {!product.inStock && <div className="out-of-stock-overlay">Made to Order</div>}
 
           {/* Cart icon — top right corner */}
@@ -368,6 +363,11 @@ export default function Home() {
             <div className="product-price-row">
               {displayPrice         && <span className="price-sale">₹{displayPrice}</span>}
               {displayOriginalPrice && <span className="price-original">₹{displayOriginalPrice}</span>}
+              {displayPrice && displayOriginalPrice && displayOriginalPrice > displayPrice && (
+                <span className="price-discount-pill">
+                  {Math.round((1 - displayPrice / displayOriginalPrice) * 100)}% off
+                </span>
+              )}
             </div>
           )}
           {product.colors?.length > 0 && (
