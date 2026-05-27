@@ -930,18 +930,25 @@ body {
   letter-spacing: 0.3px;
 }
 
+.product-name-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 6px;
+}
 .price-discount-pill {
   display: inline-flex;
   align-items: center;
   background: #e53935;
   color: #fff;
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 700;
-  padding: 2px 7px;
+  padding: 2px 6px;
   border-radius: 99px;
   letter-spacing: 0.2px;
   white-space: nowrap;
   flex-shrink: 0;
+  margin-top: 2px;
 }
 
 .out-of-stock-overlay {
