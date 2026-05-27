@@ -2241,7 +2241,8 @@ body {
   padding: 0;
   font-size: 13px;
   font-family: var(--sans);
-  color: var(--text-light);
+  color: var(--text-mid);
+  font-weight: 500;
   cursor: pointer;
   text-decoration: none;
   transition: color 0.15s;
