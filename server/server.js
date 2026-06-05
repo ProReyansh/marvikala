@@ -8,6 +8,7 @@ const productRoutes   = require('./routes/products');
 const authRoutes      = require('./routes/auth');
 const settingsRoutes  = require('./routes/settings');
 const workshopRoutes  = require('./routes/workshops');
+const reviewRoutes    = require('./routes/reviews');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -23,6 +24,7 @@ app.use('/api/products',  productRoutes);
 app.use('/api/auth',      authRoutes);
 app.use('/api/settings',  settingsRoutes);
 app.use('/api/workshops', workshopRoutes);
+app.use('/api/reviews',   reviewRoutes);
 
 app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
 

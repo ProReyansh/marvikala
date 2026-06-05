@@ -63,11 +63,7 @@ function Accordion({ items }) {
   );
 }
 
-const REVIEWS = [
-  { name: 'Priya M.',  rating: 5, date: 'March 2025',    text: 'Absolutely beautiful! The craftsmanship is incredible — each stitch is so neat and colours are exactly as shown. Packed so lovingly too. Will definitely order again!', avatar: 'P' },
-  { name: 'Ananya S.', rating: 5, date: 'February 2025', text: 'Ordered a custom piece and Marvikala delivered beyond my expectations. Quick responses, beautiful packaging and quality is outstanding.', avatar: 'A' },
-  { name: 'Ritu K.',   rating: 5, date: 'April 2025',    text: 'Such a talented creator! Got this as a gift and everyone was asking where I bought it from. The attention to detail is just wow!', avatar: 'R' },
-];
+// Reviews are now fetched from the API and managed via the admin panel.
 
 function getDeliveryRange() {
   const addBizDays = (date, n) => {
@@ -144,6 +140,7 @@ export default function ProductPage() {
   const [qty, setQty]               = useState(1);
   const [zoomOpen, setZoomOpen]     = useState(false);
   const [shared, setShared]         = useState(false);
+  const [reviews, setReviews]       = useState([]);
 
   const [pageAnim, setPageAnim] = useState('pp-enter');
   const [exiting, setExiting]   = useState(false);
@@ -196,6 +193,13 @@ export default function ProductPage() {
     if (galleryRef.current) galleryRef.current.scrollLeft = 0;
     setActiveImg(0);
   }, [activeVariant]);
+
+  // Fetch reviews from API (shared across all product pages)
+  useEffect(() => {
+    axios.get('/api/reviews')
+      .then(res => setReviews(res.data))
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     setPageAnim('pp-enter');
@@ -447,7 +451,7 @@ export default function ProductPage() {
 
         {/* Breadcrumb */}
         <nav className="product-page-breadcrumb" aria-label="Breadcrumb">
-          <button onClick={handleBack}>← Back</button>
+          <button onClick={() => navigate('/')}>Home</button>
           <span className="product-page-breadcrumb-sep">/</span>
           <button onClick={() => navigate(`/collection/${product.category}`)}>{catLabel}</button>
           <span className="product-page-breadcrumb-sep">/</span>
@@ -550,7 +554,7 @@ export default function ProductPage() {
                   {/* Reviews summary row */}
                   <div className="pp-rating-row">
                     <StarRating rating={5} />
-                    <span className="pp-rating-count">{REVIEWS.length} reviews</span>
+                    <span className="pp-rating-count">{reviews.length} review{reviews.length !== 1 ? 's' : ''}</span>
                     <span className="pp-rating-sep">·</span>
                     <span className="pp-verified-badge">✓ Verified</span>
                   </div>
@@ -586,7 +590,7 @@ export default function ProductPage() {
                   )}
 
                   <div className={`product-page-stock ${product.inStock ? 'in' : 'out'}`}>
-                    {product.inStock ? '● In Stock' : '● Made to Order'}
+                    {product.inStock ? '● Ready to Ship' : '● Made to Order'}
                   </div>
 
                   {displayDesc && <p className="product-page-desc">{displayDesc}</p>}
@@ -703,33 +707,35 @@ export default function ProductPage() {
         </div>
 
         {/* ── Customer Reviews ── */}
-        <div className="pp-reviews">
-          <div className="pp-reviews-header">
-            <div>
-              <h2 className="pp-reviews-title">What Customers Say</h2>
-              <div className="pp-reviews-summary">
-                <StarRating rating={5} />
-                <span className="pp-reviews-avg">5.0</span>
-                <span className="pp-reviews-count">· {REVIEWS.length} verified reviews</span>
+        {reviews.length > 0 && (
+          <div className="pp-reviews">
+            <div className="pp-reviews-header">
+              <div>
+                <h2 className="pp-reviews-title">What Customers Say</h2>
+                <div className="pp-reviews-summary">
+                  <StarRating rating={5} />
+                  <span className="pp-reviews-avg">5.0</span>
+                  <span className="pp-reviews-count">· {reviews.length} verified review{reviews.length !== 1 ? 's' : ''}</span>
+                </div>
               </div>
             </div>
-          </div>
-          <div className="pp-reviews-grid">
-            {REVIEWS.map((r, i) => (
-              <div key={i} className="pp-review-card">
-                <div className="pp-review-top">
-                  <div className="pp-review-avatar">{r.avatar}</div>
-                  <div className="pp-review-meta">
-                    <span className="pp-review-name">{r.name}</span>
-                    <span className="pp-review-date">{r.date}</span>
+            <div className="pp-reviews-grid">
+              {reviews.map((r, i) => (
+                <div key={r._id || i} className="pp-review-card">
+                  <div className="pp-review-top">
+                    <div className="pp-review-avatar">{r.avatar || (r.name || '?')[0].toUpperCase()}</div>
+                    <div className="pp-review-meta">
+                      <span className="pp-review-name">{r.name}</span>
+                      <span className="pp-review-date">{r.date}</span>
+                    </div>
+                    <StarRating rating={r.rating} />
                   </div>
-                  <StarRating rating={r.rating} />
+                  <p className="pp-review-text">{r.text}</p>
                 </div>
-                <p className="pp-review-text">{r.text}</p>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* ── Similar Products ── */}
         {similar.length > 0 && (

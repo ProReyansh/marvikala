@@ -103,6 +103,16 @@ export default function AdminDashboard() {
   const [wsSaving, setWsSaving]             = useState(false);
   const [wsError, setWsError]               = useState('');
 
+  // Reviews tab state
+  const EMPTY_REVIEW = { name: '', rating: 5, date: '', text: '' };
+  const [rvItems, setRvItems]               = useState([]);
+  const [rvLoading, setRvLoading]           = useState(false);
+  const [rvModalOpen, setRvModalOpen]       = useState(false);
+  const [rvEditing, setRvEditing]           = useState(null);
+  const [rvForm, setRvForm]                 = useState(EMPTY_REVIEW);
+  const [rvSaving, setRvSaving]             = useState(false);
+  const [rvError, setRvError]               = useState('');
+
   function handleHeroFileChange(e) {
     const file = e.target.files[0];
     if (!file) return;
@@ -237,6 +247,58 @@ export default function AdminDashboard() {
     } catch { alert('Could not delete workshop.'); }
   }
 
+  // Review helpers
+  async function fetchReviews() {
+    setRvLoading(true);
+    try {
+      const res = await axios.get('/api/reviews');
+      setRvItems(res.data);
+    } catch { /* ignore */ }
+    finally { setRvLoading(false); }
+  }
+
+  function openAddReview() {
+    setRvEditing(null);
+    setRvForm(EMPTY_REVIEW);
+    setRvError('');
+    setRvModalOpen(true);
+  }
+
+  function openEditReview(rv) {
+    setRvEditing(rv);
+    setRvForm({ name: rv.name, rating: rv.rating, date: rv.date || '', text: rv.text });
+    setRvError('');
+    setRvModalOpen(true);
+  }
+
+  async function handleRvSave() {
+    if (!rvForm.name.trim() || !rvForm.text.trim()) { setRvError('Name and review text are required.'); return; }
+    setRvSaving(true);
+    setRvError('');
+    try {
+      const payload = { name: rvForm.name.trim(), rating: Number(rvForm.rating), date: rvForm.date.trim(), text: rvForm.text.trim() };
+      if (rvEditing) {
+        await axios.put(`/api/reviews/${rvEditing._id}`, payload, { headers: authHeader() });
+      } else {
+        await axios.post('/api/reviews', payload, { headers: authHeader() });
+      }
+      setRvModalOpen(false);
+      fetchReviews();
+    } catch (err) {
+      setRvError(err.response?.data?.message || 'Save failed');
+    } finally {
+      setRvSaving(false);
+    }
+  }
+
+  async function handleRvDelete(rv) {
+    if (!window.confirm(`Delete review by "${rv.name}"? This cannot be undone.`)) return;
+    try {
+      await axios.delete(`/api/reviews/${rv._id}`, { headers: authHeader() });
+      fetchReviews();
+    } catch { alert('Could not delete review.'); }
+  }
+
   // Collections tab state
   const [collections, setCollections]     = useState(getStoredCollections);
   const [collSaved, setCollSaved]         = useState(false);
@@ -318,6 +380,7 @@ export default function AdminDashboard() {
   useEffect(() => {
     fetchProducts();
     fetchWorkshops();
+    fetchReviews();
     document.title = 'Marvikala Admin';
     // Fetch current hero image
     axios.get('/api/settings/hero-image')
@@ -521,6 +584,12 @@ export default function AdminDashboard() {
           onClick={() => setActiveTab('workshops')}
         >
           🧶 Workshops
+        </button>
+        <button
+          className={`admin-tab-btn${activeTab === 'reviews' ? ' active' : ''}`}
+          onClick={() => setActiveTab('reviews')}
+        >
+          ⭐ Reviews
         </button>
       </div>
 
@@ -1018,6 +1087,54 @@ export default function AdminDashboard() {
           </div>
         )}
 
+        {/* ── REVIEWS TAB ── */}
+        {activeTab === 'reviews' && (
+          <div className="admin-collections-panel">
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+              <div>
+                <h3 className="admin-coll-section-title">⭐ Customer Reviews</h3>
+                <p style={{ color: 'var(--text-mid)', fontSize: 13, marginTop: 4 }}>
+                  Reviews added here are shown on every product page.
+                </p>
+              </div>
+              <button className="btn-primary" style={{ fontSize: 13 }} onClick={openAddReview}>+ Add Review</button>
+            </div>
+
+            {rvLoading ? (
+              <div className="spinner" />
+            ) : rvItems.length === 0 ? (
+              <div style={{ textAlign: 'center', padding: '40px 20px', color: 'var(--text-light)' }}>
+                <div style={{ fontSize: 36, marginBottom: 12 }}>⭐</div>
+                <p style={{ fontSize: 14 }}>No reviews yet. Click <strong>+ Add Review</strong> to add one.</p>
+              </div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                {rvItems.map(rv => (
+                  <div key={rv._id} className="admin-ws-row">
+                    <div className="pp-review-avatar" style={{ width: 38, height: 38, flexShrink: 0, borderRadius: '50%', background: 'var(--olive)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: 15 }}>
+                      {rv.avatar || (rv.name || '?')[0].toUpperCase()}
+                    </div>
+                    <div className="admin-ws-row-info">
+                      <div className="admin-ws-row-title-row">
+                        <span className="admin-ws-row-title">{rv.name}</span>
+                        <span style={{ fontSize: 12, color: 'var(--yellow)', letterSpacing: 1 }}>{'★'.repeat(rv.rating)}</span>
+                        {rv.date && <span style={{ fontSize: 11, color: 'var(--text-light)' }}>{rv.date}</span>}
+                      </div>
+                      <div className="admin-ws-row-meta" style={{ WebkitLineClamp: 2, display: '-webkit-box', WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                        {rv.text}
+                      </div>
+                    </div>
+                    <div className="admin-ws-row-actions">
+                      <button className="admin-ws-btn-edit" onClick={() => openEditReview(rv)}>Edit</button>
+                      <button className="admin-ws-btn-delete" onClick={() => handleRvDelete(rv)}>Delete</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
       </div>
 
       {/* Workshop Add / Edit Modal */}
@@ -1102,6 +1219,48 @@ export default function AdminDashboard() {
                 <button type="button" className="btn-cancel" onClick={() => setWsModalOpen(false)}>Cancel</button>
                 <button type="button" className="btn-save" onClick={handleWsSave} disabled={wsSaving}>
                   {wsSaving ? 'Saving…' : wsEditing ? '✓ Save Changes' : '✓ Add Workshop'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Review Add / Edit Modal */}
+      {rvModalOpen && (
+        <div className="admin-modal-overlay" onClick={e => e.target === e.currentTarget && setRvModalOpen(false)}>
+          <div className="admin-modal">
+            <div className="admin-modal-scroll">
+              <h2>{rvEditing ? 'Edit Review' : 'Add Review'}</h2>
+              {rvError && <div className="error-msg">{rvError}</div>}
+
+              <div className="form-group">
+                <label>Customer Name *</label>
+                <input className="form-input" value={rvForm.name} onChange={e => setRvForm(f => ({ ...f, name: e.target.value }))} placeholder="e.g. Priya M." />
+              </div>
+
+              <div className="admin-ws-form-grid">
+                <div className="form-group">
+                  <label>Rating (1–5) *</label>
+                  <select className="form-input" value={rvForm.rating} onChange={e => setRvForm(f => ({ ...f, rating: Number(e.target.value) }))}>
+                    {[5,4,3,2,1].map(r => <option key={r} value={r}>{r} star{r !== 1 ? 's' : ''} {'★'.repeat(r)}</option>)}
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label>Date (e.g. March 2025)</label>
+                  <input className="form-input" value={rvForm.date} onChange={e => setRvForm(f => ({ ...f, date: e.target.value }))} placeholder="March 2025" />
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label>Review Text *</label>
+                <textarea className="form-input form-textarea" rows={4} value={rvForm.text} onChange={e => setRvForm(f => ({ ...f, text: e.target.value }))} placeholder="What the customer said about their order…" />
+              </div>
+
+              <div className="modal-actions">
+                <button type="button" className="btn-cancel" onClick={() => setRvModalOpen(false)}>Cancel</button>
+                <button type="button" className="btn-save" onClick={handleRvSave} disabled={rvSaving}>
+                  {rvSaving ? 'Saving…' : rvEditing ? '✓ Save Changes' : '✓ Add Review'}
                 </button>
               </div>
             </div>
