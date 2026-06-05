@@ -151,7 +151,7 @@ function ShopCard({ product }) {
         ) : (product.bestseller || product.featured) ? (
           <span className="product-badge bestseller-badge">Bestseller</span>
         ) : null}
-        {!product.inStock && <div className="out-of-stock-overlay">Made to Order</div>}
+        {/* Made-to-order overlay removed */}
         {product.inStock && (
           qty === 0 ? (
             <button className="pc-cart-icon-btn" onClick={e => { e.stopPropagation(); addToCart(getCartProduct()); }} aria-label="Add to cart">

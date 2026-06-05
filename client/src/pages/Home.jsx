@@ -336,7 +336,7 @@ export default function Home() {
           ) : (product.bestseller || product.featured) ? (
             <span className="product-badge bestseller-badge">Bestseller</span>
           ) : null}
-          {!product.inStock && <div className="out-of-stock-overlay">Made to Order</div>}
+          {/* Made-to-order overlay removed — status shown in card info strip */}
 
           {/* Cart icon — top right corner */}
           {!noCart && product.inStock && (

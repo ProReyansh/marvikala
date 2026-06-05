@@ -22,6 +22,7 @@
   --white:       #FFFFFF;
   --serif:       'Playfair Display', Georgia, serif;
   --sans:        'Nunito', system-ui, sans-serif;
+  --gotham:      'Montserrat', 'Nunito', system-ui, sans-serif;
 }
 
 * {
@@ -889,7 +890,7 @@ body {
 }
 
 .product-img {
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 4 / 5;
   height: auto;
   display: flex;
   align-items: center;
@@ -969,25 +970,23 @@ body {
   padding: 0 8px;
 }
 
-.product-info  { padding: 10px 12px; display: flex; flex-direction: column; flex: 1; }
-.product-name  { font-family: var(--sans); font-size: 13.5px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+.product-info  { padding: 7px 10px 8px; display: flex; flex-direction: column; flex: 1; gap: 2px; }
+.product-name  { font-family: var(--sans); font-size: 12.5px; font-weight: 600; color: var(--text); line-height: 1.3; }
 .product-desc  {
-  font-size: 11px;
+  font-size: 10px;
   color: var(--text-mid);
-  line-height: 1.4;
-  margin-bottom: 4px;
+  line-height: 1.3;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 .product-cat {
-  font-size: 10px;
+  font-size: 9px;
   color: var(--text-light);
-  margin-bottom: 6px;
   font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: 0.6px;
+  letter-spacing: 0.5px;
 }
 
 .enquire-btn {
@@ -3553,7 +3552,7 @@ body {
 .product-card-h-btn:active { transform: scale(0.96); }
 
 /* ═══ PRICE DISPLAY IN REGULAR CARDS ═══ */
-.product-price-row { display: flex; align-items: center; gap: 6px; margin: 4px 0 8px; flex-wrap: wrap; }
+.product-price-row { display: flex; align-items: center; gap: 4px; margin: 2px 0 2px; flex-wrap: wrap; }
 
 /* ═══ VIEW ALL BUTTON ═══ */
 .view-all-btn { display: block; margin: 4px auto 0; background: var(--teal); border: 1.5px solid var(--teal); color: #fff; border-radius: 50px; padding: 10px 28px; font-size: 13px; font-weight: 600; font-family: var(--sans); cursor: pointer; transition: all 0.18s; }
@@ -3617,7 +3616,7 @@ body {
 
 /* ═══ OUR STORY PAGE ═══ */
 .story-page { max-width: 700px; margin: 0 auto; padding: 0 4px; }
-.story-page h2 { font-family: var(--serif); font-size: 22px; color: var(--text); margin: 32px 0 12px; }
+.story-page h2 { font-family: var(--gotham); font-size: 22px; color: var(--text); margin: 32px 0 12px; font-weight: 700; }
 .story-page p { font-size: 15px; color: var(--text-mid); line-height: 1.8; margin-bottom: 16px; }
 
 /* ═══ ALL BESTSELLERS PAGE ═══ */
@@ -3841,11 +3840,11 @@ body {
 
 /* Page title */
 .sa-title {
-  font-family: var(--serif);
+  font-family: var(--gotham);
   font-size: 22px;
   font-weight: 700;
   color: var(--text);
-  letter-spacing: -0.4px;
+  letter-spacing: -0.3px;
   margin: 0;
 }
 
@@ -7181,7 +7180,7 @@ body {
 .hto-step-num { width: 40px; height: 40px; border-radius: 50%; background: var(--yellow); color: var(--navy); font-weight: 800; font-size: 13px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .hto-step-line { width: 2px; flex: 1; background: var(--border); margin: 4px 0; min-height: 32px; }
 .hto-step-right { padding-bottom: 32px; flex: 1; }
-.hto-step-title { font-family: var(--serif); font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+.hto-step-title { font-family: var(--gotham); font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
 .hto-step-desc { font-size: 14px; color: var(--text-mid); line-height: 1.65; }
 /* ── FLOATING WHATSAPP BUTTON ── */
 .floating-wa {
@@ -9553,7 +9552,8 @@ body {
 
 /* ── TYPOGRAPHY: heading / subheading spacing ── */
 .sa-title {
-  letter-spacing: -0.4px;
+  font-family: var(--gotham);
+  letter-spacing: -0.3px;
 }
 
 .section-head h2 {
@@ -10210,13 +10210,13 @@ body {
 /* ── Product card — color swatches ── */
 .product-colors {
   display: flex;
-  gap: 5px;
+  gap: 4px;
   align-items: center;
-  margin: 6px 0 4px;
+  margin: 2px 0 2px;
 }
 .product-color-dot {
-  width: 13px;
-  height: 13px;
+  width: 11px;
+  height: 11px;
   border-radius: 50%;
   border: 1.5px solid rgba(0,0,0,0.12);
   flex-shrink: 0;
@@ -10239,13 +10239,13 @@ body {
   display: inline-block;
   align-self: flex-start;
   width: fit-content;
-  font-size: 9px;
+  font-size: 8px;
   font-weight: 700;
   font-family: var(--sans);
-  letter-spacing: 0.5px;
+  letter-spacing: 0.4px;
   text-transform: uppercase;
-  margin-top: 4px;
-  padding: 3px 8px;
+  margin-top: 2px;
+  padding: 2px 6px;
   border-radius: 50px;
 }
 .pc-stock-in  { color: #1e8a4a; background: #e6f7ed; }
