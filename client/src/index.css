@@ -8870,9 +8870,9 @@ body {
   background: var(--cream);
 }
 
-/* Divider between items (not last) */
-.msp-suggestion-item:not(:last-of-type) {
-  border-bottom: 1px solid rgba(42,32,22,0.06);
+/* Divider between consecutive items only (avoids a doubled line above "See all") */
+.msp-suggestion-item + .msp-suggestion-item {
+  border-top: 1px solid rgba(42,32,22,0.06);
 }
 
 .msp-suggestion-img {

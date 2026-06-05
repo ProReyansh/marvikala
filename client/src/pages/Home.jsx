@@ -206,9 +206,13 @@ export default function Home() {
 
   const searchResults = q
     ? products.filter((p) =>
-        p.name.toLowerCase().includes(q) ||
+        (p.name || '').toLowerCase().includes(q) ||
         (p.description || '').toLowerCase().includes(q) ||
-        (CAT_LABEL[p.category] || p.category).toLowerCase().includes(q)
+        (CAT_LABEL[p.category] || p.category).toLowerCase().includes(q) ||
+        (p.colors || []).some(c => typeof c === 'object' && c && (
+          (c.name || '').toLowerCase().includes(q) ||
+          (c.description || '').toLowerCase().includes(q)
+        ))
       )
     : [];
 

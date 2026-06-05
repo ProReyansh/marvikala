@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import axios from 'axios';
 import { useCart } from '../context/CartContext';
 
 const CAT_LABEL = {
@@ -42,10 +43,28 @@ export default function Navbar({ searchQuery = '', onSearch }) {
 
   // Products for suggestions (from sessionStorage cache)
   const [allProducts, setAllProducts] = useState(getCachedProducts);
+  const [loadingProducts, setLoadingProducts] = useState(false);
   useEffect(() => {
     const cached = getCachedProducts();
     if (cached.length > 0) setAllProducts(cached);
   }, [searchOpen]);
+
+  // If the panel is opened with an empty cache (e.g. deep-link onto a static
+  // page that never fetches products), fetch them so search still works there.
+  useEffect(() => {
+    if (!searchOpen || allProducts.length > 0) return;
+    let cancelled = false;
+    setLoadingProducts(true);
+    axios.get('/api/products')
+      .then(res => {
+        if (cancelled) return;
+        setAllProducts(res.data);
+        try { sessionStorage.setItem('mk_products', JSON.stringify(res.data)); } catch {}
+      })
+      .catch(() => {})
+      .finally(() => { if (!cancelled) setLoadingProducts(false); });
+    return () => { cancelled = true; };
+  }, [searchOpen, allProducts.length]);
 
   // New arrivals shown when search is empty
   const newArrivals = useMemo(() => {
@@ -62,7 +81,15 @@ export default function Navbar({ searchQuery = '', onSearch }) {
     const q = localQuery.trim().toLowerCase();
     if (!q || q.length < 2) return [];
     return allProducts
-      .filter(p => p.name.toLowerCase().includes(q) || (p.description || '').toLowerCase().includes(q) || CAT_LABEL[p.category]?.toLowerCase().includes(q))
+      .filter(p =>
+        (p.name || '').toLowerCase().includes(q) ||
+        (p.description || '').toLowerCase().includes(q) ||
+        CAT_LABEL[p.category]?.toLowerCase().includes(q) ||
+        (p.colors || []).some(c => typeof c === 'object' && c && (
+          (c.name || '').toLowerCase().includes(q) ||
+          (c.description || '').toLowerCase().includes(q)
+        ))
+      )
       .slice(0, 6);
   }, [localQuery, allProducts]);
 
@@ -81,31 +108,50 @@ export default function Navbar({ searchQuery = '', onSearch }) {
 
   // Close search when page scrolls (e.g. rubber-band on iOS) — swipe-to-close removed
   // so the panel can only be dismissed via Cancel or tapping outside.
-  const scrollAtOpen = useRef(0);
+  const scrollAtOpen     = useRef(0);
+  const scrollCloseArmed = useRef(false);
   useEffect(() => {
+    let raf;
+    if (searchOpen) {
+      // Re-anchor AFTER the panel opens so any programmatic scroll restoration
+      // (e.g. App.jsx back-navigation) doesn't trip the close threshold.
+      scrollCloseArmed.current = false;
+      raf = requestAnimationFrame(() => {
+        scrollAtOpen.current = window.scrollY;
+        scrollCloseArmed.current = true;
+      });
+    }
     function onScroll() {
       setScrolled(window.scrollY > 8);
-      if (!searchOpen) return;
+      if (!searchOpen || !scrollCloseArmed.current) return;
       const diff = Math.abs(window.scrollY - scrollAtOpen.current);
       if (diff > 40) setSearchOpen(false);
     }
     window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
   }, [searchOpen]);
 
-  // Hide panel on outside click
+  // Hide panel on outside click. Attach immediately but gate with an `armed`
+  // flag (after 50ms) so the opening tap doesn't instantly dismiss it — and so
+  // React reliably removes the listener on close/unmount (no accumulation).
   useEffect(() => {
     if (!searchOpen) return;
-    const t = setTimeout(() => {
-      function handleOutside(e) {
-        if (panelRef.current?.contains(e.target)) return;
-        if (navRef.current?.contains(e.target)) return;
-        hideSearch();
-      }
-      document.addEventListener('pointerdown', handleOutside);
-      return () => document.removeEventListener('pointerdown', handleOutside);
-    }, 50);
-    return () => clearTimeout(t);
+    let armed = false;
+    const t = setTimeout(() => { armed = true; }, 50);
+    function handleOutside(e) {
+      if (!armed) return;
+      if (panelRef.current?.contains(e.target)) return;
+      if (navRef.current?.contains(e.target)) return;
+      hideSearch();
+    }
+    document.addEventListener('pointerdown', handleOutside);
+    return () => {
+      clearTimeout(t);
+      document.removeEventListener('pointerdown', handleOutside);
+    };
   }, [searchOpen]);
 
   // Auto-focus from ProductPage search intent
@@ -123,7 +169,10 @@ export default function Navbar({ searchQuery = '', onSearch }) {
     if (searchQuery) setSearchOpen(true);
   }, [searchQuery]);
 
-  // Restore search panel when user navigates back to the page they searched from
+  // Restore search panel when user navigates back to the page they searched from.
+  // Only re-open the floating panel on Home, where the on-page results grid
+  // actually renders; on other pages onSearch is a no-op, so floating a
+  // pre-filled panel over unfiltered content would be misleading.
   useEffect(() => {
     try {
       const saved = JSON.parse(sessionStorage.getItem('mk_return_search') || 'null');
@@ -131,9 +180,10 @@ export default function Navbar({ searchQuery = '', onSearch }) {
         sessionStorage.removeItem('mk_return_search');
         setLocalQuery(saved.query);
         onSearch?.(saved.query);
-        scrollAtOpen.current = window.scrollY;
-        setSearchOpen(true);
-        setTimeout(() => inputRef.current?.focus(), 100);
+        if (location.pathname === '/') {
+          setSearchOpen(true);
+          setTimeout(() => inputRef.current?.focus(), 100);
+        }
       }
     } catch {}
   }, [location.pathname]); // eslint-disable-line
@@ -202,6 +252,22 @@ export default function Navbar({ searchQuery = '', onSearch }) {
   function hideSearch() {
     setSearchOpen(false);
   }
+
+  // Submit the current query: show the full results page. On Home this is the
+  // live searchQuery state; on every other page we stash the query and navigate
+  // to Home, which reads it back via getSavedSearch() on mount.
+  function submitSearch() {
+    const query = localQuery.trim();
+    if (query.length < 2) return;
+    clearTimeout(blurTimeout.current);
+    try { sessionStorage.setItem('mk_search', localQuery); } catch {}
+    setSearchOpen(false);
+    if (location.pathname === '/') onSearch?.(localQuery);
+    else navigate('/');
+  }
+
+  // Cancel any pending blur-close timer if the component unmounts mid-flight.
+  useEffect(() => () => clearTimeout(blurTimeout.current), []);
 
   function handleSuggestionClick(product) {
     clearTimeout(blurTimeout.current);
@@ -334,7 +400,10 @@ export default function Navbar({ searchQuery = '', onSearch }) {
               placeholder="Search products..."
               value={localQuery}
               onChange={(e) => { setLocalQuery(e.target.value); onSearch?.(e.target.value); }}
-              onKeyDown={(e) => e.key === 'Enter' && e.currentTarget.blur()}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') { e.currentTarget.blur(); submitSearch(); }
+                else if (e.key === 'Escape') { e.currentTarget.blur(); closeSearch(); }
+              }}
               onBlur={() => {
                 blurTimeout.current = setTimeout(() => setSearchOpen(false), 150);
               }}
@@ -347,7 +416,8 @@ export default function Navbar({ searchQuery = '', onSearch }) {
               <button
                 className="msp-clear"
                 onMouseDown={(e) => { e.preventDefault(); /* keep input focused, no blur fires */ }}
-                onClick={() => { setLocalQuery(''); onSearch?.(''); }}
+                onTouchStart={() => clearTimeout(blurTimeout.current)}
+                onClick={() => { clearTimeout(blurTimeout.current); setLocalQuery(''); onSearch?.(''); inputRef.current?.focus(); }}
                 aria-label="Clear search"
               >
                 <CloseIcon size={11} />
@@ -358,6 +428,15 @@ export default function Navbar({ searchQuery = '', onSearch }) {
             Cancel
           </button>
         </div>
+
+        {/* COLD CACHE — products not loaded yet (e.g. deep-linked static page) */}
+        {searchOpen && allProducts.length === 0 && (
+          <div className="msp-suggestions">
+            <div className="msp-no-results-hint">
+              {loadingProducts ? 'Loading products…' : 'No products to show yet.'}
+            </div>
+          </div>
+        )}
 
         {/* NEW ARRIVALS — shown when query is empty */}
         {showNewArrivals && (
@@ -371,7 +450,8 @@ export default function Navbar({ searchQuery = '', onSearch }) {
             <div className="msp-section-label">✨ New Arrivals</div>
             {newArrivals.map((p, i) => {
               const imgs = p.images?.length > 0 ? p.images : (p.image ? [p.image] : []);
-              const src = imgs[0] ? imgUrl(imgs[0]) : null;
+              const cover = imgs[p.primaryImageIndex || 0] || imgs[0];
+              const src = cover ? imgUrl(cover) : null;
               return (
                 <button
                   key={p._id}
@@ -414,7 +494,8 @@ export default function Navbar({ searchQuery = '', onSearch }) {
           >
             {suggestions.map((p, i) => {
               const imgs = p.images?.length > 0 ? p.images : (p.image ? [p.image] : []);
-              const src = imgs[0] ? imgUrl(imgs[0]) : null;
+              const cover = imgs[p.primaryImageIndex || 0] || imgs[0];
+              const src = cover ? imgUrl(cover) : null;
               return (
                 <button
                   key={p._id}
@@ -446,7 +527,8 @@ export default function Navbar({ searchQuery = '', onSearch }) {
             <button
               className="msp-see-all"
               onMouseDown={() => clearTimeout(blurTimeout.current)}
-              onClick={() => { hideSearch(); }}
+              onTouchStart={() => clearTimeout(blurTimeout.current)}
+              onClick={submitSearch}
             >
               See all results for "<strong>{localQuery}</strong>"
             </button>
@@ -454,7 +536,7 @@ export default function Navbar({ searchQuery = '', onSearch }) {
         )}
 
         {/* No results — show new arrivals as fallback */}
-        {searchOpen && hasQuery && suggestions.length === 0 && (
+        {searchOpen && hasQuery && suggestions.length === 0 && allProducts.length > 0 && (
           <div
             className="msp-suggestions"
             onMouseDown={() => clearTimeout(blurTimeout.current)}
@@ -468,7 +550,8 @@ export default function Navbar({ searchQuery = '', onSearch }) {
                 <div className="msp-section-label">✨ Check out our New Arrivals</div>
                 {newArrivals.map((p, i) => {
                   const imgs = p.images?.length > 0 ? p.images : (p.image ? [p.image] : []);
-                  const src = imgs[0] ? imgUrl(imgs[0]) : null;
+                  const cover = imgs[p.primaryImageIndex || 0] || imgs[0];
+                  const src = cover ? imgUrl(cover) : null;
                   return (
                     <button
                       key={p._id}
