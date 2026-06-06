@@ -491,7 +491,7 @@ export default function ProductPage() {
 
               {/* Overlays */}
               {isBestseller && <span className="product-page-badge bestseller-badge">Bestseller</span>}
-              {!product.inStock && <div className="product-page-oos-overlay">Made to Order</div>}
+              {/* Made-to-order overlay removed */}
               {displayImages.length > 0 && (
                 <div className="pp-zoom-hint-badge">
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
