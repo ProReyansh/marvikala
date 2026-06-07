@@ -943,11 +943,11 @@ body {
   align-items: center;
   background: transparent;
   color: var(--olive);
-  border: 1.2px solid var(--olive);
+  border: none;
   font-size: 9px;
   font-weight: 700;
-  padding: 1px 5px;
-  border-radius: 99px;
+  padding: 0;
+  border-radius: 0;
   letter-spacing: 0.2px;
   white-space: nowrap;
   flex-shrink: 0;

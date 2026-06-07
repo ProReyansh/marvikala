@@ -96,15 +96,15 @@ function ShopCard({ product }) {
       <div className="product-info">
         <div className="product-name-row">
           <div className="product-name">{cv?.name || product.name}</div>
-          {displayPrice && displayOriginalPrice && displayOriginalPrice > displayPrice && (
-            <span className="price-discount-pill">{Math.round((1 - displayPrice / displayOriginalPrice) * 100)}% off</span>
-          )}
         </div>
         <div className="product-cat">{CAT_LABEL[product.category] || product.category}</div>
         {(displayPrice || displayOriginalPrice) && (
           <div className="product-price-row">
             {displayPrice         && <span className="price-sale">₹{displayPrice}</span>}
             {displayOriginalPrice && <span className="price-original">₹{displayOriginalPrice}</span>}
+            {displayPrice && displayOriginalPrice && displayOriginalPrice > displayPrice && (
+              <span className="price-discount-pill">{Math.round((1 - displayPrice / displayOriginalPrice) * 100)}% off</span>
+            )}
           </div>
         )}
         {product.colors?.length > 0 && (
